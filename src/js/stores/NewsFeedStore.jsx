@@ -87,7 +87,7 @@ class NewsFeedStore extends EventEmitter {
   handleActions(action) {
     switch(action.type) {
       case "NEWSFEED_POST": {
-        // TODO: Readd this back in
+        // TODO: Read this back in
         this.emit("updated");
         break;
       }

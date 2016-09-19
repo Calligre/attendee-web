@@ -15,9 +15,16 @@ export default class NewsFeed extends React.Component {
     this.fbToggle = this.fbToggle.bind(this);
     this.state = {
       posts: NewsFeedStore.getAll(),
-      fbPost: false,
-      twPost: false,
-      userText: "#SoftwareDemoDay",
+      facebookPost: false,
+      twitterPost: false,
+      message: "#SoftwareDemoDay",
+      user:
+        {
+          id: 0,
+          name: "",
+          twitterIntegration: true,
+          facebookIntegration: true,
+        },
     };
   }
 
@@ -51,13 +58,13 @@ export default class NewsFeed extends React.Component {
 
   fbToggle() {
     this.setState({
-      fbPost: !this.state.fbPost,
+      fbPost: !this.state.facebookPost,
     })
   }
 
   twToggle() {
     this.setState({
-      twPost: !this.state.twPost,
+      twPost: !this.state.twitterPost,
     });
   }
 
@@ -65,12 +72,36 @@ export default class NewsFeed extends React.Component {
   render() {
     console.log(this.state.fbPost);
     console.log(this.state.twPost);
-    const { posts } = this.state;
+    const { posts, fbPost, twPost, user, fbToggle, twToggle } = this.state;
+    console.log (user.facebookIntegration);
 
     const NewsFeedPosts = posts.map((post) => {
         console.log(post)
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
+
+    function displayFacebook() {
+      if (user.facebookIntegration) {
+        console.log("HERE")
+        return (
+          <div>
+            <span class="fb-check" style={fsize}><input type="checkbox"
+                  onChange={fbToggle}/>Facebook</span>
+          </div>
+        );
+      }
+    }
+
+    function displayTwitter() {
+      if (user.twitterIntegration) {
+        return (
+          <div>
+            <span class="tw-check" style={fsize}><input type="checkbox"
+                  onChange={twToggle}/>Twitter</span>
+          </div>
+        )
+      }
+    }
 
     var upost = {
       margin: "30px 20% 15px 20%",
@@ -109,12 +140,10 @@ export default class NewsFeed extends React.Component {
           <div>
             <form class="user-post-form" style={upost}>
               <textarea style={fsize} maxLength="140" rows="4" cols="80" type="text"
-                defaultValue={this.state.userText}></textarea>
+                defaultValue={this.state.message}></textarea>
               <div style={alignLeft}>
-                <span class="fb-check" style={fsize}><input type="checkbox"
-                  onChange={this.fbToggle}/>Facebook</span><br/>
-                <span class="tw-check" style={fsize}><input type="checkbox"
-                  onChange={this.twToggle}/>Twitter</span>
+                {displayFacebook()}
+                {displayTwitter()}
               </div>
               <div style={alignRight}>
                 <button class="submit-form btn btn-primary" style={aright} onClick={this.createPost}>Make a post</button>
@@ -127,6 +156,7 @@ export default class NewsFeed extends React.Component {
             {NewsFeedPosts}
           </div>
         </div>
+        <span>Load More</span>
       </div>
     );
   }
