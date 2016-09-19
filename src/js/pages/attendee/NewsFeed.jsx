@@ -23,6 +23,7 @@ export default class NewsFeed extends React.Component {
     this.fbToggle = this.fbToggle.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.state = {
+<<<<<<< b083b594a40c605629709195c51b4b2c774f2545
       contentFeed: {
         posts: [
           {
@@ -69,6 +70,18 @@ export default class NewsFeed extends React.Component {
           name: "",
           twIntegration: true,
           fbIntegration: true,
+=======
+      posts: NewsFeedStore.getAll(),
+      facebookPost: false,
+      twitterPost: false,
+      message: "#SoftwareDemoDay",
+      user:
+        {
+          id: 0,
+          name: "",
+          twitterIntegration: true,
+          facebookIntegration: true,
+>>>>>>> Toggle display of Facebook and Twitter buttons based on fake data
         },
     };
   }
@@ -113,13 +126,13 @@ export default class NewsFeed extends React.Component {
 
   fbToggle() {
     this.setState({
-      fbPost: !this.state.fbPost,
+      fbPost: !this.state.facebookPost,
     })
   }
 
   twToggle() {
     this.setState({
-      twPost: !this.state.twPost,
+      twPost: !this.state.twitterPost,
     });
   }
 
@@ -133,12 +146,20 @@ export default class NewsFeed extends React.Component {
 
 
   render() {
+<<<<<<< b083b594a40c605629709195c51b4b2c774f2545
     const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
+=======
+    console.log(this.state.fbPost);
+    console.log(this.state.twPost);
+    const { posts, fbPost, twPost, user, fbToggle, twToggle } = this.state;
+    console.log (user.facebookIntegration);
+>>>>>>> Toggle display of Facebook and Twitter buttons based on fake data
 
     const NewsFeedPosts = contentFeed.posts.map((post) => {
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
 
+<<<<<<< b083b594a40c605629709195c51b4b2c774f2545
     // function displayTwitter() {
     //   if (user.twIntegration) {
     //     return (
@@ -164,12 +185,54 @@ export default class NewsFeed extends React.Component {
           <span>End of Content</span>
         )
       }
+=======
+    function displayFacebook() {
+      if (user.facebookIntegration) {
+        console.log("HERE")
+        return (
+          <div>
+            <span class="fb-check" style={fsize}><input type="checkbox"
+                  onChange={fbToggle}/>Facebook</span>
+          </div>
+        );
+      }
+    }
+
+    function displayTwitter() {
+      if (user.twitterIntegration) {
+        return (
+          <div>
+            <span class="tw-check" style={fsize}><input type="checkbox"
+                  onChange={twToggle}/>Twitter</span>
+          </div>
+        )
+      }
+    }
+
+    var upost = {
+      margin: "30px 20% 15px 20%",
+      display: "inline-block"
+    }
+
+    var alignLeft = {
+      align: "left",
+      width: "50%",
+      display: "inline-block"
+    }
+
+    var alignRight = {
+      align: "right",
+      width: "49%",
+      display: "inline-block",
+      marginTop: "-30px",
+>>>>>>> Toggle display of Facebook and Twitter buttons based on fake data
     }
 
     return (
       <div className="newsFeed">
         <div class="user-post">
           <div>
+<<<<<<< b083b594a40c605629709195c51b4b2c774f2545
             <form className="user-post-form upost">
               <textarea className="fsize" maxLength="140" rows="4" cols="80" type="text"
                 defaultValue={message}></textarea>
@@ -194,6 +257,14 @@ export default class NewsFeed extends React.Component {
                     <span>Twitter</span>
                   </div>
                 }
+=======
+            <form class="user-post-form" style={upost}>
+              <textarea style={fsize} maxLength="140" rows="4" cols="80" type="text"
+                defaultValue={this.state.message}></textarea>
+              <div style={alignLeft}>
+                {displayFacebook()}
+                {displayTwitter()}
+>>>>>>> Toggle display of Facebook and Twitter buttons based on fake data
               </div>
               <div className="alignRight">
                 <Dropzone multiple={false} accept="image/*" onDrop={this.onDrop}>
@@ -216,6 +287,7 @@ export default class NewsFeed extends React.Component {
             {displayPaginate()}
           </div>
         </div>
+        <span>Load More</span>
       </div>
     );
   }
