@@ -1,8 +1,9 @@
 import React from "react";
-
 import NewsFeedPost from "components/NewsFeedPost";
 import NewsFeedStore from "stores/NewsFeedStore";
 // import style from 'sass/newsfeed.scss';
+import Dropzone from 'react-dropzone';
+// import style from '../../sass/newsfeed.scss';
 
 // TODO Twitter char limit
 // TODO Photo upload
@@ -20,11 +21,13 @@ export default class NewsFeed extends React.Component {
     this.createPost = this.createPost.bind(this);
     this.twToggle = this.twToggle.bind(this);
     this.fbToggle = this.fbToggle.bind(this);
+    this.onDrop = this.onDrop.bind(this);
     this.state = {
       contentFeed: {
         items: [],
         nextPage: null,
       },
+      file: null,
       fbPost: false,
       twPost: false,
       message: " #SoftwareDemoDay",
@@ -39,7 +42,6 @@ export default class NewsFeed extends React.Component {
   }
 
   componentWillMount() {
-    console.log("Component will mount");
     NewsFeedStore.on("post", this.getNewsFeedPosts);
     NewsFeedStore.on("updated", this.getNewsFeedPosts);
     NewsFeedStore.on("error", this.showError);
@@ -48,18 +50,19 @@ export default class NewsFeed extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log("Component will unmount");
     NewsFeedStore.removeListener("post", this.getNewsFeedPosts);
     NewsFeedStore.removeListener("updated", this.getNewsFeedPosts);
     NewsFeedStore.removeListener("error", this.showError);
   }
 
+  // Grab the News Feed Posts that the user has retrieved from the store
   getNewsFeedPosts() {
     this.setState({
       contentFeed: NewsFeedStore.contentFeed,
     });
   }
 
+  //
   createPost() {
     let text = document.getElementsByClassName(
       "user-post-form")[0].getElementsByTagName('textarea')[0].value;
@@ -69,7 +72,7 @@ export default class NewsFeed extends React.Component {
   }
 
   uploadPhoto() {
-    console.log("Let's do a photo thing")
+    console.log("Let's do a photo thing");
   }
 
 
@@ -90,7 +93,14 @@ export default class NewsFeed extends React.Component {
     });
   }
 
-
+  onDrop(files) {
+    console.log(files);
+    console.log("FILE");
+    this.setState({
+      file: files[0]
+    });
+    console.log(this.state.file);
+  }
 
 
   render() {
@@ -178,6 +188,11 @@ export default class NewsFeed extends React.Component {
                 {displayTwitter()}
               </div>
               <div style={alignRight}>
+                <Dropzone multiple={false} accept="image/*"
+                          onDrop={this.onDrop}>
+                  <p>Drop a file or click to open</p>
+                </Dropzone>
+                {this.state.file ? <div>FILEEEE<img src={this.state.file.preview}/></div> : <p>hjfdsjfhdsjfdssfdsfdsf</p>}
                 <button class="submit-form btn btn-primary" style={aright} onClick={this.uploadPhoto}>Make a post</button>
                 <button class="submit-form btn btn-primary" style={aright} onClick={this.createPost}>Make a post</button>
               </div>

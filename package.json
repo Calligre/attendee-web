@@ -27,7 +27,7 @@
     "react-bootstrap": "^0.30.6",
     "react-date-picker": "^5.3.26",
     "react-dom": "^0.14.6",
-    "react-dropzone": "^3.5.3",
+    "react-dropzone": "^3.6.0",
     "react-icons": "^2.2.1",
     "react-notification": "^6.0.0",
     "react-router": "^2.0.0",
