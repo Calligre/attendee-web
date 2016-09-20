@@ -1,7 +1,6 @@
 import React from "react";
 import NewsFeedPost from "components/NewsFeedPost";
 import NewsFeedStore from "stores/NewsFeedStore";
-// import style from 'sass/newsfeed.scss';
 import Dropzone from 'react-dropzone';
 // import style from '../../sass/newsfeed.scss';
 
@@ -73,6 +72,7 @@ export default class NewsFeed extends React.Component {
         items: [],
         nextPage: null,
       },
+      file: null,
       fbPost: false,
       twPost: false,
       message: " #SoftwareDemoDay",
@@ -87,7 +87,6 @@ export default class NewsFeed extends React.Component {
   }
 
   componentWillMount() {
-    console.log("Component will mount");
     NewsFeedStore.on("post", this.getNewsFeedPosts);
     NewsFeedStore.on("updated", this.getNewsFeedPosts);
     NewsFeedStore.on("error", this.showError);
@@ -96,7 +95,6 @@ export default class NewsFeed extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log("Component will unmount");
     NewsFeedStore.removeListener("post", this.getNewsFeedPosts);
     NewsFeedStore.removeListener("updated", this.getNewsFeedPosts);
     NewsFeedStore.removeListener("error", this.showError);
@@ -119,7 +117,7 @@ export default class NewsFeed extends React.Component {
   }
 
   uploadPhoto() {
-    console.log("Let's do a photo thing")
+    console.log("Let's do a photo thing");
   }
 
   showError(){
@@ -140,13 +138,20 @@ export default class NewsFeed extends React.Component {
 
   onDrop(files) {
     console.log(files);
+<<<<<<< 54c12e2ec459f86bc5a1ebbbed7d10d9ed9cc103
+=======
+    console.log("FILE");
+>>>>>>> React dropzone and image preview
     this.setState({
       file: files[0]
     });
     console.log(this.state.file);
   }
+<<<<<<< 54c12e2ec459f86bc5a1ebbbed7d10d9ed9cc103
 
 
+=======
+>>>>>>> React dropzone and image preview
 
 
   render() {
@@ -181,65 +186,12 @@ export default class NewsFeed extends React.Component {
           <span>End of Content</span>
         )
       }
-=======
-    function displayFacebook() {
-      if (user.fbIntegration) {
-        return (
-          <div>
-            <span class="fb-check" style={fsize}><input type="checkbox"
-                  onChange={fbToggle}/>Facebook</span>
-          </div>
-        );
-      }
-    }
-
-    function displayTwitter() {
-      if (user.twIntegration) {
-        return (
-          <div>
-            <span class="tw-check" style={fsize}><input type="checkbox"
-                  onChange={twToggle}/>Twitter</span>
-          </div>
-        )
-      }
-    }
-
-    function displayPaginate() {
-      if (contentFeed.nextPage !== null) {
-        return (
-          <div onClick={NewsFeedStore.get}>Load More...</div>
-        );
-      } else {
-        return(
-          <span>End of Content</span>
-        )
-      }
-    }
-
-    var upost = {
-      margin: "30px 20% 15px 20%",
-      display: "inline-block"
-    }
-
-    var alignLeft = {
-      align: "left",
-      width: "50%",
-      display: "inline-block"
-    }
-
-    var alignRight = {
-      align: "right",
-      width: "49%",
-      display: "inline-block",
-      marginTop: "-30px",
->>>>>>> Toggle display of Facebook and Twitter buttons based on fake data
     }
 
     return (
       <div className="newsFeed">
         <div class="user-post">
           <div>
-<<<<<<< b083b594a40c605629709195c51b4b2c774f2545
             <form className="user-post-form upost">
               <textarea className="fsize" maxLength="140" rows="4" cols="80" type="text"
                 defaultValue={message}></textarea>
@@ -264,16 +216,7 @@ export default class NewsFeed extends React.Component {
                     <span>Twitter</span>
                   </div>
                 }
-=======
-            <form class="user-post-form" style={upost}>
-              <textarea style={fsize} maxLength="140" rows="4" cols="80" type="text"
-                defaultValue={message}></textarea>
-              <div style={alignLeft}>
-                {displayFacebook()}
-                {displayTwitter()}
->>>>>>> Toggle display of Facebook and Twitter buttons based on fake data
               </div>
-<<<<<<< 58e26382b4bfa3d89f6e84a5cb4839e8919bafc9
               <div className="alignRight">
                 <Dropzone multiple={false} accept="image/*" onDrop={this.onDrop}>
                   <p>Drop a file or click to open</p>
@@ -281,11 +224,6 @@ export default class NewsFeed extends React.Component {
                 {this.state.file && <div><img src={this.state.file.preview}/></div>}
                 <a href="google.com">jfdsfhsdfsda</a>
                 <button className="submit-form btn btn-primary aright" onClick={this.createPost}>Make a post</button>
-=======
-              <div style={alignRight}>
-                <button class="submit-form btn btn-primary" style={aright} onClick={this.uploadPhoto}>Make a post</button>
-                <button class="submit-form btn btn-primary" style={aright} onClick={this.createPost}>Make a post</button>
->>>>>>> Pagination, store reloads when navigating in app
               </div>
             </form>
           </div>
