@@ -8,17 +8,20 @@ class NewsFeedStore extends EventEmitter {
 
   constructor(auth) {
     super()
-    this.response = {
-      posts: [],
+    console.log("STORE CONSTUCTOR")
+    this.contentFeed = {
+      items: []
     }
     this.error = null;
+    this.dataFetched = false;
   }
 
 
-  getAll() {
+  get() {
+    // TODO: Configure next page into API
+    // if (this.contentFeed.nextpage) { add nextPage into query}
+    //
     $.ajax({
-      // url: "https://sehackday.calligre.com/api/content",
-      // url: "https://yi7degrws0.execute-api.us-west-2.amazonaws.com/api/content",
       url: "https://dev.calligre.com/api/content",
       dataType: "json",
       headers: {
@@ -26,16 +29,25 @@ class NewsFeedStore extends EventEmitter {
       },
       cache: false,
       success: function(response){
+        console.log(this)
+        newsFeedStore.dataFetched = true;
         dispatcher.dispatch({type: "NEWSFEED_GET", response: response});
       },
       failure: function(error){
+        this.dataFetched = false;
         dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
       }
     });
-    return this.response;
   }
 
-  // TODO grab in segments instead of all at once
+  getOnLoad() {
+    if (!this.dataFetched) {
+      this.get();
+    } else {
+      console.log("Data was already loaded. Retrieving from store instead")
+      this.emit("updated");
+    }
+  }
 
   incrementLike() {
     console.log("TODO: incrementLike");
@@ -48,19 +60,14 @@ class NewsFeedStore extends EventEmitter {
 
   createPost(text, fbIntegration, twIntegration) {
 
-    // POST TO FB / TWITTER
-    // TODO clean up offline update
+    // TODO: Userid isn't static
     let data = {
       posterid: 2,
       text: text,
       media_link: "",
       like_count: 0,
       timestamp: Date.now(),
-
     }
-
-    // TODO: Client side update over server call
-    this.posts.unshift(data);
 
     $.ajax({
       type: "POST",
@@ -78,25 +85,23 @@ class NewsFeedStore extends EventEmitter {
       failure: function(error){
         dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
       }
-
     });
-
   }
 
 
   handleActions(action) {
     switch(action.type) {
       case "NEWSFEED_POST": {
-        // TODO: Read this back in
-        this.emit("updated");
+        // TODO: ensure that client sees their post on the front end
+        this.emit("post");
         break;
       }
       case "NEWSFEED_GET": {
-        console.log("GET");
-        console.log(action.response.items);
-        this.contentFeed = action.response;
-        // TODO: Append posts, don't simply delete old data
+        this.contentFeed.items.push.apply(this.contentFeed.items, action.response.items);
+        this.contentFeed.nextPage = action.response.nextPage;
+        this.contentFeed.count = action.response.count;
         this.emit("updated");
+        console.log(this);
         break;
       }
       case "ERROR": {
@@ -104,7 +109,6 @@ class NewsFeedStore extends EventEmitter {
         this.emit("error");
         break;
       }
-
     }
   }
 }

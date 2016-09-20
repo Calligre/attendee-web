@@ -4,6 +4,13 @@ import NewsFeedPost from "components/NewsFeedPost";
 import NewsFeedStore from "stores/NewsFeedStore";
 // import style from 'sass/newsfeed.scss';
 
+// TODO Twitter char limit
+// TODO Photo upload
+// TODO Configure likes - pull in likes by user
+//                        make API post to add or remove
+//
+// TODO
+//
 
 export default class NewsFeed extends React.Component {
 
@@ -16,11 +23,12 @@ export default class NewsFeed extends React.Component {
     this.state = {
       contentFeed: {
         items: [],
+        nextPage: null,
       },
       fbPost: false,
       twPost: false,
-      message: "#SoftwareDemoDay",
-      user:
+      message: " #SoftwareDemoDay",
+      user: // TODO: Receive this information somehow
         {
           id: 0,
           name: "",
@@ -28,22 +36,25 @@ export default class NewsFeed extends React.Component {
           fbIntegration: true,
         },
     };
-    NewsFeedStore.getAll();
   }
 
   componentWillMount() {
+    console.log("Component will mount");
+    NewsFeedStore.on("post", this.getNewsFeedPosts);
     NewsFeedStore.on("updated", this.getNewsFeedPosts);
     NewsFeedStore.on("error", this.showError);
+    // Grab data here. Emitted events aren't picked up until here
+    NewsFeedStore.getOnLoad();
   }
 
   componentWillUnmount() {
+    console.log("Component will unmount");
+    NewsFeedStore.removeListener("post", this.getNewsFeedPosts);
     NewsFeedStore.removeListener("updated", this.getNewsFeedPosts);
     NewsFeedStore.removeListener("error", this.showError);
   }
 
   getNewsFeedPosts() {
-    console.log(NewsFeedStore.contentFeed);
-    console.log(this.state.contentFeed);
     this.setState({
       contentFeed: NewsFeedStore.contentFeed,
     });
@@ -57,8 +68,14 @@ export default class NewsFeed extends React.Component {
     console.log(text);
   }
 
+  uploadPhoto() {
+    console.log("Let's do a photo thing")
+  }
+
+
+
   showError(){
-    console.log(EventStore.error);
+    console.log(NewsFeedStore.error);
   }
 
   fbToggle() {
@@ -74,13 +91,10 @@ export default class NewsFeed extends React.Component {
   }
 
 
+
+
   render() {
-    const { contentFeed, fbPost, twPost, user, fbToggle, twToggle } = this.state;
-    console.log(fbPost);
-    console.log(twPost);
-    console.log (user.fbIntegration);
-    console.log(contentFeed);
-    console.log(contentFeed.items);
+    const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
 
     const NewsFeedPosts = contentFeed.items.map((post) => {
         console.log(post)
@@ -89,7 +103,6 @@ export default class NewsFeed extends React.Component {
 
     function displayFacebook() {
       if (user.fbIntegration) {
-        console.log("HERE")
         return (
           <div>
             <span class="fb-check" style={fsize}><input type="checkbox"
@@ -106,6 +119,18 @@ export default class NewsFeed extends React.Component {
             <span class="tw-check" style={fsize}><input type="checkbox"
                   onChange={twToggle}/>Twitter</span>
           </div>
+        )
+      }
+    }
+
+    function displayPaginate() {
+      if (contentFeed.nextPage !== null) {
+        return (
+          <div onClick={NewsFeedStore.get}>Load More...</div>
+        );
+      } else {
+        return(
+          <span>End of Content</span>
         )
       }
     }
@@ -147,12 +172,13 @@ export default class NewsFeed extends React.Component {
           <div>
             <form class="user-post-form" style={upost}>
               <textarea style={fsize} maxLength="140" rows="4" cols="80" type="text"
-                defaultValue={this.state.message}></textarea>
+                defaultValue={message}></textarea>
               <div style={alignLeft}>
                 {displayFacebook()}
                 {displayTwitter()}
               </div>
               <div style={alignRight}>
+                <button class="submit-form btn btn-primary" style={aright} onClick={this.uploadPhoto}>Make a post</button>
                 <button class="submit-form btn btn-primary" style={aright} onClick={this.createPost}>Make a post</button>
               </div>
             </form>
@@ -162,8 +188,11 @@ export default class NewsFeed extends React.Component {
           <div className="news-feed-posts">
             {NewsFeedPosts}
           </div>
+          <div>
+            <hr/>
+            {displayPaginate()}
+          </div>
         </div>
-        <span>Load More</span>
       </div>
     );
   }
