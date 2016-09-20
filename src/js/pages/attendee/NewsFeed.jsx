@@ -23,7 +23,6 @@ export default class NewsFeed extends React.Component {
     this.fbToggle = this.fbToggle.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.state = {
-<<<<<<< b083b594a40c605629709195c51b4b2c774f2545
       contentFeed: {
         posts: [
           {
@@ -70,20 +69,21 @@ export default class NewsFeed extends React.Component {
           name: "",
           twIntegration: true,
           fbIntegration: true,
-=======
-      posts: NewsFeedStore.getAll(),
-      facebookPost: false,
-      twitterPost: false,
+      contentFeed: {
+        items: [],
+      },
+      fbPost: false,
+      twPost: false,
       message: "#SoftwareDemoDay",
       user:
         {
           id: 0,
           name: "",
-          twitterIntegration: true,
-          facebookIntegration: true,
->>>>>>> Toggle display of Facebook and Twitter buttons based on fake data
+          twIntegration: true,
+          fbIntegration: true,
         },
     };
+    NewsFeedStore.getAll();
   }
 
   componentWillMount() {
@@ -102,6 +102,8 @@ export default class NewsFeed extends React.Component {
 
   // Grab the News Feed Posts that the user has retrieved from the store
   getNewsFeedPosts() {
+    console.log(NewsFeedStore.contentFeed);
+    console.log(this.state.contentFeed);
     this.setState({
       contentFeed: NewsFeedStore.contentFeed,
     });
@@ -126,13 +128,13 @@ export default class NewsFeed extends React.Component {
 
   fbToggle() {
     this.setState({
-      fbPost: !this.state.facebookPost,
+      fbPost: !this.state.fbPost,
     })
   }
 
   twToggle() {
     this.setState({
-      twPost: !this.state.twitterPost,
+      twPost: !this.state.twPost,
     });
   }
 
@@ -146,6 +148,7 @@ export default class NewsFeed extends React.Component {
 
 
   render() {
+<<<<<<< 4c57e03448a74015d31bf09a035123eba5318674
 <<<<<<< b083b594a40c605629709195c51b4b2c774f2545
     const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
 =======
@@ -156,6 +159,17 @@ export default class NewsFeed extends React.Component {
 >>>>>>> Toggle display of Facebook and Twitter buttons based on fake data
 
     const NewsFeedPosts = contentFeed.posts.map((post) => {
+=======
+    const { contentFeed, fbPost, twPost, user, fbToggle, twToggle } = this.state;
+    console.log(fbPost);
+    console.log(twPost);
+    console.log (user.fbIntegration);
+    console.log(contentFeed);
+    console.log(contentFeed.items);
+
+    const NewsFeedPosts = contentFeed.items.map((post) => {
+        console.log(post)
+>>>>>>> Get pagination data
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
 
@@ -187,7 +201,7 @@ export default class NewsFeed extends React.Component {
       }
 =======
     function displayFacebook() {
-      if (user.facebookIntegration) {
+      if (user.fbIntegration) {
         console.log("HERE")
         return (
           <div>
@@ -199,7 +213,7 @@ export default class NewsFeed extends React.Component {
     }
 
     function displayTwitter() {
-      if (user.twitterIntegration) {
+      if (user.twIntegration) {
         return (
           <div>
             <span class="tw-check" style={fsize}><input type="checkbox"
