@@ -9,12 +9,11 @@ class NewsFeedStore extends EventEmitter {
   constructor(auth) {
     super()
     this.contentFeed = {
-      items: []
+      items: [],
     }
     this.error = null;
     this.dataFetched = false;
   }
-
   get() {
     // TODO: Configure next page into API
     // if (this.contentFeed.nextpage) { add nextPage into query}
@@ -55,9 +54,7 @@ class NewsFeedStore extends EventEmitter {
     console.log("TODO: decrementLike");
   }
 
-
   createPost(text, photo, fbIntegration, twIntegration) {
-    console.log(photo)
     // TODO: Userid isn't static
     let data = {
       posterid: 2,
@@ -97,6 +94,10 @@ class NewsFeedStore extends EventEmitter {
       case "NEWSFEED_GET": {
         this.contentFeed.posts.push.apply(this.contentFeed.items, action.response.items);
         this.contentFeed.nextOffset = action.response.nextOffset;
+=======
+        this.contentFeed.items.push.apply(this.contentFeed.items, action.response.items);
+        this.contentFeed.nextPage = action.response.nextPage;
+>>>>>>> Pagination, store reloads when navigating in app
         this.contentFeed.count = action.response.count;
         this.emit("updated");
         console.log(this);

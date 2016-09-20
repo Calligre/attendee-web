@@ -71,11 +71,12 @@ export default class NewsFeed extends React.Component {
           fbIntegration: true,
       contentFeed: {
         items: [],
+        nextPage: null,
       },
       fbPost: false,
       twPost: false,
-      message: "#SoftwareDemoDay",
-      user:
+      message: " #SoftwareDemoDay",
+      user: // TODO: Receive this information somehow
         {
           id: 0,
           name: "",
@@ -83,10 +84,10 @@ export default class NewsFeed extends React.Component {
           fbIntegration: true,
         },
     };
-    NewsFeedStore.getAll();
   }
 
   componentWillMount() {
+    console.log("Component will mount");
     NewsFeedStore.on("post", this.getNewsFeedPosts);
     NewsFeedStore.on("updated", this.getNewsFeedPosts);
     NewsFeedStore.on("error", this.showError);
@@ -95,6 +96,7 @@ export default class NewsFeed extends React.Component {
   }
 
   componentWillUnmount() {
+    console.log("Component will unmount");
     NewsFeedStore.removeListener("post", this.getNewsFeedPosts);
     NewsFeedStore.removeListener("updated", this.getNewsFeedPosts);
     NewsFeedStore.removeListener("error", this.showError);
@@ -102,8 +104,6 @@ export default class NewsFeed extends React.Component {
 
   // Grab the News Feed Posts that the user has retrieved from the store
   getNewsFeedPosts() {
-    console.log(NewsFeedStore.contentFeed);
-    console.log(this.state.contentFeed);
     this.setState({
       contentFeed: NewsFeedStore.contentFeed,
     });
@@ -119,7 +119,7 @@ export default class NewsFeed extends React.Component {
   }
 
   uploadPhoto() {
-    console.log("Let's do a photo thing");
+    console.log("Let's do a photo thing")
   }
 
   showError(){
@@ -147,33 +147,15 @@ export default class NewsFeed extends React.Component {
   }
 
 
-  render() {
-<<<<<<< 4c57e03448a74015d31bf09a035123eba5318674
-<<<<<<< b083b594a40c605629709195c51b4b2c774f2545
-    const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
-=======
-    console.log(this.state.fbPost);
-    console.log(this.state.twPost);
-    const { posts, fbPost, twPost, user, fbToggle, twToggle } = this.state;
-    console.log (user.facebookIntegration);
->>>>>>> Toggle display of Facebook and Twitter buttons based on fake data
 
-    const NewsFeedPosts = contentFeed.posts.map((post) => {
-=======
-    const { contentFeed, fbPost, twPost, user, fbToggle, twToggle } = this.state;
-    console.log(fbPost);
-    console.log(twPost);
-    console.log (user.fbIntegration);
-    console.log(contentFeed);
-    console.log(contentFeed.items);
+
+  render() {
+    const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
 
     const NewsFeedPosts = contentFeed.items.map((post) => {
-        console.log(post)
->>>>>>> Get pagination data
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
 
-<<<<<<< b083b594a40c605629709195c51b4b2c774f2545
     // function displayTwitter() {
     //   if (user.twIntegration) {
     //     return (
@@ -202,7 +184,6 @@ export default class NewsFeed extends React.Component {
 =======
     function displayFacebook() {
       if (user.fbIntegration) {
-        console.log("HERE")
         return (
           <div>
             <span class="fb-check" style={fsize}><input type="checkbox"
@@ -219,6 +200,18 @@ export default class NewsFeed extends React.Component {
             <span class="tw-check" style={fsize}><input type="checkbox"
                   onChange={twToggle}/>Twitter</span>
           </div>
+        )
+      }
+    }
+
+    function displayPaginate() {
+      if (contentFeed.nextPage !== null) {
+        return (
+          <div onClick={NewsFeedStore.get}>Load More...</div>
+        );
+      } else {
+        return(
+          <span>End of Content</span>
         )
       }
     }
@@ -274,12 +267,13 @@ export default class NewsFeed extends React.Component {
 =======
             <form class="user-post-form" style={upost}>
               <textarea style={fsize} maxLength="140" rows="4" cols="80" type="text"
-                defaultValue={this.state.message}></textarea>
+                defaultValue={message}></textarea>
               <div style={alignLeft}>
                 {displayFacebook()}
                 {displayTwitter()}
 >>>>>>> Toggle display of Facebook and Twitter buttons based on fake data
               </div>
+<<<<<<< 58e26382b4bfa3d89f6e84a5cb4839e8919bafc9
               <div className="alignRight">
                 <Dropzone multiple={false} accept="image/*" onDrop={this.onDrop}>
                   <p>Drop a file or click to open</p>
@@ -287,6 +281,11 @@ export default class NewsFeed extends React.Component {
                 {this.state.file && <div><img src={this.state.file.preview}/></div>}
                 <a href="google.com">jfdsfhsdfsda</a>
                 <button className="submit-form btn btn-primary aright" onClick={this.createPost}>Make a post</button>
+=======
+              <div style={alignRight}>
+                <button class="submit-form btn btn-primary" style={aright} onClick={this.uploadPhoto}>Make a post</button>
+                <button class="submit-form btn btn-primary" style={aright} onClick={this.createPost}>Make a post</button>
+>>>>>>> Pagination, store reloads when navigating in app
               </div>
             </form>
           </div>
@@ -301,7 +300,6 @@ export default class NewsFeed extends React.Component {
             {displayPaginate()}
           </div>
         </div>
-        <span>Load More</span>
       </div>
     );
   }
