@@ -8,9 +8,10 @@ class NewsFeedStore extends EventEmitter {
 
   constructor(auth) {
     super()
-
-    this.posts = [];
-    this.error = null;    
+    this.response = {
+      posts: [],
+    }
+    this.error = null;
   }
 
 
@@ -25,14 +26,13 @@ class NewsFeedStore extends EventEmitter {
       },
       cache: false,
       success: function(response){
-        dispatcher.dispatch({type: "NEWSFEED_GET", posts: response["items"]});
+        dispatcher.dispatch({type: "NEWSFEED_GET", response: response});
       },
       failure: function(error){
         dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
       }
     });
-
-    return this.posts;
+    return this.response;
   }
 
   // TODO grab in segments instead of all at once
@@ -92,7 +92,9 @@ class NewsFeedStore extends EventEmitter {
         break;
       }
       case "NEWSFEED_GET": {
-        this.posts = action.posts;
+        console.log("GET");
+        console.log(action.response.items);
+        this.contentFeed = action.response;
         // TODO: Append posts, don't simply delete old data
         this.emit("updated");
         break;

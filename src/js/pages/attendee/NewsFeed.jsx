@@ -14,18 +14,21 @@ export default class NewsFeed extends React.Component {
     this.twToggle = this.twToggle.bind(this);
     this.fbToggle = this.fbToggle.bind(this);
     this.state = {
-      posts: NewsFeedStore.getAll(),
-      facebookPost: false,
-      twitterPost: false,
+      contentFeed: {
+        items: [],
+      },
+      fbPost: false,
+      twPost: false,
       message: "#SoftwareDemoDay",
       user:
         {
           id: 0,
           name: "",
-          twitterIntegration: true,
-          facebookIntegration: true,
+          twIntegration: true,
+          fbIntegration: true,
         },
     };
+    NewsFeedStore.getAll();
   }
 
   componentWillMount() {
@@ -39,8 +42,10 @@ export default class NewsFeed extends React.Component {
   }
 
   getNewsFeedPosts() {
+    console.log(NewsFeedStore.contentFeed);
+    console.log(this.state.contentFeed);
     this.setState({
-      posts: NewsFeedStore.posts
+      contentFeed: NewsFeedStore.contentFeed,
     });
   }
 
@@ -58,30 +63,32 @@ export default class NewsFeed extends React.Component {
 
   fbToggle() {
     this.setState({
-      fbPost: !this.state.facebookPost,
+      fbPost: !this.state.fbPost,
     })
   }
 
   twToggle() {
     this.setState({
-      twPost: !this.state.twitterPost,
+      twPost: !this.state.twPost,
     });
   }
 
 
   render() {
-    console.log(this.state.fbPost);
-    console.log(this.state.twPost);
-    const { posts, fbPost, twPost, user, fbToggle, twToggle } = this.state;
-    console.log (user.facebookIntegration);
+    const { contentFeed, fbPost, twPost, user, fbToggle, twToggle } = this.state;
+    console.log(fbPost);
+    console.log(twPost);
+    console.log (user.fbIntegration);
+    console.log(contentFeed);
+    console.log(contentFeed.items);
 
-    const NewsFeedPosts = posts.map((post) => {
+    const NewsFeedPosts = contentFeed.items.map((post) => {
         console.log(post)
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
 
     function displayFacebook() {
-      if (user.facebookIntegration) {
+      if (user.fbIntegration) {
         console.log("HERE")
         return (
           <div>
@@ -93,7 +100,7 @@ export default class NewsFeed extends React.Component {
     }
 
     function displayTwitter() {
-      if (user.twitterIntegration) {
+      if (user.twIntegration) {
         return (
           <div>
             <span class="tw-check" style={fsize}><input type="checkbox"
