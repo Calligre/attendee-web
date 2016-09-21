@@ -1,0 +1,51 @@
+.newsFeed {
+  a {
+    color: black;
+    font-size: 50px;
+
+    &:hover {
+      color: $blue;
+    }
+  }
+
+  img {
+    display: block;
+    max-width:200px;
+    max-height:120px;
+    width: auto;
+    height: auto;
+  }
+
+  .upost {
+    margin: "30px 20% 15px 20%";
+    display: "inline-block"
+  }
+
+  .alignLeft {
+    align: "left";
+    width: "50%";
+    display: "inline-block"
+  }
+
+  .alignRight {
+    align: "right";
+    width: "49%";
+    display: "inline-block";
+    marginTop: "-30px";
+  }
+
+  .aright {
+    float: "right";
+  }
+
+  .width100 {
+    width: "100%";
+  }
+
+  .fsize {
+    fontSize: "24px";
+  }
+}
+
+
+

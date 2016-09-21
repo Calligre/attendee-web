@@ -58,8 +58,8 @@ class NewsFeedStore extends EventEmitter {
   }
 
 
-  createPost(text, fbIntegration, twIntegration) {
-
+  createPost(text, photo, fbIntegration, twIntegration) {
+    console.log(photo)
     // TODO: Userid isn't static
     let data = {
       posterid: 2,

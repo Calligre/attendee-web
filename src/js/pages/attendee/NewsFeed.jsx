@@ -66,7 +66,7 @@ export default class NewsFeed extends React.Component {
   createPost() {
     let text = document.getElementsByClassName(
       "user-post-form")[0].getElementsByTagName('textarea')[0].value;
-    NewsFeedStore.createPost(text, this.state.fbPost, this.state.twPost);
+    NewsFeedStore.createPost(text, this.state.file, this.state.fbPost, this.state.twPost);
 
     console.log(text);
   }
@@ -74,8 +74,6 @@ export default class NewsFeed extends React.Component {
   uploadPhoto() {
     console.log("Let's do a photo thing");
   }
-
-
 
   showError(){
     console.log(NewsFeedStore.error);
@@ -107,27 +105,19 @@ export default class NewsFeed extends React.Component {
     const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
 
     const NewsFeedPosts = contentFeed.items.map((post) => {
-        console.log(post)
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
-
-    function displayFacebook() {
-      if (user.fbIntegration) {
-        return (
-          <div>
-            <span class="fb-check" style={fsize}><input type="checkbox"
-                  onChange={fbToggle}/>Facebook</span>
-          </div>
-        );
-      }
-    }
 
     function displayTwitter() {
       if (user.twIntegration) {
         return (
           <div>
-            <span class="tw-check" style={fsize}><input type="checkbox"
-                  onChange={twToggle}/>Twitter</span>
+            <input
+              type="checkbox"
+              onClick={this.twToggle}
+              checked={this.state.twPost}
+            />
+            <span className="tw-check fsize">Twitter</span>
           </div>
         )
       }
@@ -145,60 +135,47 @@ export default class NewsFeed extends React.Component {
       }
     }
 
-    var upost = {
-      margin: "30px 20% 15px 20%",
-      display: "inline-block"
-    }
-
-    var alignLeft = {
-      align: "left",
-      width: "50%",
-      display: "inline-block"
-    }
-
-    var alignRight = {
-      align: "right",
-      width: "49%",
-      display: "inline-block",
-      marginTop: "-30px",
-    }
-
-    var aright = {
-      float: "right",
-    }
-
-    var width100 = {
-      width: "100%"
-    }
-
-    var fsize = {
-      fontSize: "24px"
-    }
-
-
     return (
-      <div style={width100}>
+      <div className="newsFeed">
         <div class="user-post">
           <div>
-            <form class="user-post-form" style={upost}>
-              <textarea style={fsize} maxLength="140" rows="4" cols="80" type="text"
+            <form className="user-post-form upost">
+              <textarea className="fsize" maxLength="140" rows="4" cols="80" type="text"
                 defaultValue={message}></textarea>
-              <div style={alignLeft}>
-                {displayFacebook()}
-                {displayTwitter()}
+              <div className="alignLeft">
+                {this.state.user.fbIntegration &&
+                  <div>
+                    <input
+                      type="checkbox"
+                      onClick={this.fbToggle}
+                      checked={this.state.fbPost}
+                    />
+                    <span>Facebook</span>
+                  </div>
+                }
+                {this.state.user.twIntegration &&
+                  <div>
+                    <input
+                      type="checkbox"
+                      onClick={this.twToggle}
+                      checked={this.state.twPost}
+                    />
+                    <span>Twitter</span>
+                  </div>
+                }
               </div>
-              <div style={alignRight}>
-                <Dropzone multiple={false} accept="image/*"
-                          onDrop={this.onDrop}>
+              <div className="alignRight">
+                <Dropzone multiple={false} accept="image/*" onDrop={this.onDrop}>
                   <p>Drop a file or click to open</p>
                 </Dropzone>
-                {this.state.file ? <div>FILEEEE<img src={this.state.file.preview}/></div> : <p>hjfdsjfhdsjfdssfdsfdsf</p>}
-                <button class="submit-form btn btn-primary" style={aright} onClick={this.uploadPhoto}>Make a post</button>
-                <button class="submit-form btn btn-primary" style={aright} onClick={this.createPost}>Make a post</button>
+                {this.state.file && <div><img src={this.state.file.preview}/></div>}
+                <a href="google.com">jfdsfhsdfsda</a>
+                <button className="submit-form btn btn-primary aright" onClick={this.createPost}>Make a post</button>
               </div>
             </form>
           </div>
         </div>
+
         <div>
           <div className="news-feed-posts">
             {NewsFeedPosts}
