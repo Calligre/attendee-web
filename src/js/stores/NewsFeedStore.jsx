@@ -54,7 +54,13 @@ class NewsFeedStore extends EventEmitter {
     console.log("TODO: decrementLike");
   }
 
+<<<<<<< b758faf3af3b95edf9ca05a7f814f2f6e7e9c7b9
   createPost(text, photo, fbIntegration, twIntegration) {
+=======
+
+  createPost(text, photo, fbIntegration, twIntegration) {
+    console.log(photo)
+>>>>>>> Photos, sass file
     // TODO: Userid isn't static
     let data = {
       posterid: 2,

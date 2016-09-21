@@ -138,20 +138,11 @@ export default class NewsFeed extends React.Component {
 
   onDrop(files) {
     console.log(files);
-<<<<<<< 54c12e2ec459f86bc5a1ebbbed7d10d9ed9cc103
-=======
-    console.log("FILE");
->>>>>>> React dropzone and image preview
     this.setState({
       file: files[0]
     });
     console.log(this.state.file);
   }
-<<<<<<< 54c12e2ec459f86bc5a1ebbbed7d10d9ed9cc103
-
-
-=======
->>>>>>> React dropzone and image preview
 
 
   render() {
