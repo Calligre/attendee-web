@@ -3,15 +3,19 @@ var $ = require('jquery');
 var _ = require('lodash');
 
 import BroadcastMessage from "../components/BroadcastMessage";
-import Events from "../components/Events";
+import EventStore from "../stores/EventStore";
+import Card from "../components/Card";
 
 import { NotificationStack } from 'react-notification';
 import { OrderedSet } from 'immutable';
 var moment = require('moment');
 
+var id = 1; //TEMP, TODO: Get the real logged in user's id.
+
 export default class Featured extends React.Component {
   constructor(props) {
-    super();
+    super(props);
+    this.getEvents = this.getEvents.bind(this);
     this.addNotification = this.addNotification.bind(this);
     this.removeNotification = this.removeNotification.bind(this);
     this.state = {
@@ -20,7 +24,7 @@ export default class Featured extends React.Component {
       events: [],
       apiBaseURL: props.route.apiBaseURL,
     };
-  }
+  };
 
   addNotification (message) {
     const currTime = moment().unix();
@@ -35,14 +39,13 @@ export default class Featured extends React.Component {
         dismissAfter: (message.expirytime - currTime) * 1000
       })
     });
-  }
+  };
 
   removeNotification (count) {
     this.setState({
       messageStack: this.state.messageStack.filter(n => n.key !== count)
     })
-  }
-
+  };
 
   componentDidMount() {
     var self = this;
@@ -59,33 +62,35 @@ export default class Featured extends React.Component {
       });
     }.bind(this));
 
-    var event_ids = [];
-    var evnts = [];
-    this.eventRequest = $.get(this.state.apiBaseURL + "/user/1/subscription", function (result) {
-      for (var i in result.data) {
-        event_ids.push({'id': result.data[i].attributes.event_id});
-      }
+    EventStore.getAll();
+  };
 
-      this.eventsRequest = $.get(this.state.apiBaseURL + "/event", function (result) {
-        evnts = _.intersectionBy(result.data, event_ids, 'id');
-        self.setState({
-          events: evnts,
-        });
-      });
-
-    }.bind(this));
-  }
+  componentWillMount() {
+    EventStore.on("received", this.getEvents);
+    EventStore.on("error", this.showError);
+  };
 
   componentWillUnmount() {
     this.broadcastRequest.abort();
-    this.eventRequest.abort();
+    EventStore.removeListener("error", this.showError);
+    EventStore.removeListener("received", this.getEvents);
+  };
+
+  getEvents() {
+    this.setState({
+      events: EventStore.events.filter(event => event.isSubscribed)
+    });
+  };
+
+  showError(){
+    console.log(EventStore.error)
   }
 
   render() {
     const { messages, events, apiBaseURL } = this.state;
 
-    const EventComponents = events.map((events) => {
-      return <Events key={events.id} name={events.attributes.name} description={events.attributes.description} starttime={events.attributes.starttime} endtime={events.attributes.endtime} location={events.attributes.location} streamColor={events.attributes.streamColor} {...events}/>;
+    const EventComponents = events.map((event) => {
+      return <Card type="event" key={"event-" + event.id} item={event}/>;
     });
 
     return (
@@ -103,5 +108,5 @@ export default class Featured extends React.Component {
         </div>
       </div>
     );
-  }
+  };
 }
