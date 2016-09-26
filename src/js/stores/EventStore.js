@@ -130,9 +130,6 @@ class EventStore extends EventEmitter {
         this.emit("subscription");
         break;
       }
-      case "EVENT_UNSUBSCRIBE": {
-        break;
-      }
       case "ERROR": {
         this.error = action.error;
         this.emit("error");
