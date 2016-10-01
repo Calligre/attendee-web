@@ -1,4 +1,5 @@
 import decode from 'jwt-decode';
+var moment = require('moment');
 
 export function getTokenExpirationDate(token){
   const decoded = decode(token)
@@ -13,9 +14,8 @@ export function getTokenExpirationDate(token){
 
 export function isTokenExpired(token){
   const date = getTokenExpirationDate(token)
-  const offsetSeconds = 0
   if (date === null) {
     return false
   }
-  return !(date.valueOf() > (new Date().valueOf() + (offsetSeconds * 1000)))
+  return moment().isAfter(date);
 }

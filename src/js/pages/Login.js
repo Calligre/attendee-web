@@ -1,14 +1,14 @@
-import React, { PropTypes as T } from 'react'
+import React, { PropTypes } from 'react'
 import AuthService from '../util/AuthService'
 
 export default class Login extends React.Component {
   static contextTypes = {
-    router: T.object
+    router: PropTypes.object
   }
 
   static propTypes = {
-    location: T.object,
-    auth: T.instanceOf(AuthService)
+    location: PropTypes.object,
+    auth: PropTypes.instanceOf(AuthService)
   }
 
   render() {
