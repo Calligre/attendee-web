@@ -11,6 +11,13 @@ export default class Layout extends React.Component {
       marginTop: "60px"
     };
 
+    let children = null;
+    if (this.props.children) {
+      children = React.cloneElement(this.props.children, {
+        auth: this.props.route.auth //sends auth instance to children
+      })
+    }
+
     return (
       <div>
 
@@ -20,7 +27,7 @@ export default class Layout extends React.Component {
           <div class="row">
             <div class="col-lg-12">
 
-              {this.props.children}
+              {children}
 
             </div>
           </div>

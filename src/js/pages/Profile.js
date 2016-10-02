@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropTypes } from "react";
 import $ from 'jquery';
 
 import PeopleStore from "../stores/PeopleStore";
@@ -6,14 +6,30 @@ import Dropzone from 'react-dropzone';
 import Clear from 'react-icons/lib/md/clear';
 import Edit from 'react-icons/lib/md/mode-edit';
 
+import AuthService from '../util/AuthService';
+import LinkedAccountsList from '../components/LinkedAccountsList';
+
 export default class Profile extends React.Component {
+  static propTypes = {
+    auth: PropTypes.instanceOf(AuthService)
+  }
+
   constructor(props) {
     super(props);
-    this.state = { profile: {id: 0}, preview: '', uploadInProgress: false, newPhoto: null };
+    this.state = {
+      profile: {id: 0},
+      preview: '',
+      uploadInProgress: false,
+      newPhoto: null,
+      authProfile: this.props.auth.getProfile(),
+    };
     this.getProfile = this.getProfile.bind(this);
     this.submitChanges = this.submitChanges.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.cancelDrop = this.cancelDrop.bind(this);
+    this.props.auth.on('profile_updated', (newProfile) => {
+      this.setState({authProfile: newProfile})
+    })
     PeopleStore.getAll();
   }
 
@@ -129,6 +145,7 @@ export default class Profile extends React.Component {
         </div>
 
         <button className="submitChanges" onClick={this.submitChanges}>Save changes</button>
+        <LinkedAccountsList profile={this.state.authProfile} auth={this.props.auth}></LinkedAccountsList>
       </div>
     );
   }
