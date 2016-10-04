@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Router, useRouterHistory } from 'react-router'
-import { Route, IndexRoute, IndexLink } from "react-router";
+import { Router, Route, useRouterHistory, IndexRoute, IndexLink } from "react-router";
 import { createHashHistory } from 'history'
 
 require('!style!css!sass!../sass/main.scss');
