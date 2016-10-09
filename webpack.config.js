@@ -8,8 +8,8 @@ module.exports = {
   context: path.join(__dirname, "src"),
   devtool: debug ? "inline-sourcemap" : null,
   entry: {
-    attendee: "./js/attendee.client.js",
-    organizer: "./js/organizer.client.js",
+    attendee: "./js/attendee.client.jsx",
+    organizer: "./js/organizer.client.jsx",
   },
   module: {
     loaders: [
@@ -27,6 +27,9 @@ module.exports = {
         loaders: ['style', 'css', 'sass']
       }
     ]
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx']
   },
   output: {
     path: __dirname + "/build",
