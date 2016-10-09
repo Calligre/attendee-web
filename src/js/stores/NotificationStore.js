@@ -4,7 +4,7 @@ import dispatcher from "../dispatcher";
 
 var $ = require("jquery");
 var moment = require('moment');
-var url = "https://dev.calligre.com"
+var url = "https://dev.calligre.com";
 
 class NotificationStore extends EventEmitter {
   constructor() {
@@ -21,6 +21,9 @@ class NotificationStore extends EventEmitter {
       cache: false,
       success: function(response) {
         self.notifications = response.data;
+        self.notifications = self.notifications.map((notification) => {
+          return notification.attributes;
+        });
         dispatcher.dispatch({type: "NOTIFICATIONS_GET", notifications: self.notifications});
       },
       failure: function(error){
@@ -32,15 +35,31 @@ class NotificationStore extends EventEmitter {
 
   getUnexpired() {
     var self = this;
-    var tempNotifications = [];
     const currTime = moment().unix();
-    self.notifications.forEach((notification) => {
-      if (currTime > notification.attributes.expirytime) {
-        return;
-      }
-      tempNotifications.push(notification);
+    self.notifications = self.notifications.filter((notification) => {
+      return notification.expirytime > currTime;
     });
-    self.notifications = tempNotifications;
+
+    self.notifications = self.notifications.map((notification) => {
+      return {
+        message: notification.message,
+        id: notification.id,
+        key: "notification-" + notification.id,
+        expirytime: notification.expirytime,
+        action: 'Dismiss',
+        dismissAfter: (notification.expirytime - currTime) * 1000,
+        onClick: () => this.handleDismiss(notification)
+      }
+    });
+    return self.notifications;
+  }
+
+  handleDismiss(notificationParam) {
+    var self = this;
+    self.notifications = self.notifications.filter((notification) => {
+      return notification.id != notificationParam.id;
+    });
+    dispatcher.dispatch({type: "NOTIFICATIONS_GET"});
     return self.notifications;
   }
 

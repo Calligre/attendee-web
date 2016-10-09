@@ -7,7 +7,7 @@ import Event  from "../components/Event";
 export default class Card extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {type: props.type}
+    this.state = {type: props.type};
     this.handleDismiss = this.handleDismiss.bind(this);
   };
 
@@ -32,7 +32,7 @@ export default class Card extends React.Component {
     }
 
     return (
-      <div class="Card">
+      <div class="card">
         <span class='dismiss' onClick={this.handleDismiss}>x</span>
         {renderedContent}
       </div>

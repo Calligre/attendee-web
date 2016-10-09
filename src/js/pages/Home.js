@@ -22,16 +22,13 @@ export default class Featured extends React.Component {
     };
   };
 
-  componentDidMount() {
-    NotificationStore.getAll();
-    EventStore.getAll();
-  };
-
   componentWillMount() {
     NotificationStore.on("received", this.getNotifications);
     NotificationStore.on("error", this.showNotificationStoreError);
     EventStore.on("received", this.getEvents);
     EventStore.on("error", this.showEventStoreError);
+    NotificationStore.getAll();
+    EventStore.getAll();
   };
 
   componentWillUnmount() {
@@ -41,27 +38,9 @@ export default class Featured extends React.Component {
     EventStore.removeListener("error", this.showEventStoreError);
   };
 
-  removeNotification (id) {
-    this.setState({
-      notifications: this.state.notifications.filter(n => n.key !== id)
-    })
-  };
-
   getNotifications() {
-    var unexpired = NotificationStore.getUnexpired();
-    let temp = [];
-    const currTime = moment().unix();
-    unexpired.forEach(function(notification) {
-      temp.push({
-        message: notification.attributes.message,
-        key: "notification-" + notification.attributes.id,
-        action: 'Dismiss',
-        dismissAfter: (notification.attributes.expirytime - currTime) * 1000,
-        onClick: () => this.removeNotification("notification-" + notification.attributes.id),
-      });
-    }.bind(this));
-
-    this.setState({notifications: temp});
+    let unexpired = NotificationStore.getUnexpired();
+    this.setState({notifications: unexpired});
   };
 
   showNotificationStoreError() {
@@ -84,14 +63,11 @@ export default class Featured extends React.Component {
     const EventComponents = events.map((event) => {
       return <Card type="event" key={"event-" + event.id} item={event}/>;
     });
-
     return (
       <div>
         <NotificationStack
           notifications={notifications}
-          onDismiss={notification => this.setState({
-            notifications: notifications.filter((n) => n.key !== notification.key)
-          })}
+          onDismiss={() => {}}
         />
         <h2>Your Upcoming Events</h2>
         <div>
@@ -101,5 +77,3 @@ export default class Featured extends React.Component {
     );
   };
 }
-
-
