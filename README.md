@@ -17,3 +17,16 @@ It will deploy to localhost:8081
 
 #### [localhost:8080](http://localhost:8080)
 #### [localhost:8081](http://localhost:8081)
+
+
+### Linter
+to run the linter locally: ```node_modules/.bin/eslint```
+
+to run the linter globally (like in a text editor) you have to install all eslint plugins globally:
+ ```npm install -g eslint```
+ ```npm install -g eslint-config-airbnb```
+ ```npm install -g eslint-plugin-import```
+ ```npm install -g eslint-plugin-jsx-a11y```
+ ```npm install -g eslint-plugin-react```
+
+then run ```elint```
