@@ -1,81 +1,79 @@
-import React from "react";
+import React from 'react';
 
-import EventStore from "../stores/EventStore";
-import SubscribeButton from "../components/SubscribeButton";
-import { IndexLink } from "react-router";
+import EventStore from '../stores/EventStore';
+import SubscribeButton from '../components/SubscribeButton';
 
 
-var moment = require('moment');
+const moment = require('moment');
 
-export default class Events extends React.Component {
-	constructor(props) {
-		super(props);
-		this.getEvent = this.getEvent.bind(this);
+export default class Event extends React.Component {
+  constructor(props) {
+    super(props);
 
     this.state = { event: undefined };
 
     EventStore.get(this.props.params.eventId);
-	}
+  }
 
   componentWillMount() {
-    EventStore.on("received", this.getEvent);
-    EventStore.on("subscription", this.getEvent);
-    EventStore.on("error", this.showError);
+    EventStore.on('received', this.getEvent);
+    EventStore.on('subscription', this.getEvent);
+    EventStore.on('error', this.showError);
   }
 
   componentWillUnmount() {
-    EventStore.removeListener("received", this.getEvent);
-    EventStore.removeListener("subscription", this.getEvent);
-    EventStore.removeListener("error", this.showError);
+    EventStore.removeListener('received', this.getEvent);
+    EventStore.removeListener('subscription', this.getEvent);
+    EventStore.removeListener('error', this.showError);
   }
 
-	getEvent() {
-    var id = this.props.params.eventId;
-    var event = EventStore.events.filter((event) => {
-      return event.id == id;
-    })[0]
+  getEvent = () => {
+    const id = this.props.params.eventId;
+    const event = EventStore.events.filter(e => e.id === id)[0];
     this.setState({
-      event: event
-    })
-	}
+      event,
+    });
+  }
 
 
-  showError(){
-    console.log(EventStore.error)
+  showError() {
+    console.log(EventStore.error);
   }
 
   render() {
-    if(typeof this.state.event == "undefined") {
-      return (<div></div>);
+    if (typeof this.state.event === 'undefined') {
+      return (<div />);
     }
 
     const { event } = this.state;
-    const { id, name, description, stream, streamColor, isSubscribed, location, starttime, endtime } = event;
+    const { id, name, description, streamColor, isSubscribed, location, starttime, endtime } = event;
 
 
-    var streamStyle = {
-      borderColor: streamColor
+    const streamStyle = {
+      borderColor: streamColor,
     };
 
-    /*<IndexLink to={{ pathname: 'events?stream=' + stream }}>
-      <div class="stream" style={streamStyle}></div>
-    </IndexLink>*/
-
     return (
-        <div id={"event-" + id} class="event-item">
-          <div className="nameContainer" style={streamStyle}>
-            <div class="dates">
-              <div class="date">{moment.unix(starttime).format("h:mm a")}</div>
-              <div class="date">{moment.unix(endtime).format("h:mm a")}</div>
-            </div>
-            <h1>{name}</h1>
-            <SubscribeButton className="isSubscribed" id={this.state.event.id} subscribed={isSubscribed}/>
+      <div id={`event-${id}`} className="event-item">
+        <div className="nameContainer" style={streamStyle}>
+          <div className="dates">
+            <div className="date">{moment.unix(starttime).format('h:mm a')}</div>
+            <div className="date">{moment.unix(endtime).format('h:mm a')}</div>
           </div>
-          <div class="info">
-            <h2 class="location">{location}</h2>
-            <div class="description">{description}</div>
-          </div>                
-        </div>                
+          <h1>{name}</h1>
+          <SubscribeButton className="isSubscribed" id={this.state.event.id} subscribed={isSubscribed} />
+        </div>
+        <div className="info">
+          <h2 className="location">{location}</h2>
+          <div className="description">{description}</div>
+        </div>
+      </div>
     );
   }
 }
+
+Event.propTypes = {
+  params: React.PropTypes.shape({
+    eventId: React.PropTypes.number.isRequired,
+  }),
+};

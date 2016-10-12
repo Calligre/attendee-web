@@ -1,63 +1,63 @@
-import React from "react";
-import { IndexLink, Link } from "react-router";
+import React from 'react';
+import { IndexLink, Link } from 'react-router';
 
 export default class Nav extends React.Component {
   constructor() {
-    super()
+    super();
     this.state = {
       collapsed: true,
     };
   }
 
-  toggleCollapse() {
+  toggleCollapse = () => {
     const collapsed = !this.state.collapsed;
-    this.setState({collapsed});
+    this.setState({ collapsed });
   }
 
   render() {
-    const { location } = this.props;
+    const { pathname } = this.props.location;
     const { collapsed } = this.state;
-    const featuredClass = location.pathname === "/" ? "active" : "";
-    const newsFeedClass = location.pathname.match(/^\/newsfeed/) ? "active" : "";
-    const peopleClass = location.pathname.match(/^\/people/) ? "active" : "";
-    const eventsClass = location.pathname.match(/^\/events/) ? "active" : "";
-    const profileClass = location.pathname.match(/^\/profile/) ? "active" : "";
-    const infoClass = location.pathname.match(/^\/info/) ? "active" : "";
-    const navClass = collapsed ? "collapse" : "";
+    const featuredClass = pathname === '/' ? 'active' : '';
+    const newsFeedClass = pathname.match(/^\/newsfeed/) ? 'active' : '';
+    const peopleClass = pathname.match(/^\/people/) ? 'active' : '';
+    const eventsClass = pathname.match(/^\/events/) ? 'active' : '';
+    const profileClass = pathname.match(/^\/profile/) ? 'active' : '';
+    const infoClass = pathname.match(/^\/info/) ? 'active' : '';
+    const navClass = collapsed ? 'collapse' : '';
 
     return (
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" onClick={this.toggleCollapse.bind(this)} >
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
+      <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div className="container">
+          <div className="navbar-header">
+            <button type="button" className="navbar-toggle" onClick={this.toggleCollapse} >
+              <span className="sr-only">Toggle navigation</span>
+              <span className="icon-bar" />
+              <span className="icon-bar" />
+              <span className="icon-bar" />
             </button>
           </div>
-          <div class={"navbar-collapse " + navClass} id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <li class={featuredClass}>
-                <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Home</IndexLink>
+          <div className={`navbar-collapse ${navClass}`} id="bs-example-navbar-collapse-1">
+            <ul className="nav navbar-nav">
+              <li className={featuredClass}>
+                <IndexLink to="/" onClick={this.toggleCollapse}>Home</IndexLink>
               </li>
-              <li class={newsFeedClass}>
-                <Link to="newsfeed" onClick={this.toggleCollapse.bind(this)}>News Feed</Link>
+              <li className={newsFeedClass}>
+                <Link to="newsfeed" onClick={this.toggleCollapse}>News Feed</Link>
               </li>
-              <li class={peopleClass}>
-                <Link to="people" onClick={this.toggleCollapse.bind(this)}>People</Link>
+              <li className={peopleClass}>
+                <Link to="people" onClick={this.toggleCollapse}>People</Link>
               </li>
-              <li class={eventsClass}>
-                <Link to="events" onClick={this.toggleCollapse.bind(this)}>Events</Link>
+              <li className={eventsClass}>
+                <Link to="events" onClick={this.toggleCollapse}>Events</Link>
               </li>
-              <li class={profileClass}>
-                <Link to="profile" onClick={this.toggleCollapse.bind(this)}>My Profile</Link>
+              <li className={profileClass}>
+                <Link to="profile" onClick={this.toggleCollapse}>My Profile</Link>
               </li>
-              <li class={infoClass}>
-                <Link to="info" onClick={this.toggleCollapse.bind(this)}>Conference Info</Link>
+              <li className={infoClass}>
+                <Link to="info" onClick={this.toggleCollapse}>Conference Info</Link>
               </li>
               <li>
-                <Link to="/" onClick={this.props.auth.logout.bind(this)}>Logout</Link>
+                <Link to="/" onClick={this.props.auth.logout}>Logout</Link>
               </li>
             </ul>
           </div>
@@ -66,3 +66,12 @@ export default class Nav extends React.Component {
     );
   }
 }
+
+Nav.propTypes = {
+  location: React.PropTypes.shape({
+    pathname: React.PropTypes.string.isRequired,
+  }),
+  auth: React.PropTypes.shape({
+    logout: React.PropTypes.func,
+  }),
+};

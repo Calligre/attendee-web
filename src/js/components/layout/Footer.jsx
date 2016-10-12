@@ -1,16 +1,15 @@
-import React from "react";
+import React from 'react';
 
 
 export default class Footer extends React.Component {
   render() {
     const footerStyles = {
-      marginTop: "30px",
+      marginTop: '30px',
     };
 
     return (
       <footer style={footerStyles}>
-        <div class="row">
-        </div>
+        <div className="row" />
       </footer>
     );
   }

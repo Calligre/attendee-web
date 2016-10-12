@@ -1,7 +1,8 @@
-import React from "react";
-import EventStore from "../stores/EventStore";
+import React from 'react';
 import StarEmpty from 'react-icons/lib/md/star-border';
 import StarFilled from 'react-icons/lib/md/star';
+
+import EventStore from '../stores/EventStore';
 
 export default class SubscribeButton extends React.Component {
   constructor(props) {
@@ -9,31 +10,31 @@ export default class SubscribeButton extends React.Component {
     this.toggleSubscribed = this.toggleSubscribed.bind(this);
     this.mouseOver = this.mouseOver.bind(this);
     this.mouseOut = this.mouseOut.bind(this);
-    this.state = { id: props.id, hover: false, subscribed: props.subscribed};
+    this.state = { id: props.id, hover: false, subscribed: props.subscribed };
     this.starFilled = React.createElement(StarFilled, null);
     this.starEmpty = React.createElement(StarEmpty, null);
   }
 
   mouseOver() {
-    this.setState({hover: true});
+    this.setState({ hover: true });
   }
 
   mouseOut() {
-    this.setState({hover: false});
+    this.setState({ hover: false });
   }
 
   toggleSubscribed() {
-    if(this.state.subscribed){
+    if (this.state.subscribed) {
       EventStore.unsubscribeToEvent(this.state.id);
-      this.setState({subscribed: false});
+      this.setState({ subscribed: false });
     } else {
       EventStore.subscribeToEvent(this.state.id);
-      this.setState({subscribed: true});
+      this.setState({ subscribed: true });
     }
   }
 
   render() {
-    var icon = this.starEmpty;
+    let icon = this.starEmpty;
     if (this.state.hover || this.state.subscribed) {
       icon = this.starFilled;
     }

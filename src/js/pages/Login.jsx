@@ -1,18 +1,18 @@
-import React, { PropTypes } from 'react'
-import AuthService from '../util/AuthService'
+import React, { PropTypes } from 'react';
+import AuthService from '../util/AuthService';
 
 export default class Login extends React.Component {
   static contextTypes = {
-    router: PropTypes.object
+    router: PropTypes.object,
   }
 
   static propTypes = {
     location: PropTypes.object,
-    auth: PropTypes.instanceOf(AuthService)
+    auth: PropTypes.instanceOf(AuthService),
   }
 
   render() {
-    const { auth } = this.props.route
+    const { auth } = this.props.route;
     return (
       <div>
         <h2>Login to Calligre</h2>

@@ -1,14 +1,14 @@
-import React from "react";
-var $ = require('jquery');
-var _ = require('lodash');
-
-import BroadcastMessage from "../components/BroadcastMessage";
-import EventStore from "../stores/EventStore";
-import NotificationStore from "../stores/NotificationStore";
-import Card from "../components/Card";
+import React from 'react';
 
 import { NotificationStack } from 'react-notification';
-var moment = require('moment');
+import { OrderedSet } from 'immutable';
+
+import Events from '../components/Events';
+import BroadcastMessage from '../components/BroadcastMessage';
+
+const $ = require('jquery');
+const _ = require('lodash');
+const moment = require('moment');
 
 export default class Featured extends React.Component {
   constructor(props) {
@@ -60,14 +60,16 @@ export default class Featured extends React.Component {
   render() {
     const { messages, events, notifications } = this.state;
 
-    const EventComponents = events.map((event) => {
-      return <Card type="event" key={"event-" + event.id} item={event}/>;
+    const EventComponents = events.map((events) => {
+      return <Events key={events.id} name={events.attributes.name} description={events.attributes.description} starttime={events.attributes.starttime} endtime={events.attributes.endtime} location={events.attributes.location} streamColor={events.attributes.streamColor} {...events} />;
     });
     return (
       <div>
         <NotificationStack
-          notifications={notifications}
-          onDismiss={() => {}}
+          notifications={this.state.messageStack.toArray()}
+          onDismiss={notification => this.setState({
+            notifications: this.state.messageStack.delete(notification),
+          })}
         />
         <h2>Your Upcoming Events</h2>
         <div>
