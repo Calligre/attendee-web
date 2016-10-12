@@ -1,4 +1,5 @@
 import { EventEmitter } from "events";
+import AuthService from "services/AuthService";
 
 import dispatcher from "../dispatcher";
 
@@ -20,6 +21,9 @@ class EventStore extends EventEmitter {
     $.ajax({
       url: url + "/api/event",
       dataType: "json",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getAccessToken()
+      },
       cache: false,
       success: function(response){
         var events = response.data;
@@ -49,6 +53,9 @@ class EventStore extends EventEmitter {
     $.ajax({
       url: url + "/api/event/" + id,
       dataType: "json",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getAccessToken()
+      },
       cache: false,
       success: function(response){
         dispatcher.dispatch({type: "EVENT_GET", event: response.data});
@@ -66,6 +73,9 @@ class EventStore extends EventEmitter {
       type: "POST",
       data: JSON.stringify({"event_id": id}),
       contentType: "application/json",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getAccessToken()
+      },
       dataType: 'json',
       cache: false,
       success: function(response){
@@ -81,7 +91,9 @@ class EventStore extends EventEmitter {
     $.ajax({
       url: url + "/api/user/" + currentUser + "/subscription/" + id,
       type: "DELETE",
-      dataType: "json",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getAccessToken()
+      },
       cache: false,
       success: function(response){
         dispatcher.dispatch({type: "EVENT_UNSUBSCRIBE", event: id, isSubscribed: false});

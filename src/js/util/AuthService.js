@@ -18,6 +18,7 @@ export default class AuthService extends EventEmitter {
   _doAuthentication(authResult){
     // Saves the user token
     this.setToken(authResult.idToken)
+    this.setAccessToken(authResult.accessToken)
     // Async loads the user profile data
     this.lock.getProfile(authResult.idToken, (error, profile) => {
       if (error) {
@@ -65,6 +66,17 @@ export default class AuthService extends EventEmitter {
   getToken(){
     // Retrieves the user token from localStorage
     return localStorage.getItem('id_token')
+  }
+
+
+  setAccessToken(token){
+    // Saves user token to localStorage
+    localStorage.setItem('access_token', token)
+  }
+
+  getAccessToken(){
+    // Retrieves the user token from localStorage
+    return localStorage.getItem('access_token')
   }
 
   logout(){
