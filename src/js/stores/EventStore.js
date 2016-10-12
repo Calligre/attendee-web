@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import AuthService from "services/AuthService";
+import AuthService from "../util/AuthService";
 
 import dispatcher from "../dispatcher";
 
@@ -22,7 +22,7 @@ class EventStore extends EventEmitter {
       url: url + "/api/event",
       dataType: "json",
       headers: {
-        "Authorization": "Bearer " + AuthService.getAccessToken()
+        "Authorization": "Bearer " + AuthService.getToken()
       },
       cache: false,
       success: function(response){
@@ -54,7 +54,7 @@ class EventStore extends EventEmitter {
       url: url + "/api/event/" + id,
       dataType: "json",
       headers: {
-        "Authorization": "Bearer " + AuthService.getAccessToken()
+        "Authorization": "Bearer " + AuthService.getToken()
       },
       cache: false,
       success: function(response){
@@ -74,7 +74,7 @@ class EventStore extends EventEmitter {
       data: JSON.stringify({"event_id": id}),
       contentType: "application/json",
       headers: {
-        "Authorization": "Bearer " + AuthService.getAccessToken()
+        "Authorization": "Bearer " + AuthService.getToken()
       },
       dataType: 'json',
       cache: false,
@@ -92,7 +92,7 @@ class EventStore extends EventEmitter {
       url: url + "/api/user/" + currentUser + "/subscription/" + id,
       type: "DELETE",
       headers: {
-        "Authorization": "Bearer " + AuthService.getAccessToken()
+        "Authorization": "Bearer " + AuthService.getToken()
       },
       cache: false,
       success: function(response){

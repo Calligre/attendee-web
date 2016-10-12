@@ -1,17 +1,16 @@
 import { EventEmitter } from "events";
-import AuthService from "service/AuthService";
-
+import AuthService from "../util/AuthService";
 import dispatcher from "../dispatcher";
 
 var $ = require("jquery");
 
 class NewsFeedStore extends EventEmitter {
 
-  constructor() {
+  constructor(auth) {
     super()
 
     this.posts = [];
-    this.error = null;
+    this.error = null;    
   }
 
 
@@ -22,7 +21,7 @@ class NewsFeedStore extends EventEmitter {
       url: "https://dev.calligre.com/api/content",
       dataType: "json",
       headers: {
-        "Authorization": "Bearer " + AuthService.getAccessToken()
+        "Authorization": "Bearer " + AuthService.getToken()
       },
       cache: false,
       success: function(response){
@@ -69,7 +68,7 @@ class NewsFeedStore extends EventEmitter {
       data: JSON.stringify(data),
       dataType: "json",
       headers: {
-        "Authorization": "Bearer " + AuthService.getAccessToken()
+        "Authorization": "Bearer " + AuthService.getToken()
       },
       contentType:"application/json",
       cache: false,

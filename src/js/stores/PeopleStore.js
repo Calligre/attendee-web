@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import AuthService from "service/AuthService";
+import AuthService from "../util/AuthService";
 
 import dispatcher from "../dispatcher";
 
@@ -17,7 +17,7 @@ class PeopleStore extends EventEmitter {
       url: "https://dev.calligre.com/api/user",
       dataType: "json",
       headers: {
-        "Authorization": "Bearer " + AuthService.getAccessToken()
+        "Authorization": "Bearer " + AuthService.getToken()
       },
       cache: false,
       success: function(response){
@@ -41,7 +41,7 @@ class PeopleStore extends EventEmitter {
         type: 'put',
         data: JSON.stringify({data: this.result}),
       headers: {
-        "Authorization": "Bearer " + AuthService.getAccessToken()
+        "Authorization": "Bearer " + AuthService.getToken()
       },
         processData: false,
         cache: false,
@@ -67,7 +67,7 @@ class PeopleStore extends EventEmitter {
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getAccessToken()
+        "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
         console.log(response);

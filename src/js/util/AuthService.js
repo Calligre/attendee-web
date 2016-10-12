@@ -1,12 +1,14 @@
 import { EventEmitter } from 'events'
 import { isTokenExpired } from './jwtHelper'
 import Auth0Lock from 'auth0-lock'
+import * as config from '../auth0.config.js';
 
-export default class AuthService extends EventEmitter {
+
+class AuthService extends EventEmitter {
   constructor(clientId, domain) {
     super()
     // Configure Auth0
-    this.lock = new Auth0Lock(clientId, domain, {})
+    this.lock = new Auth0Lock(clientId, domain, {auth: {redirect: false}})
     // Add callback for lock `authenticated` event
     this.lock.on('authenticated', this._doAuthentication.bind(this))
     // Add callback for lock `authorization_error` event
@@ -18,7 +20,6 @@ export default class AuthService extends EventEmitter {
   _doAuthentication(authResult){
     // Saves the user token
     this.setToken(authResult.idToken)
-    this.setAccessToken(authResult.accessToken)
     // Async loads the user profile data
     this.lock.getProfile(authResult.idToken, (error, profile) => {
       if (error) {
@@ -68,20 +69,14 @@ export default class AuthService extends EventEmitter {
     return localStorage.getItem('id_token')
   }
 
-
-  setAccessToken(token){
-    // Saves user token to localStorage
-    localStorage.setItem('access_token', token)
-  }
-
-  getAccessToken(){
-    // Retrieves the user token from localStorage
-    return localStorage.getItem('access_token')
-  }
-
   logout(){
     // Clear user token and profile data from localStorage
     localStorage.removeItem('id_token');
     localStorage.removeItem('profile');
   }
 }
+
+
+const authService = new AuthService(config.clientId, config.clientDomain);
+
+export default authService;
