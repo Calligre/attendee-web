@@ -19,7 +19,8 @@ import AuthService from './util/AuthService';
 import * as config from './auth0.config.js';
 
 const app = document.getElementById('app');
-const appHistory = useRouterHistory(createHashHistory)({ queryKey: false })
+//If we find that we need more persistent state remove the queryKey: false
+const appHistory = useRouterHistory(createHashHistory)({ queryKey: false})
 
 const auth = new AuthService(config.clientId, config.clientDomain);
 
@@ -32,15 +33,17 @@ const requireAuth = (nextState, replace) => {
 
 ReactDOM.render(
   <Router history={appHistory}>
-    <Route path="/" component={Layout}>
-      <IndexRoute apiBaseURL="https://dev.calligre.com/api" component={Home}></IndexRoute>
-      <Route path="newsfeed" component={NewsFeed}></Route>
-      <Route path="people" component={People}></Route>
-      <Route path='people/:id' component={Profile} />
-      <Route path="events" component={Events}></Route>
-      <Route path="events/:eventId" component={EventPage}></Route>
-      <Route path="profile" component={Profile}></Route>
-      <Route path="info" apiBaseURL="https://dev.calligre.com/api" component={Info}></Route>
+    <Route path="/" component={Layout} auth={auth}>
+      <IndexRoute apiBaseURL="https://dev.calligre.com/api" component={Home} onEnter={requireAuth}></IndexRoute>
+      <Route path="newsfeed" component={NewsFeed} onEnter={requireAuth}></Route>
+      <Route path="people" component={People} onEnter={requireAuth}></Route>
+      <Route path='people/:id' component={Profile} onEnter={requireAuth} />
+      <Route path="events" component={Events} onEnter={requireAuth}></Route>
+      <Route path="events/:eventId" component={EventPage} onEnter={requireAuth}></Route>
+      <Route path="profile" component={Profile} onEnter={requireAuth}></Route>
+      <Route path="info" apiBaseURL="https://dev.calligre.com/api" component={Info} onEnter={requireAuth}></Route>
+      <Route path="login" component={Login} auth={auth}></Route>
+      <Route path="access_token=:token" component={Login} auth={auth}/>
     </Route>
   </Router>,
 app);
