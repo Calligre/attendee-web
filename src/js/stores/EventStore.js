@@ -91,6 +91,7 @@ class EventStore extends EventEmitter {
     $.ajax({
       url: url + "/api/user/" + currentUser + "/subscription/" + id,
       type: "DELETE",
+      dataType: "json",
       headers: {
         "Authorization": "Bearer " + AuthService.getToken()
       },
