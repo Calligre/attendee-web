@@ -43,8 +43,9 @@
     "webpack": "^1.13.1"
   },
   "scripts": {
-    "dev": "webpack-dev-server --content-base src --inline --hot",
-    "prod": "webpack-dev-server --content-base src --compress --host 0.0.0.0 --port 8081"
+    "organizer-dev": "webpack-dev-server --content-base build/organizer --inline --hot",
+    "attendee-dev": "webpack-dev-server --content-base build/attendee --inline --hot",
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC"
