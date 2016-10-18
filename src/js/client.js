@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Router, Route, IndexRoute, hashHistory, IndexLink } from "react-router";
+import { Router, Route, useRouterHistory, IndexRoute, IndexLink } from "react-router";
+import { createHashHistory } from 'history'
 
 require('!style!css!sass!../sass/main.scss');
 
@@ -18,6 +19,8 @@ import AuthService from './util/AuthService';
 import * as config from './auth0.config.js';
 
 const app = document.getElementById('app');
+//If we find that we need more persistent state remove the queryKey: false
+const appHistory = useRouterHistory(createHashHistory)({ queryKey: false})
 
 const auth = new AuthService(config.clientId, config.clientDomain);
 
@@ -29,7 +32,7 @@ const requireAuth = (nextState, replace) => {
 };
 
 ReactDOM.render(
-  <Router history={hashHistory}>
+  <Router history={appHistory}>
     <Route path="/" component={Layout} auth={auth}>
       <IndexRoute apiBaseURL="https://dev.calligre.com/api" component={Home} onEnter={requireAuth}></IndexRoute>
       <Route path="newsfeed" component={NewsFeed} onEnter={requireAuth}></Route>
