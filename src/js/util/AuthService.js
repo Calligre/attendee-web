@@ -2,6 +2,7 @@ import { EventEmitter } from 'events'
 import { isTokenExpired } from './jwtHelper'
 import Auth0Lock from 'auth0-lock'
 import * as config from '../auth0.config.js';
+import AppHistory from './AppHistory.js';
 
 
 class AuthService extends EventEmitter {
@@ -15,6 +16,10 @@ class AuthService extends EventEmitter {
     this.lock.on('authorization_error', this._authorizationError.bind(this))
     // binds login functions to keep this context
     this.login = this.login.bind(this)
+
+    this.lock.on('hide', () => {
+      AppHistory.push("/");
+    })
   }
 
   _doAuthentication(authResult){

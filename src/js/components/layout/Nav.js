@@ -59,7 +59,7 @@ export default class Nav extends React.Component {
                 <Link to="info" onClick={this.toggleCollapse.bind(this)}>Conference Info</Link>
               </li>
               <li>
-                <Link to="/" onClick={AuthService.logout}>Logout</Link>
+                <Link to="login" onClick={AuthService.logout}>Logout</Link>
               </li>
             </ul>
           </div>
