@@ -43,8 +43,8 @@
     "webpack": "^1.13.1"
   },
   "scripts": {
-    "organizer-dev": "webpack-dev-server --content-base build/organizer --inline --hot",
-    "attendee-dev": "webpack-dev-server --content-base build/attendee --inline --hot",
+    "organizer-dev": "webpack-dev-server --content-base build/organizer --inline --hot --port 8080",
+    "attendee-dev": "webpack-dev-server --content-base build/attendee --inline --hot --port 8081",
     "build": "webpack"
   },
   "author": "",
