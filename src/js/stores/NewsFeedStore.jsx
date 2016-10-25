@@ -1,13 +1,13 @@
-import { EventEmitter } from 'events';
+import { EventEmitter } from "events";
 
-import dispatcher from '../dispatcher';
+import dispatcher from "../dispatcher";
 
-const $ = require('jquery');
+var $ = require("jquery");
 
 class NewsFeedStore extends EventEmitter {
 
   constructor() {
-    super();
+    super()
 
     this.posts = [];
     this.error = null;
@@ -18,15 +18,15 @@ class NewsFeedStore extends EventEmitter {
     $.ajax({
       // url: "https://sehackday.calligre.com/api/content",
       // url: "https://yi7degrws0.execute-api.us-west-2.amazonaws.com/api/content",
-      url: 'https://dev.calligre.com/api/content',
-      dataType: 'json',
+      url: "https://dev.calligre.com/api/content",
+      dataType: "json",
       cache: false,
-      success(response) {
-        dispatcher.dispatch({ type: 'NEWSFEED_GET', posts: response.items });
+      success: function(response){
+        dispatcher.dispatch({type: "NEWSFEED_GET", posts: response["items"]});
       },
-      failure(error) {
-        dispatcher.dispatch({ type: 'NEWSFEED_ERROR', error });
-      },
+      failure: function(error){
+        dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
+      }
     });
 
     return this.posts;
@@ -35,63 +35,65 @@ class NewsFeedStore extends EventEmitter {
   // TODO grab in segments instead of all at once
 
   incrementLike() {
-    console.log('TODO: incrementLike');
+    console.log("TODO: incrementLike");
   }
 
   decrementLike() {
-    console.log('TODO: decrementLike');
+    console.log("TODO: decrementLike");
   }
 
 
   createPost(text, fbIntegration, twIntegration) {
+
     // POST TO FB / TWITTER
     // TODO clean up offline update
-    const data = {
+    let data = {
       posterid: 2,
-      text,
-      media_link: '',
+      text: text,
+      media_link: "",
       like_count: 0,
       timestamp: Date.now(),
 
-    };
+    }
 
     // TODO: Client side update over server call
     this.posts.unshift(data);
 
     $.ajax({
-      type: 'POST',
-      url: 'https://dev.calligre.com/api/content',
+      type: "POST",
+      url: "https://dev.calligre.com/api/content",
       data: JSON.stringify(data),
-      dataType: 'json',
-      contentType: 'application/json',
+      dataType: "json",
+      contentType:"application/json",
       cache: false,
-      success(response) {
-        dispatcher.dispatch({ type: 'NEWSFEED_POST', post: response.id });
+      success: function(response) {
+        dispatcher.dispatch({type: "NEWSFEED_POST", post: response["id"]});
       },
-      failure(error) {
-        dispatcher.dispatch({ type: 'NEWSFEED_ERROR', error });
-      },
+      failure: function(error){
+        dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
+      }
 
     });
+
   }
 
 
   handleActions(action) {
-    switch (action.type) {
-      case 'NEWSFEED_POST': {
+    switch(action.type) {
+      case "NEWSFEED_POST": {
         // TODO: Readd this back in
-        this.emit('updated');
+        this.emit("updated");
         break;
       }
-      case 'NEWSFEED_GET': {
+      case "NEWSFEED_GET": {
         this.posts = action.posts;
         // TODO: Append posts, don't simply delete old data
-        this.emit('updated');
+        this.emit("updated");
         break;
       }
-      case 'ERROR': {
+      case "ERROR": {
         this.error = action.error;
-        this.emit('error');
+        this.emit("error");
         break;
       }
 
@@ -99,7 +101,7 @@ class NewsFeedStore extends EventEmitter {
   }
 }
 
-const newsFeedStore = new NewsFeedStore();
+const newsFeedStore = new NewsFeedStore;
 dispatcher.register(newsFeedStore.handleActions.bind(newsFeedStore));
 
 export default newsFeedStore;

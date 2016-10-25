@@ -1,27 +1,32 @@
-import React from 'react';
+import React from "react";
 
-import { IndexLink } from 'react-router';
-import SubscribeButton from '../components/SubscribeButton';
+import { IndexLink } from "react-router";
+import EventStore from "../stores/EventStore";
+import SubscribeButton from "../components/SubscribeButton";
 
-const moment = require('moment');
+var moment = require('moment');
 
 export default class Event extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
   render() {
-    const { id, name, streamColor, location, starttime, endtime, isSubscribed } = this.props.event;
+    const { id, name, description, stream, streamColor, isSubscribed, location, starttime, endtime } = this.props;
 
-    const streamStyle = {
-      borderColor: streamColor,
+    var streamStyle = {
+      borderColor: streamColor
     };
 
+    var dateFormat = "MM-DD h:mm a";
 
     return (
       <div className="eventPageEvent">
-        <IndexLink to={{ pathname: `events/${id}` }}>
-          <div id={`event-${id}`} className="event">
+        <IndexLink to={{ pathname: 'events/' + this.props.id }}>
+          <div id={"event-" + id} className="event">
             <div className="time" style={streamStyle}>
-              <p className="start">{moment.unix(starttime).format('hh:mma')}</p>
-              <p className="end">{moment.unix(endtime).format('hh:mma')}</p>
+              <p className="start">{moment.unix(starttime).format("hh:mma")}</p>
+              <p className="end">{moment.unix(endtime).format("hh:mma")}</p>
             </div>
             <div className="details">
               <h4 className="title">{name}</h4>
@@ -29,21 +34,8 @@ export default class Event extends React.Component {
             </div>
           </div>
         </IndexLink>
-        <SubscribeButton id={id} subscribed={isSubscribed} />
+        <SubscribeButton id={this.props.id} subscribed={this.props.isSubscribed}/>
       </div>
     );
   }
 }
-
-Event.propTypes = {
-  event: React.PropTypes.shape({
-    id: React.PropTypes.number,
-    name: React.PropTypes.string,
-    streamColor: React.PropTypes.string,
-    isSubscribed: React.PropTypes.bool,
-    location: React.PropTypes.string,
-    starttime: React.PropTypes.number,
-    endtime: React.PropTypes.number,
-  }),
-};
-

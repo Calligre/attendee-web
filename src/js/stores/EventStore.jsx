@@ -1,141 +1,141 @@
-import { EventEmitter } from 'events';
+import { EventEmitter } from "events";
 
-import dispatcher from '../dispatcher';
+import dispatcher from "../dispatcher";
 
-const $ = require('jquery');
-const randomColor = require('randomcolor');
-const streamMap = {};
-const url = 'https://dev.calligre.com';
-const currentUser = 1; // TODO: this needs to actually do the thing
+var $ = require("jquery");
+var randomColor = require('randomcolor');
+var streamMap = {};
+var url = "https://dev.calligre.com"
+var currentUser = 1; //TODO: this needs to actually do the thing
 
 
 class EventStore extends EventEmitter {
   constructor() {
-    super();
+    super()
     this.events = [];
     this.error = null;
   }
 
   getAll() {
     $.ajax({
-      url: `${url}/api/event`,
-      dataType: 'json',
+      url: url + "/api/event",
+      dataType: "json",
       cache: false,
-      success(response) {
-        const events = response.data;
+      success: function(response){
+        var events = response.data;
         $.ajax({
-          url: `${url}/api/user/${currentUser}/subscription`,
-          dataType: 'json',
+          url: url + "/api/user/" + currentUser + "/subscription",
+          dataType: "json",
           cache: false,
-          success(response) {
-            const subscription = response.data.map((sub) => {
+          success: function(response){
+            var subscription = response.data.map((sub) => {
               return sub.attributes.event_id;
             });
-            dispatcher.dispatch({ type: 'EVENTS_GET', events, subscriptions: subscription });
+            dispatcher.dispatch({type: "EVENTS_GET", events: events, subscriptions: subscription});
           },
-          failure(error) {
-            dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
-          },
+          failure: function(error){
+            dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
+          }
         });
       },
-      failure(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
-      },
+      failure: function(error){
+        dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
+      }
     });
     return this.events;
   }
 
-  get(id) {
+  get(id){
     $.ajax({
-      url: `${url}/api/event/${id}`,
-      dataType: 'json',
+      url: url + "/api/event/" + id,
+      dataType: "json",
       cache: false,
-      success(response) {
-        dispatcher.dispatch({ type: 'EVENT_GET', event: response.data });
+      success: function(response){
+        dispatcher.dispatch({type: "EVENT_GET", event: response.data});
       },
-      failure(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
-      },
+      failure: function(error){
+        dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
+      }
     });
     return this.events;
   }
 
-  subscribeToEvent(id) {
+  subscribeToEvent(id){
     $.ajax({
-      url: `${url}/api/user/${currentUser}/subscription`,
-      type: 'POST',
-      data: JSON.stringify({ event_id: id }),
-      contentType: 'application/json',
+      url: url + "/api/user/" + currentUser + "/subscription",
+      type: "POST",
+      data: JSON.stringify({"event_id": id}),
+      contentType: "application/json",
       dataType: 'json',
       cache: false,
-      success(response) {
-        dispatcher.dispatch({ type: 'EVENT_SUBSCRIBE', event: id, isSubscribed: true });
+      success: function(response){
+        dispatcher.dispatch({type: "EVENT_SUBSCRIBE", event: id, isSubscribed: true});
       },
-      failure(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
-      },
+      failure: function(error){
+        dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
+      }
     });
   }
 
-  unsubscribeToEvent(id) {
+  unsubscribeToEvent(id){
     $.ajax({
-      url: `${url}/api/user/${currentUser}/subscription/${id}`,
-      type: 'DELETE',
-      dataType: 'json',
+      url: url + "/api/user/" + currentUser + "/subscription/" + id,
+      type: "DELETE",
+      dataType: "json",
       cache: false,
-      success(response) {
-        dispatcher.dispatch({ type: 'EVENT_UNSUBSCRIBE', event: id, isSubscribed: false });
+      success: function(response){
+        dispatcher.dispatch({type: "EVENT_UNSUBSCRIBE", event: id, isSubscribed: false});
       },
-      failure(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
-      },
+      failure: function(error){
+        dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
+      }
     });
   }
 
 
   handleActions(action) {
-    switch (action.type) {
-      case 'EVENTS_GET': {
+    switch(action.type) {
+      case "EVENTS_GET": {
         action.events.forEach((event) => {
-          if (typeof streamMap[event.attributes.stream] == 'undefined') {
+          if(typeof streamMap[event.attributes.stream] == "undefined"){
             streamMap[event.attributes.stream] = randomColor();
           }
         });
         this.events = action.events.map((event) => {
-          const attributes = event.attributes;
-          attributes.streamColor = streamMap[attributes.stream];
-          attributes.isSubscribed = action.subscriptions.includes(attributes.id);
+          var attributes = event.attributes;
+          attributes["streamColor"] = streamMap[attributes.stream];
+          attributes["isSubscribed"] = action.subscriptions.includes(attributes.id);
           return attributes;
-        });
+        })
 
-        this.emit('received');
+        this.emit("received");
         break;
       }
-      case 'EVENT_GET': {
+      case "EVENT_GET": {
         this.events.forEach((event) => {
-          if (event.id == action.event.id) {
+          if(event.id == action.event.id) {
             $.extend(event, action.event.attributes);
           }
         });
-        this.emit('received');
+        this.emit("received");
         break;
       }
-      case 'EVENT_SUBSCRIBE':
-      case 'EVENT_UNSUBSCRIBE': {
+      case "EVENT_SUBSCRIBE":
+      case "EVENT_UNSUBSCRIBE": {
         this.events.forEach((event) => {
-          if (event.id == action.event) {
+          if(event.id == action.event) {
             event.isSubscribed = action.isSubscribed;
           }
         });
-        this.emit('subscription');
+        this.emit("subscription");
         break;
       }
-      case 'EVENT_UNSUBSCRIBE': {
+      case "EVENT_UNSUBSCRIBE": {
         break;
       }
-      case 'ERROR': {
+      case "ERROR": {
         this.error = action.error;
-        this.emit('error');
+        this.emit("error");
         break;
       }
     }
@@ -143,7 +143,7 @@ class EventStore extends EventEmitter {
 
 }
 
-const eventStore = new EventStore();
+const eventStore = new EventStore;
 dispatcher.register(eventStore.handleActions.bind(eventStore));
 
 export default eventStore;
