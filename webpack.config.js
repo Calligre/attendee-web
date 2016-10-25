@@ -29,7 +29,7 @@ module.exports = {
     ]
   },
   output: {
-    path: __dirname + "/build",
+    path:  path.resolve(__dirname, 'build/'),
     filename: "[name]/[name].client.min.js"
   },
   plugins: debug ? [] : [
