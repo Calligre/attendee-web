@@ -1,8 +1,8 @@
 import React from "react";
 
 import { IndexLink } from "react-router";
-import EventStore from "../stores/EventStore";
-import SubscribeButton from "../components/SubscribeButton";
+import EventStore from "stores/EventStore";
+import SubscribeButton from "components/SubscribeButton";
 
 var moment = require('moment');
 

@@ -2,7 +2,7 @@ var $ = require('jquery');
 
 import React from "react";
 
-import Event  from "../components/Event";
+import Event  from "components/Event";
 
 export default class Card extends React.Component {
   constructor(props) {

@@ -1,7 +1,7 @@
 import React from "react";
 
-import EventStore from "../stores/EventStore";
-import SubscribeButton from "../components/SubscribeButton";
+import EventStore from "stores/EventStore";
+import SubscribeButton from "components/SubscribeButton";
 import { IndexLink } from "react-router";
 
 

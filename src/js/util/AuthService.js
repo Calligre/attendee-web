@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { isTokenExpired } from './jwtHelper'
 import Auth0Lock from 'auth0-lock'
-import * as config from '../auth0.config.js';
+import * as config from 'auth0.config.js';
 import AppHistory from './AppHistory.js';
 
 

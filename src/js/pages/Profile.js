@@ -1,7 +1,7 @@
 import React from "react";
 import $ from 'jquery';
 
-import PeopleStore from "../stores/PeopleStore";
+import PeopleStore from "stores/PeopleStore";
 import Dropzone from 'react-dropzone';
 import Clear from 'react-icons/lib/md/clear';
 import Edit from 'react-icons/lib/md/mode-edit';

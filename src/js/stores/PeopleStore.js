@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
-import AuthService from "../util/AuthService";
+import AuthService from "util/AuthService";
 
-import dispatcher from "../dispatcher";
+import dispatcher from "dispatcher";
 
 var $ = require("jquery");
 

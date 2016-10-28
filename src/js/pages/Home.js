@@ -2,10 +2,10 @@ import React from "react";
 var $ = require('jquery');
 var _ = require('lodash');
 
-import BroadcastMessage from "../components/BroadcastMessage";
-import EventStore from "../stores/EventStore";
-import NotificationStore from "../stores/NotificationStore";
-import Card from "../components/Card";
+import BroadcastMessage from "components/BroadcastMessage";
+import EventStore from "stores/EventStore";
+import NotificationStore from "stores/NotificationStore";
+import Card from "components/Card";
 
 import { NotificationStack } from 'react-notification';
 var moment = require('moment');
