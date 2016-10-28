@@ -1,6 +1,8 @@
 import React from "react";
 import { IndexLink, Link } from "react-router";
 
+import AuthService from "../../util/AuthService";
+
 export default class Nav extends React.Component {
   constructor() {
     super()
@@ -57,7 +59,7 @@ export default class Nav extends React.Component {
                 <Link to="info" onClick={this.toggleCollapse.bind(this)}>Conference Info</Link>
               </li>
               <li>
-                <Link to="/" onClick={this.props.auth.logout.bind(this)}>Logout</Link>
+                <Link to="login" onClick={AuthService.logout}>Logout</Link>
               </li>
             </ul>
           </div>
