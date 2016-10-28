@@ -1,6 +1,6 @@
 import React from "react";
 import {IndexLink} from "react-router";
-import PeopleStore from "../stores/PeopleStore";
+import PeopleStore from "stores/PeopleStore";
 import SearchInput, {createFilter} from 'react-search-input';
 import Select from 'react-select';
 import SwapVert from 'react-icons/lib/md/swap-vert';

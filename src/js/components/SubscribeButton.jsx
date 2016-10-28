@@ -1,5 +1,5 @@
 import React from "react";
-import EventStore from "../stores/EventStore";
+import EventStore from "stores/EventStore";
 import StarEmpty from 'react-icons/lib/md/star-border';
 import StarFilled from 'react-icons/lib/md/star';
 

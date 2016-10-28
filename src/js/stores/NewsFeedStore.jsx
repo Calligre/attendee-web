@@ -1,16 +1,16 @@
 import { EventEmitter } from "events";
-
-import dispatcher from "../dispatcher";
+import AuthService from "util/AuthService";
+import dispatcher from "dispatcher";
 
 var $ = require("jquery");
 
 class NewsFeedStore extends EventEmitter {
 
-  constructor() {
+  constructor(auth) {
     super()
 
     this.posts = [];
-    this.error = null;
+    this.error = null;    
   }
 
 
@@ -20,6 +20,9 @@ class NewsFeedStore extends EventEmitter {
       // url: "https://yi7degrws0.execute-api.us-west-2.amazonaws.com/api/content",
       url: "https://dev.calligre.com/api/content",
       dataType: "json",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
       cache: false,
       success: function(response){
         dispatcher.dispatch({type: "NEWSFEED_GET", posts: response["items"]});
@@ -64,6 +67,9 @@ class NewsFeedStore extends EventEmitter {
       url: "https://dev.calligre.com/api/content",
       data: JSON.stringify(data),
       dataType: "json",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
       contentType:"application/json",
       cache: false,
       success: function(response) {

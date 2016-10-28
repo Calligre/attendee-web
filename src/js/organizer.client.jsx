@@ -1,20 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Router, Route, IndexRoute, hashHistory, IndexLink } from "react-router";
+import { Router, Route, useRouterHistory, IndexRoute, IndexLink } from "react-router";
 
 
-import Layout from "./pages/Layout";
-import Home from "./pages/Home";
-import NewsFeed from "./pages/NewsFeed";
-import People from "./pages/People";
-import Events from "./pages/Events";
-import EventPage from "./pages/Event";
-import Profile from "./pages/Profile";
-import Info from "./pages/Info";
-import Login from "./pages/Login";
+import Layout from "pages/Layout";
+import Home from "pages/Home";
+import NewsFeed from "pages/NewsFeed";
+import People from "pages/People";
+import Events from "pages/Events";
+import EventPage from "pages/Event";
+import Profile from "pages/Profile";
+import Info from "pages/Info";
+import Login from "pages/Login";
 
-import AuthService from './util/AuthService';
-import * as config from './auth0.config.js';
+import AppHistory from 'util/AppHistory';
+import AuthService from 'util/AuthService';
+import * as config from 'auth0.config.js';
 
 require('!style!css!sass!../sass/main.scss');
 
@@ -30,7 +31,7 @@ const requireAuth = (nextState, replace) => {
 };
 
 ReactDOM.render(
-  <Router history={hashHistory}>
+  <Router history={AppHistory}>
     <Route path="/" component={Layout} auth={auth}>
       <IndexRoute apiBaseURL="https://dev.calligre.com/api" component={Home} onEnter={requireAuth}></IndexRoute>
       <Route path="newsfeed" component={NewsFeed} onEnter={requireAuth}></Route>
@@ -41,7 +42,6 @@ ReactDOM.render(
       <Route path="profile" component={Profile} onEnter={requireAuth}></Route>
       <Route path="info" apiBaseURL="https://dev.calligre.com/api" component={Info} onEnter={requireAuth}></Route>
       <Route path="login" component={Login} auth={auth}></Route>
-      <Route path="access_token=:token" component={Login} auth={auth}/>
     </Route>
   </Router>,
 app);

@@ -1,8 +1,8 @@
 import React from "react";
 
-import NewsFeedPost from "../components/NewsFeedPost";
-import NewsFeedStore from "../stores/NewsFeedStore";
-// import style from '../../sass/newsfeed.scss';
+import NewsFeedPost from "components/NewsFeedPost";
+import NewsFeedStore from "stores/NewsFeedStore";
+// import style from 'sass/newsfeed.scss';
 
 
 export default class NewsFeed extends React.Component {

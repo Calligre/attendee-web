@@ -8,8 +8,8 @@ module.exports = {
   context: path.join(__dirname, "src"),
   devtool: debug ? "inline-sourcemap" : null,
   entry: {
-    attendee: "./js/attendee.client.jsx",
-    organizer: "./js/organizer.client.jsx",
+    attendee: "attendee.client",
+    organizer: "organizer.client",
   },
   module: {
     loaders: [
@@ -32,8 +32,14 @@ module.exports = {
     extensions: ['', '.js', '.jsx']
   },
   output: {
-    path: __dirname + "/build",
+    path:  path.resolve(__dirname, 'build/'),
     filename: "[name]/[name].client.min.js"
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+    root: [
+      path.resolve("./src/js")
+    ]
   },
   plugins: debug ? [] : [
     new ExtractTextPlugin('dist/styles/main.css', { allChunks: true }),

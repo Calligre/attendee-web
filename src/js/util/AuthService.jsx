@@ -1,18 +1,25 @@
 import { EventEmitter } from 'events'
 import { isTokenExpired } from './jwtHelper'
 import Auth0Lock from 'auth0-lock'
+import * as config from 'auth0.config.js';
+import AppHistory from './AppHistory.js';
 
-export default class AuthService extends EventEmitter {
+
+class AuthService extends EventEmitter {
   constructor(clientId, domain) {
     super()
     // Configure Auth0
-    this.lock = new Auth0Lock(clientId, domain, {})
+    this.lock = new Auth0Lock(clientId, domain, {auth: {redirect: false}})
     // Add callback for lock `authenticated` event
     this.lock.on('authenticated', this._doAuthentication.bind(this))
     // Add callback for lock `authorization_error` event
     this.lock.on('authorization_error', this._authorizationError.bind(this))
     // binds login functions to keep this context
     this.login = this.login.bind(this)
+
+    this.lock.on('hide', () => {
+      AppHistory.push("/");
+    })
   }
 
   _doAuthentication(authResult){
@@ -73,3 +80,8 @@ export default class AuthService extends EventEmitter {
     localStorage.removeItem('profile');
   }
 }
+
+
+const authService = new AuthService(config.clientId, config.clientDomain);
+
+export default authService;
