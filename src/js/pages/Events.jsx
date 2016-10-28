@@ -33,7 +33,6 @@ export default class Events extends React.Component {
   }
 
 	getEvents() {
-    console.log(EventStore.events);
 		this.setState({
 			events: EventStore.events
     });
