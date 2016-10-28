@@ -3,8 +3,8 @@ import React from "react";
 import SearchInput, {createFilter} from 'react-search-input';
 import { DateField, TransitionView, Calendar } from 'react-date-picker'
 import Select from 'react-select';
-import Event from "../components/Event";
-import EventStore from "../stores/EventStore";
+import Event from "components/Event";
+import EventStore from "stores/EventStore";
 
 require('!style!css!sass!react-date-picker/index.css');
 

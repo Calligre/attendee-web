@@ -4,19 +4,19 @@ import { Router, Route, useRouterHistory, IndexRoute, IndexLink } from "react-ro
 
 require('!style!css!sass!../sass/main.scss');
 
-import Layout from "./pages/Layout";
-import Home from "./pages/Home";
-import NewsFeed from "./pages/NewsFeed";
-import People from "./pages/People";
-import Events from "./pages/Events";
-import EventPage from "./pages/Event";
-import Profile from "./pages/Profile";
-import Info from "./pages/Info";
-import Login from "./pages/Login";
+import Layout from "pages/Layout";
+import Home from "pages/Home";
+import NewsFeed from "pages/NewsFeed";
+import People from "pages/People";
+import Events from "pages/Events";
+import EventPage from "pages/Event";
+import Profile from "pages/Profile";
+import Info from "pages/Info";
+import Login from "pages/Login";
 
-import AppHistory from './util/AppHistory';
-import AuthService from './util/AuthService';
-import * as config from './auth0.config.js';
+import AppHistory from 'util/AppHistory';
+import AuthService from 'util/AuthService';
+import * as config from 'auth0.config.js';
 
 const app = document.getElementById('app');
 

@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 
-import dispatcher from "../dispatcher";
+import dispatcher from "dispatcher";
 
 var $ = require("jquery");
 var moment = require('moment');

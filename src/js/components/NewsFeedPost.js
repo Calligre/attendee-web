@@ -1,6 +1,6 @@
 import React from "react";
 
-import NewsFeedStore from "../stores/NewsFeedStore";
+import NewsFeedStore from "stores/NewsFeedStore";
 
 export default class NewsFeedPost extends React.Component {
 

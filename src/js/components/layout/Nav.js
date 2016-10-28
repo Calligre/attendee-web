@@ -1,7 +1,7 @@
 import React from "react";
 import { IndexLink, Link } from "react-router";
 
-import AuthService from "../../util/AuthService";
+import AuthService from "util/AuthService";
 
 export default class Nav extends React.Component {
   constructor() {
