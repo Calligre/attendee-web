@@ -31,7 +31,7 @@ export default class Info extends React.Component {
         twitter: result.data.attributes.twitter,
         facebook: result.data.attributes.facebook,
       });
-    }.bind(this));
+    });
   }
 
   componentWillUnmount() {
