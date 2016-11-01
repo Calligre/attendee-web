@@ -28,9 +28,6 @@ module.exports = {
       }
     ]
   },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
-  },
   output: {
     path:  path.resolve(__dirname, 'build/'),
     filename: "[name]/[name].client.min.js"
@@ -38,7 +35,7 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx'],
     root: [
-      path.resolve("./src/js")
+      path.resolve(__dirname, "./src/js")
     ]
   },
   plugins: debug ? [] : [
