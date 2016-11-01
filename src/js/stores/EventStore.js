@@ -7,7 +7,6 @@ var $ = require("jquery");
 var randomColor = require('randomcolor');
 var streamMap = {};
 var url = "https://dev.calligre.com"
-var currentUser = 1; //TODO: this needs to actually do the thing
 
 
 class EventStore extends EventEmitter {
@@ -28,7 +27,7 @@ class EventStore extends EventEmitter {
       success: function(response){
         var events = response.data;
         $.ajax({
-          url: url + "/api/user/" + currentUser + "/subscription",
+          url: url + "/api/user/" + AuthService.getCurrentUserId() + "/subscription",
           dataType: "json",
           cache: false,
           success: function(response){
@@ -69,7 +68,7 @@ class EventStore extends EventEmitter {
 
   subscribeToEvent(id){
     $.ajax({
-      url: url + "/api/user/" + currentUser + "/subscription",
+      url: url + "/api/user/" + AuthService.getCurrentUserId() + "/subscription",
       type: "POST",
       data: JSON.stringify({"event_id": id}),
       contentType: "application/json",
@@ -89,7 +88,7 @@ class EventStore extends EventEmitter {
 
   unsubscribeToEvent(id){
     $.ajax({
-      url: url + "/api/user/" + currentUser + "/subscription/" + id,
+      url: url + "/api/user/" + AuthService.getCurrentUserId() + "/subscription/" + id,
       type: "DELETE",
       dataType: "json",
       headers: {

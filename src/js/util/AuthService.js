@@ -3,7 +3,10 @@ import { isTokenExpired } from './jwtHelper'
 import Auth0Lock from 'auth0-lock'
 import * as config from 'auth0.config.js';
 import AppHistory from './AppHistory.js';
+import PeopleStore from '../stores/PeopleStore.js'
 
+var $ = require("jquery");
+var url = "https://dev.calligre.com"
 
 class AuthService extends EventEmitter {
   constructor(clientId, domain) {
@@ -30,9 +33,33 @@ class AuthService extends EventEmitter {
       if (error) {
         console.log('Error loading the Profile', error)
       } else {
-        this.setProfile(profile)
+        this.setProfile(profile);
+        this._createUser();
       }
     })
+  }
+
+  _createUser() {
+    const profile = this.getProfile();
+    const id = profile.identities[0].user_id
+    $.ajax({
+      url: "https://dev.calligre.com/api/user/" + id,
+      dataType: "json",
+      headers: {
+        "Authorization": "Bearer " + this.getToken()
+      },
+      cache: false,
+      success: function(response){},
+      error: function(error){
+        const userData = {
+          id: profile.identities[0].user_id,
+          first_name: profile.given_name,
+          last_name: profile.family_name,
+          email: profile.email,
+        }
+        PeopleStore.create(userData);
+      }
+    });
   }
 
   _authorizationError(error){
@@ -64,6 +91,10 @@ class AuthService extends EventEmitter {
     return profile ? JSON.parse(localStorage.profile) : {}
   }
 
+  getCurrentUserId(){
+    return this.getProfile().identities[0].user_id;
+  }
+
   setToken(idToken){
     // Saves user token to localStorage
     localStorage.setItem('id_token', idToken)
@@ -83,5 +114,4 @@ class AuthService extends EventEmitter {
 
 
 const authService = new AuthService(config.clientId, config.clientDomain);
-
 export default authService;
