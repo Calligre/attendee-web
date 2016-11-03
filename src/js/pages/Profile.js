@@ -1,20 +1,14 @@
 import React, { PropTypes } from "react";
 import $ from 'jquery';
 
+import LinkedAccountsList from 'components/LinkedAccountsList';
 import PeopleStore from "stores/PeopleStore";
 import AuthService from "util/AuthService"
 import Dropzone from 'react-dropzone';
 import Clear from 'react-icons/lib/md/clear';
 import Edit from 'react-icons/lib/md/mode-edit';
 
-import AuthService from '../util/AuthService';
-import LinkedAccountsList from '../components/LinkedAccountsList';
-
 export default class Profile extends React.Component {
-  static propTypes = {
-    auth: PropTypes.instanceOf(AuthService)
-  }
-
   constructor(props) {
     super(props);
     this.state = {
@@ -22,15 +16,11 @@ export default class Profile extends React.Component {
       preview: '',
       uploadInProgress: false,
       newPhoto: null,
-      authProfile: this.props.auth.getProfile(),
     };
     this.getProfile = this.getProfile.bind(this);
     this.submitChanges = this.submitChanges.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.cancelDrop = this.cancelDrop.bind(this);
-    this.props.auth.on('profile_updated', (newProfile) => {
-      this.setState({authProfile: newProfile})
-    })
     PeopleStore.getAll();
   }
 
@@ -49,8 +39,9 @@ export default class Profile extends React.Component {
     if (this.props.params.hasOwnProperty("id")) {
       id = this.props.params.id;
     }
+    var p = PeopleStore.people;
     var profiles = PeopleStore.people.filter((profile) => {
-      return profile.id == id;
+      return profile.id == 1;
     })
 
     this.setState({
@@ -143,9 +134,8 @@ export default class Profile extends React.Component {
           <p contentEditable={myProfile} className="description editable">{description}</p>
           <div className="editIcon">{editIcon}</div>
         </div>
-
         <button className="submitChanges" onClick={this.submitChanges}>Save changes</button>
-        <LinkedAccountsList profile={this.state.authProfile} auth={this.props.auth}></LinkedAccountsList>
+        <LinkedAccountsList></LinkedAccountsList>
       </div>
     );
   }

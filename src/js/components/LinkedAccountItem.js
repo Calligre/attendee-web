@@ -1,40 +1,48 @@
 import React, { PropTypes } from 'react'
 import {ListGroupItem, Button} from 'react-bootstrap'
-import AuthService from '../util/AuthService'
+import AuthService from 'util/AuthService'
+import { SocialIcon } from 'react-social-icons'
 
 export class LinkedAccountItem extends React.Component {
   static propTypes = {
-    auth: PropTypes.instanceOf(AuthService),
-    profile: PropTypes.object,
     identity: PropTypes.object
   }
 
   unlink(identity){
     if (window.confirm(`Are you sure you want to unlink ${identity.connection}?`)) {
-      this.props.auth.unlinkAccount(identity)
+      AuthService.unlinkAccount(identity)
     }
   }
 
   renderUnlink(){
-    const { profile, identity } = this.props
+    const { identity } = this.props
+    const profile = AuthService.getProfile()
     if (profile.user_id != identity.provider + '|' + identity.user_id){
       return (
-        <Button onClick={this.unlink.bind(this, identity)}>
+        <Button className="unlink" onClick={this.unlink.bind(this, identity)}>
             unlink
           </Button>
       )
     }
+    return (
+      <div className="unlink" id="main"> Main </div>
+    )
   }
 
   render(){
     const { identity } = this.props
-    const profileName = identity.profileData ? identity.profileData.name : 'Main'
-
+    var url;
+    if (identity.provider == "facebook") {
+      url = "http://facebook.com/" + identity.user_id
+    } else if (identity.provider == "twitter") {
+      url = "http://twitter.com/intent/user?user_id=" + identity.user_id
+    }
+      
     return (
-      <ListGroupItem header={profileName}>
-        {identity.connection}
+      <div className="linkedAccount">
+        <SocialIcon url={url} />
         {this.renderUnlink()}
-      </ListGroupItem>
+      </div>
     )
   }
 }

@@ -1,9 +1,9 @@
 import Auth0Lock from 'auth0-lock'
+import AuthService from "util/AuthService"
 
 export default class LinkAccountService {
-  constructor(auth) {
-    this.auth = auth
-    this.lock = new Auth0Lock(auth.clientId, auth.domain, {
+  constructor() {
+    this.lock = new Auth0Lock(AuthService.clientId, AuthService.domain, {
       auth: {params: {state: 'linking'}},
       allowedConnections: ['facebook', 'twitter', 'google-oauth2'],
       languageDictionary: { // allows to override dictionary entries

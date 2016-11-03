@@ -116,6 +116,32 @@
     display: none;
   }
 
+  .linkedAccount {
+    display: inline-block;
+    vertical-align: top;
+
+    button {
+      background-color: $grey !important;
+      color: black !important;
+
+      &:hover {
+        background-color: $darkGrey !important;
+      }
+    }
+
+    .unlink {
+      display: block;
+      margin: 10px 10px 0 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+
+      &#main {
+        font-weight: bold;
+        line-height: 1.5;
+      }
+    }
+  }
+
   &.myProfile {
     .cancel {
       display: none !important;
