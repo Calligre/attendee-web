@@ -29,6 +29,9 @@ class EventStore extends EventEmitter {
         $.ajax({
           url: url + "/api/user/" + AuthService.getCurrentUserId() + "/subscription",
           dataType: "json",
+          headers: {
+            "Authorization": "Bearer " + AuthService.getToken()
+          },
           cache: false,
           success: function(response){
             var subscription = response.data.map((sub) => {
@@ -140,6 +143,9 @@ class EventStore extends EventEmitter {
           }
         });
         this.emit("subscription");
+        break;
+      }
+      case "EVENT_UNSUBSCRIBE": {
         break;
       }
       case "ERROR": {

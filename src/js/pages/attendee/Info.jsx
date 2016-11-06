@@ -20,7 +20,7 @@ export default class Info extends React.Component {
   }
 
   componentDidMount() {
-    this.serverRequest = $.get(this.props.route.apiBaseURL + "/info", function (result) {
+    this.serverRequest = $.get(`${this.props.route.apiBaseURL}/info`, (result) => {
       this.setState({
         logo: result.data.attributes.logo,
         confName: result.data.attributes.name,
@@ -31,7 +31,7 @@ export default class Info extends React.Component {
         twitter: result.data.attributes.twitter,
         facebook: result.data.attributes.facebook,
       });
-    }.bind(this));
+    });
   }
 
   componentWillUnmount() {
