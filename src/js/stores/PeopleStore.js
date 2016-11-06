@@ -12,6 +12,28 @@ class PeopleStore extends EventEmitter {
     this.error = null;
   }
 
+  create(data) {
+    $.ajax({
+      url: "https://dev.calligre.com/api/user",
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify(data),
+      type: 'POST',
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      cache: false,
+      success: function(response){
+        dispatcher.dispatch({type: "PEOPLE_CREATE", people: response});
+      },
+      error: function(error){
+        dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
+      }
+    });
+    return this.people;
+  }
+
+
   getAll() {
     $.ajax({
       url: "https://dev.calligre.com/api/user",
@@ -23,7 +45,7 @@ class PeopleStore extends EventEmitter {
       success: function(response){
         dispatcher.dispatch({type: "PEOPLE_GET", people: response});
       },
-      failure: function(error){
+      error: function(error){
         dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
       }
     });
@@ -40,16 +62,16 @@ class PeopleStore extends EventEmitter {
         contentType : 'application/json',
         type: 'put',
         data: JSON.stringify({data: this.result}),
-      headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
-      },
+        headers: {
+          "Authorization": "Bearer " + AuthService.getToken()
+        },
         processData: false,
         cache: false,
         success: function(response){
           self.updatePerson({id: id, photo: response.data.url});
           //dispatcher.dispatch({type: "PEOPLE_GET", people: response});
         },
-        failure: function(error){
+        error: function(error){
           console.log(error);
           //dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
         }
@@ -73,7 +95,7 @@ class PeopleStore extends EventEmitter {
         console.log(response);
         //dispatcher.dispatch({type: "PEOPLE_GET", people: response});
       },
-      failure: function(error){
+      error: function(error){
         console.log(error);
         //dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
       }
@@ -83,6 +105,10 @@ class PeopleStore extends EventEmitter {
 
   handleActions(action) {
     switch(action.type) {
+      case "PEOPLE_CREATE":
+        this.people.push(action.person);
+        this.emit("received");
+        break;
       case "PEOPLE_GET": {
         this.people = action.people.data.map(function(person) {
           return person.attributes;
