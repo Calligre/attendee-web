@@ -2,6 +2,7 @@ import React from "react";
 import $ from 'jquery';
 
 import PeopleStore from "stores/PeopleStore";
+import AuthService from "util/AuthService"
 import Dropzone from 'react-dropzone';
 import Clear from 'react-icons/lib/md/clear';
 import Edit from 'react-icons/lib/md/mode-edit';
@@ -28,8 +29,7 @@ export default class Profile extends React.Component {
   }
 
   getProfile() {
-    // TODO: set to the current user id instead of 1
-    var id = 1;
+    var id = AuthService.getCurrentUserId();
     if (this.props.params.hasOwnProperty("id")) {
       id = this.props.params.id;
     }
@@ -100,7 +100,7 @@ export default class Profile extends React.Component {
     const {id, first_name, last_name, organization, points, description} = this.state.profile;
 
     // TODO: determine if this is my profile or not
-    const myProfile = id == 1;
+    const myProfile = id == AuthService.getCurrentUserId();
 
     const displayCancel = myProfile && this.state.uploadInProgress ? "visible" : "hidden";
     const myProfileClass = myProfile ? "myProfile" : "";
