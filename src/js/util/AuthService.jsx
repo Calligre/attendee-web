@@ -3,7 +3,7 @@ import { isTokenExpired } from './jwtHelper'
 import Auth0Lock from 'auth0-lock'
 import * as config from 'auth0.config.js';
 import AppHistory from './AppHistory.js';
-import PeopleStore from '../stores/PeopleStore.js'
+import PeopleStore from 'stores/PeopleStore.js'
 
 var $ = require("jquery");
 var url = "https://dev.calligre.com"

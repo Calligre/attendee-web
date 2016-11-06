@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Router, Route, useRouterHistory, IndexRoute, IndexLink } from "react-router";
 
-require('!style!css!sass!../sass/main.scss');
 
 import Layout from "pages/Layout";
 import Home from "pages/Home";
@@ -17,6 +16,8 @@ import Login from "pages/Login";
 import AppHistory from 'util/AppHistory';
 import AuthService from 'util/AuthService';
 import * as config from 'auth0.config.js';
+
+require('!style!css!sass!../sass/main.scss');
 
 const app = document.getElementById('app');
 
