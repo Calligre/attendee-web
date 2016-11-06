@@ -28,17 +28,21 @@ class AuthService extends EventEmitter {
   }
 
   _doAuthentication(authResult){
-    // Saves the user token
-    this.setToken(authResult.idToken)
-    // Async loads the user profile data
-    this.lock.getProfile(authResult.idToken, (error, profile) => {
-      if (error) {
-        console.log('Error loading the Profile', error)
-      } else {
-        this.setProfile(profile);
-        this._createUser();
-      }
-    })
+    if (authResult.state.includes('linking')) {
+      this.linkAccount(authResult.idToken) // linkAccount when state is linking
+    } else {
+      // Saves the user token
+      this.setToken(authResult.idToken)
+      // Async loads the user profile data
+      this.lock.getProfile(authResult.idToken, (error, profile) => {
+        if (error) {
+          console.log('Error loading the Profile', error)
+        } else {
+          this.setProfile(profile);
+          this._createUser();
+        }
+      })
+    }
   }
 
   _createUser() {
