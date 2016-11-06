@@ -1,4 +1,5 @@
 import { EventEmitter } from "events";
+import AuthService from "util/AuthService" 
 
 import dispatcher from "dispatcher";
 
@@ -18,6 +19,9 @@ class NotificationStore extends EventEmitter {
     $.ajax({
       url: url + "/api/broadcast",
       dataType: "json",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
       cache: false,
       success: function(response) {
         self.notifications = response.data;
