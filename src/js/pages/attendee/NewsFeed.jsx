@@ -15,7 +15,7 @@ import Dropzone from 'react-dropzone';
 
 export default class NewsFeed extends React.Component {
 
-	constructor() {
+  constructor() {
     super();
     this.getNewsFeedPosts = this.getNewsFeedPosts.bind(this);
     this.createPost = this.createPost.bind(this);
@@ -24,8 +24,40 @@ export default class NewsFeed extends React.Component {
     this.onDrop = this.onDrop.bind(this);
     this.state = {
       contentFeed: {
-        items: [],
-        nextPage: null,
+        posts: [
+          {
+            current_user_likes: true,
+            text: "Runscope test",
+            poster_name: "Lookup Name Result",
+            poster_id: "2",
+            like_count: 0,
+            timestamp: 1474834562.532806,
+            poster_icon: "http://calligre-profilepics.s3-website-us-west-2.amazonaws.com/profilepic-1.jpg",
+            id: "1474834562.532805919647216796875"
+        },
+        {
+            current_user_likes: true,
+            text: "testingpost",
+            poster_name: "Lookup Name Result",
+            poster_id: "adsku43oufo4ulf",
+            like_count: 0,
+            timestamp: 1474611177.963123,
+            poster_icon: "http://calligre-profilepics.s3-website-us-west-2.amazonaws.com/profilepic-1.jpg",
+            id: "1474611177.9631230831146240234375"
+        },
+        {
+            current_user_likes: true,
+            text: "No text provided",
+            poster_name: "Lookup Name Result",
+            poster_id: "1",
+            like_count: 1,
+            timestamp: 1474610782.024339,
+            poster_icon: "http://calligre-profilepics.s3-website-us-west-2.amazonaws.com/profilepic-1.jpg",
+            id: "1474610782.0243389606475830078125"
+          }
+        ],
+        nextOffset: null,
+        count: 0,
       },
       file: null,
       fbPost: false,
@@ -93,7 +125,6 @@ export default class NewsFeed extends React.Component {
 
   onDrop(files) {
     console.log(files);
-    console.log("FILE");
     this.setState({
       file: files[0]
     });
@@ -104,24 +135,24 @@ export default class NewsFeed extends React.Component {
   render() {
     const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
 
-    const NewsFeedPosts = contentFeed.items.map((post) => {
+    const NewsFeedPosts = contentFeed.posts.map((post) => {
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
 
-    function displayTwitter() {
-      if (user.twIntegration) {
-        return (
-          <div>
-            <input
-              type="checkbox"
-              onClick={this.twToggle}
-              checked={this.state.twPost}
-            />
-            <span className="tw-check fsize">Twitter</span>
-          </div>
-        )
-      }
-    }
+    // function displayTwitter() {
+    //   if (user.twIntegration) {
+    //     return (
+    //       <div>
+    //         <input
+    //           type="checkbox"
+    //           onClick={this.twToggle}
+    //           checked={this.state.twPost}
+    //         />
+    //         <span className="tw-check fsize">Twitter</span>
+    //       </div>
+    //     )
+    //   }
+    // }
 
     function displayPaginate() {
       if (contentFeed.nextPage !== null) {

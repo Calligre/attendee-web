@@ -3,15 +3,15 @@ import NewsFeedStore from "stores/NewsFeedStore";
 
 export default class NewsFeedPost extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.togglePictureDisplay = this.togglePictureDisplay.bind(this);
     this.changeLike = this.changeLike.bind(this);
-    this.state = {
-      showPicture: false,
-      liked: 0,
-      likeStyle: {color: 'black', fontSize: "40px", marginLeft: "50px"},
-    };
+    this.state = this.props;
+    console.log("THIS IS MY STATE");
+    console.log(this.state);
+
+    // likeStyle: {color: 'black', fontSize: "40px", marginLeft: "50px"},
   }
 
   // componentWillMount() {
@@ -24,7 +24,7 @@ export default class NewsFeedPost extends React.Component {
   //   NewsFeedStore.removeListener("error", this.showError);
   // }
 
-  showError(){
+  showError() {
     console.log(NewsFeedStoreStore.error);
   }
 
@@ -38,16 +38,16 @@ export default class NewsFeedPost extends React.Component {
     // TODO: How are we doing this on the backend?
     if (this.state.liked) {
       // When this works, remove liked attribute
-      NewsFeedStore.decrementLike();
+      newsFeedStore.decrementLike();
       this.setState({
         liked: 0,
-        likeStyle: {color: 'black', fontSize: "40px", marginLeft: "50px"},
+        // likeStyle: {color: 'black', fontSize: "40px", marginLeft: "50px"},
       });
     } else {
-      NewsFeedStore.incrementLike();
+      newsFeedStore.incrementLike();
       this.setState({
         liked: 1,
-        likeStyle: {color: 'red', fontSize: "40px", marginLeft: "50px"},
+        // likeStyle: {color: 'red', fontSize: "40px", marginLeft: "50px"},
       })
     }
 
@@ -60,41 +60,14 @@ export default class NewsFeedPost extends React.Component {
     // TODO: This is a dirty hack job until the API has a solution
     let likeCount = like_count + this.state.liked;
 
-
-
-    var width100 = {
-      margin: "30px -10% 15px 20%",
-    }
-
-    var font30 = {
-      fontSize: "26px"
-    }
-
-    var font40 = {
-      fontSize: "32px"
-    }
-
-    var font24 = {
-      fontSize: "20px",
-    }
-
-    var fleft = {
-      float: "left"
-    }
-
-    var fcenter = {
-      float: "center"
-    }
-
-
     let renderPicture;
     if (this.props.media_link === undefined || this.props.media_link === "") {
       renderPicture = (
-        <span style={font24}>NO MEDIA LINK</span>
+        <span>NO MEDIA LINK</span>
       );
     } else if (!this.state.showPicture) {
       renderPicture = (
-        <span class="picture-text" style={font30} onClick={this.togglePictureDisplay}>Show Photo...</span>
+        <span class="picture-text" onClick={this.togglePictureDisplay}>Show Photo...</span>
       );
     } else {
       renderPicture = (
@@ -104,19 +77,17 @@ export default class NewsFeedPost extends React.Component {
       );
     }
 
-
-
-
     return (
-      <div class="newsfeed-post" style={width100}>
+      <div class="newsfeed-post">
         <div class="test-post">
-          <span class="username" style={font40}>{posterid} - </span>
-          <span class="text" style={font30}>{text} </span>
+          <span class="username">{posterid} - </span>
+          <span class="text">{text} </span>
         </div>
-        <span class="likes" style={this.state.likeStyle} onClick={this.changeLike}>&hearts;</span>
-        <span style={font40}>{likeCount} - </span>
+        <span class="likes" onClick={this.changeLike}>&hearts;</span>
+        <span>{like_count} - </span>
         {renderPicture}
       </div>
     );
   }
 }
+// style={this.state.likeStyle}

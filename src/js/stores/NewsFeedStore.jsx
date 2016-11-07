@@ -8,14 +8,12 @@ class NewsFeedStore extends EventEmitter {
 
   constructor(auth) {
     super()
-    console.log("STORE CONSTUCTOR")
     this.contentFeed = {
       items: []
     }
     this.error = null;
     this.dataFetched = false;
   }
-
 
   get() {
     // TODO: Configure next page into API
@@ -34,7 +32,7 @@ class NewsFeedStore extends EventEmitter {
         dispatcher.dispatch({type: "NEWSFEED_GET", response: response});
       },
       failure: function(error){
-        this.dataFetched = false;
+        newsFeedStore.dataFetched = false;
         dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
       }
     });
@@ -97,8 +95,8 @@ class NewsFeedStore extends EventEmitter {
         break;
       }
       case "NEWSFEED_GET": {
-        this.contentFeed.items.push.apply(this.contentFeed.items, action.response.items);
-        this.contentFeed.nextPage = action.response.nextPage;
+        this.contentFeed.posts.push.apply(this.contentFeed.items, action.response.items);
+        this.contentFeed.nextOffset = action.response.nextOffset;
         this.contentFeed.count = action.response.count;
         this.emit("updated");
         console.log(this);
