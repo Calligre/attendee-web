@@ -5,9 +5,19 @@ import AuthService from 'util/AuthService'
 import LinkAccountService from 'util/LinkAccountService'
 
 export class LinkedAccountsList extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      profile: AuthService.getProfile()
+    }
+    AuthService.on('profile_updated', (newProfile) => {
+      this.setState({profile: newProfile})
+    })
+  }
+
   render(){
     const linker = new LinkAccountService()
-    const profile = AuthService.getProfile()
+    const profile = this.state.profile
     let items = []
     if (profile && profile.identities) {
       items = profile.identities.map(identity => {

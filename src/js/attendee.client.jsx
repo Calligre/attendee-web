@@ -24,7 +24,18 @@ const app = document.getElementById('app');
 // onEnter callback to validate authentication in private routes
 const requireAuth = (nextState, replace) => {
   if (!AuthService.loggedIn()) {
+    localStorage.setItem('redirect_after_login', nextState.location.pathname);
     replace({ nextPathname: nextState.location.pathname }, '/login');
+  } else {
+    redirectAfterLogin(replace)
+  }
+};
+
+const redirectAfterLogin = (replace) => {
+  const url = localStorage.getItem('redirect_after_login')
+  if (url) {
+    localStorage.removeItem('redirect_after_login')
+    replace({ pathname: url })
   }
 };
 
@@ -40,6 +51,7 @@ ReactDOM.render(
       <Route path="profile" component={Profile} onEnter={requireAuth}></Route>
       <Route path="info" apiBaseURL="https://dev.calligre.com/api" component={Info} onEnter={requireAuth}></Route>
       <Route path="login" component={Login}></Route>
+      <Route path="access_token=:token" component={Login} />
     </Route>
   </Router>,
 app);
