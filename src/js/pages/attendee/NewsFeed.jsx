@@ -68,20 +68,6 @@ export default class NewsFeed extends React.Component {
           name: "",
           twIntegration: true,
           fbIntegration: true,
-      contentFeed: {
-        items: [],
-        nextPage: null,
-      },
-      file: null,
-      fbPost: false,
-      twPost: false,
-      message: " #SoftwareDemoDay",
-      user: // TODO: Receive this information somehow
-        {
-          id: 0,
-          name: "",
-          twIntegration: true,
-          fbIntegration: true,
         },
     };
   }
@@ -148,7 +134,7 @@ export default class NewsFeed extends React.Component {
   render() {
     const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
 
-    const NewsFeedPosts = contentFeed.items.map((post) => {
+    const NewsFeedPosts = contentFeed.posts.map((post) => {
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
 

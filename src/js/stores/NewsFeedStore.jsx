@@ -14,6 +14,7 @@ class NewsFeedStore extends EventEmitter {
     this.error = null;
     this.dataFetched = false;
   }
+
   get() {
     // TODO: Configure next page into API
     // if (this.contentFeed.nextpage) { add nextPage into query}
@@ -54,13 +55,7 @@ class NewsFeedStore extends EventEmitter {
     console.log("TODO: decrementLike");
   }
 
-<<<<<<< b758faf3af3b95edf9ca05a7f814f2f6e7e9c7b9
   createPost(text, photo, fbIntegration, twIntegration) {
-=======
-
-  createPost(text, photo, fbIntegration, twIntegration) {
-    console.log(photo)
->>>>>>> Photos, sass file
     // TODO: Userid isn't static
     let data = {
       posterid: 2,
@@ -100,10 +95,6 @@ class NewsFeedStore extends EventEmitter {
       case "NEWSFEED_GET": {
         this.contentFeed.posts.push.apply(this.contentFeed.items, action.response.items);
         this.contentFeed.nextOffset = action.response.nextOffset;
-=======
-        this.contentFeed.items.push.apply(this.contentFeed.items, action.response.items);
-        this.contentFeed.nextPage = action.response.nextPage;
->>>>>>> Pagination, store reloads when navigating in app
         this.contentFeed.count = action.response.count;
         this.emit("updated");
         console.log(this);
