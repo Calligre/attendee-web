@@ -19,9 +19,9 @@ const app = document.getElementById('app');
 
 // onEnter callback to validate authentication in private routes
 const requireAuth = (nextState, replace) => {
-  if (!AuthService.loggedIn()) {
-    replace({ nextPathname: nextState.location.pathname }, '/login');
-  }
+  // if (!AuthService.loggedIn()) {
+  //   replace({ nextPathname: nextState.location.pathname }, '/login');
+  // }
 }
 
 ReactDOM.render(
