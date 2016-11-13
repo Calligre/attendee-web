@@ -89,9 +89,4 @@ export default class NewsFeedPost extends React.Component {
       </div>
     );
   }
-<<<<<<< 6f5487546d34c19ecf7af3378b0f9d2e16a4dd00
 }
-// style={this.state.likeStyle}
-=======
-}
->>>>>>> Work on merge
