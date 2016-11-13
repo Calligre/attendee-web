@@ -43,7 +43,7 @@ ReactDOM.render(
   <Router history={AppHistory}>
     <Route path="/" component={Layout}>
       <IndexRoute apiBaseURL="https://dev.calligre.com/api" component={Home} onEnter={requireAuth}></IndexRoute>
-      <Route path="newsfeed" component={NewsFeed} onEnter={requireAuth}></Route>
+
       <Route path="people" component={People} onEnter={requireAuth}></Route>
       <Route path='people/:id' component={Profile} onEnter={requireAuth} />
       <Route path="events" component={Events} onEnter={requireAuth}></Route>

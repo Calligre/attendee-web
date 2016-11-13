@@ -3,15 +3,15 @@ import ReactDOM from "react-dom";
 import { Router, Route, useRouterHistory, IndexRoute, IndexLink } from "react-router";
 
 
-import Layout from "pages/Layout";
-import Home from "pages/Home";
-import NewsFeed from "pages/NewsFeed";
-import People from "pages/People";
-import Events from "pages/Events";
-import EventPage from "pages/Event";
-import Profile from "pages/Profile";
-import Info from "pages/Info";
-import Login from "pages/Login";
+import Layout from "pages/attendee/Layout";
+import Home from "pages/attendee/Home";
+import NewsFeed from "pages/attendee/NewsFeed";
+import People from "pages/attendee/People";
+import Events from "pages/attendee/Events";
+import EventPage from "pages/attendee/Event";
+import Profile from "pages/attendee/Profile";
+import Info from "pages/attendee/Info";
+import Login from "pages/attendee/Login";
 
 import AppHistory from 'util/AppHistory';
 import AuthService from 'util/AuthService';
