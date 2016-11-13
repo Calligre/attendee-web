@@ -24,6 +24,7 @@
     "moment": "^2.14.1",
     "randomcolor": "^0.4.4",
     "react": "^0.14.8",
+    "react-bootstrap": "^0.30.6",
     "react-date-picker": "^5.3.26",
     "react-dom": "^0.14.6",
     "react-dropzone": "^3.5.3",

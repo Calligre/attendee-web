@@ -21,14 +21,11 @@ class AuthService extends EventEmitter {
     this.lock.on('authorization_error', this._authorizationError.bind(this))
     // binds login functions to keep this context
     this.login = this.login.bind(this)
-
-    this.lock.on('hide', () => {
-      AppHistory.push("/");
-    })
   }
 
   _doAuthentication(authResult){
-    if (authResult.state.includes('linking')) {
+    if (authResult.state && authResult.state.includes('linking')) {
+      localStorage.setItem('redirect_after_login', 'profile')
       this.linkAccount(authResult.idToken) // linkAccount when state is linking
     } else {
       // Saves the user token

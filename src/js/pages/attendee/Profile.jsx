@@ -39,7 +39,6 @@ export default class Profile extends React.Component {
     if (this.props.params.hasOwnProperty("id")) {
       id = this.props.params.id;
     }
-    var p = PeopleStore.people;
     var profiles = PeopleStore.people.filter((profile) => {
       return profile.id == 1;
     })
