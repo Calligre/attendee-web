@@ -38,13 +38,13 @@ export default class NewsFeedPost extends React.Component {
     // TODO: How are we doing this on the backend?
     if (this.state.liked) {
       // When this works, remove liked attribute
-      newsFeedStore.decrementLike();
+      NewsFeedStore.decrementLike();
       this.setState({
         liked: 0,
         // likeStyle: {color: 'black', fontSize: "40px", marginLeft: "50px"},
       });
     } else {
-      newsFeedStore.incrementLike();
+      NewsFeedStore.incrementLike();
       this.setState({
         liked: 1,
         // likeStyle: {color: 'red', fontSize: "40px", marginLeft: "50px"},

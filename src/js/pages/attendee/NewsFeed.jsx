@@ -154,15 +154,16 @@ export default class NewsFeed extends React.Component {
     // }
 
     function displayPaginate() {
-      if (contentFeed.nextPage !== null) {
+      console.log("THIS IS MY PAGINATION")
+      console.log(contentFeed.nextOffset)
+      if (contentFeed.nextOffset) {
         return (
           <div onClick={NewsFeedStore.get}>Load More...</div>
         );
-      } else {
-        return(
-          <span>End of Content</span>
-        )
       }
+      return(
+        <span>End of Content</span>
+      )
     }
 
     return (
