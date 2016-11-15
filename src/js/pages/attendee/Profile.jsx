@@ -22,6 +22,9 @@ export default class Profile extends React.Component {
     this.onDrop = this.onDrop.bind(this);
     this.cancelDrop = this.cancelDrop.bind(this);
     PeopleStore.getAll();
+    AuthService.on('profile_updated', (newProfile) => {
+      this.getProfile
+    })
   }
 
   componentWillMount() {
@@ -35,6 +38,9 @@ export default class Profile extends React.Component {
   }
 
   getProfile() {
+    if (!AuthService.getProfile().identities) {
+      return
+    }
     var id = AuthService.getCurrentUserId();
     if (this.props.params.hasOwnProperty("id")) {
       id = this.props.params.id;
@@ -99,8 +105,8 @@ export default class Profile extends React.Component {
   }
 
   render() {
-    if (this.state.profile.private) {
-      return;
+    if (this.state.profile.private || !AuthService.getProfile().identities) {
+      return (<div><h2>Loading</h2></div>)
     }
 
     const {id, first_name, last_name, organization, points, description} = this.state.profile;

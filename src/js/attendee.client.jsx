@@ -20,22 +20,26 @@ import AuthService from 'util/AuthService';
 import * as config from 'auth0.config.js';
 
 const app = document.getElementById('app');
+const redirectCallback = (newProfile) => {
+  redirectAfterLogin()
+}
 
 // onEnter callback to validate authentication in private routes
 const requireAuth = (nextState, replace) => {
   if (!AuthService.loggedIn()) {
     localStorage.setItem('redirect_after_login', nextState.location.pathname);
-    replace({ nextPathname: nextState.location.pathname }, '/login');
+    AppHistory.push('login')
   } else {
-    redirectAfterLogin(replace)
+    AuthService.on('profile_updated', redirectCallback)
   }
 };
 
-const redirectAfterLogin = (replace) => {
+const redirectAfterLogin = () => {
   const url = localStorage.getItem('redirect_after_login')
   if (url) {
     localStorage.removeItem('redirect_after_login')
-    replace({ pathname: url })
+    AppHistory.push(url)
+    AuthService.removeListener('profile_updated', redirectCallback)
   }
 };
 
