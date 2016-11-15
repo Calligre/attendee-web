@@ -11,8 +11,6 @@ import Results from 'pages/organizer/Results';
 import Login from 'pages/Login';
 
 import AppHistory from 'util/AppHistory';
-import AuthService from 'util/AuthService';
-import * as config from 'auth0.config.js';
 
 require('!style!css!sass!../sass/main.scss');
 
