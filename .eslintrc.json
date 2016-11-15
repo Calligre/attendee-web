@@ -4,5 +4,19 @@
         "react",
         "jsx-a11y",
         "import"
-    ]
+    ],
+    "settings": {
+        "import/parser": "babel-eslint",
+        "import/resolver": {
+            "webpack": {
+                "config": "webpack.config.js"
+            }
+        }
+    },
+    "rules": {
+        //These rules are in place because eslint import resolver webpack refuses to do its job
+        "import/no-unresolved": 0,
+        "import/no-extraneous-dependencies": 0,
+        "import/extensions": 0
+    }
 }
