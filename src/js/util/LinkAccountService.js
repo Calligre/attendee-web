@@ -11,10 +11,15 @@ export default class LinkAccountService {
       }
     })
     this.link = this.link.bind(this)
+
+    this.lock.on('hide', () => {
+      localStorage.removeItem('logging_in')
+    })
   }
 
   link(){
     // Call the show method to display the authentication window.
     this.lock.show()
+    localStorage.setItem('logging_in', true)
   }
 }

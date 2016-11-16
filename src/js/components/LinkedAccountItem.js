@@ -5,6 +5,7 @@ import { SocialIcon } from 'react-social-icons'
 
 export class LinkedAccountItem extends React.Component {
   static propTypes = {
+    profile: PropTypes.object,
     identity: PropTypes.object
   }
 
@@ -15,8 +16,10 @@ export class LinkedAccountItem extends React.Component {
   }
 
   renderUnlink(){
-    const { identity } = this.props
-    const profile = AuthService.getProfile()
+    const { profile, identity } = this.props
+    // TODO: when identities are returned as part of the queried profile,
+    // check if current user id
+
     if (profile.user_id != identity.provider + '|' + identity.user_id){
       return (
         <Button className="unlink" onClick={this.unlink.bind(this, identity)}>

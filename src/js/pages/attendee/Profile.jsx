@@ -23,7 +23,7 @@ export default class Profile extends React.Component {
     this.cancelDrop = this.cancelDrop.bind(this);
     PeopleStore.getAll();
     AuthService.on('profile_updated', (newProfile) => {
-      this.getProfile
+      this.getProfile()
     })
   }
 
@@ -46,7 +46,7 @@ export default class Profile extends React.Component {
       id = this.props.params.id;
     }
     var profiles = PeopleStore.people.filter((profile) => {
-      return profile.id == 1;
+      return profile.id == id;
     })
 
     this.setState({
@@ -104,6 +104,15 @@ export default class Profile extends React.Component {
     PeopleStore.updatePerson(profile);
   }
 
+  renderLinkedAccountsList(myProfile) {
+    if (myProfile) {
+      return (
+        <LinkedAccountsList profile={AuthService.getProfile()}></LinkedAccountsList>
+      )
+    }
+    return null
+  }
+
   render() {
     if (this.state.profile.private || !AuthService.getProfile().identities) {
       return (<div><h2>Loading</h2></div>)
@@ -129,18 +138,16 @@ export default class Profile extends React.Component {
         </Dropzone>
         <h2>{first_name} {last_name}</h2>
         <h4>Points: {points}</h4>
+        {this.renderLinkedAccountsList(myProfile)}
         <div className="editableContainer profileItem">
           <h3 contentEditable={myProfile} className="organization editable">{organization}</h3>
           <div className="editIcon">{editIcon}</div>
-        </div>
-        <div className="socialMediaContainer profileItem">
         </div>
         <div className="editableContainer profileItem">
           <p contentEditable={myProfile} className="description editable">{description}</p>
           <div className="editIcon">{editIcon}</div>
         </div>
         <button className="submitChanges" onClick={this.submitChanges}>Save changes</button>
-        <LinkedAccountsList></LinkedAccountsList>
       </div>
     );
   }

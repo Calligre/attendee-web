@@ -158,6 +158,7 @@ class AuthService extends EventEmitter {
       } else {
         this.setProfile({...profile, identities: response}) // updates profile identities
       }
+      localStorage.removeItem('logging_in')
     })
   }
 
