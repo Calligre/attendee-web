@@ -3,6 +3,7 @@ import AuthService from "util/AuthService";
 import dispatcher from "dispatcher";
 
 var $ = require("jquery");
+var url = "https://dev.calligre.com"
 
 class NewsFeedStore extends EventEmitter {
 
@@ -20,23 +21,37 @@ class NewsFeedStore extends EventEmitter {
     // if (this.contentFeed.nextpage) { add nextPage into query}
     //
     $.ajax({
-      url: "https://dev.calligre.com/api/content",
+      url: url + "/api/social",
       dataType: "json",
       headers: {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       cache: false,
-      success: function(response){
-        console.log(this)
+      success: function(response) {
         newsFeedStore.dataFetched = true;
         dispatcher.dispatch({type: "NEWSFEED_GET", response: response});
       },
-      failure: function(error){
+      failure: function(error) {
         newsFeedStore.dataFetched = false;
         dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
       }
     });
   }
+
+    // $.ajax({
+    //   url: "https://dev.calligre.com/api/user",
+    //   dataType: "json",
+    //   headers: {
+    //     "Authorization": "Bearer " + AuthService.getToken()
+    //   },
+    //   cache: false,
+    //   success: function(response){
+    //     dispatcher.dispatch({type: "PEOPLE_GET", people: response});
+    //   },
+    //   error: function(error){
+    //     dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
+    //   }
+    // });
 
   getOnLoad() {
     if (!this.dataFetched) {
@@ -93,7 +108,7 @@ class NewsFeedStore extends EventEmitter {
         break;
       }
       case "NEWSFEED_GET": {
-        this.contentFeed.posts.push.apply(this.contentFeed.items, action.response.items);
+        Array.prototype.push.apply(this.contentFeed.items, action.response.items);
         this.contentFeed.nextOffset = action.response.nextOffset;
         this.contentFeed.count = action.response.count;
         this.emit("updated");

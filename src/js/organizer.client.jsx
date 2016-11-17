@@ -9,7 +9,7 @@ import NewsFeed from "pages/attendee/NewsFeed";
 import People from "pages/attendee/People";
 import Events from "pages/attendee/Events";
 import EventPage from "pages/attendee/Event";
-import Profile from "pages/attendee/Profile";
+import Profile from "pages/Profile";
 import Info from "pages/attendee/Info";
 import Login from "pages/attendee/Login";
 

@@ -21,9 +21,12 @@ export default class NewsFeed extends React.Component {
     this.twToggle = this.twToggle.bind(this);
     this.fbToggle = this.fbToggle.bind(this);
     this.onDrop = this.onDrop.bind(this);
+    this.updateMessage = this.updateMessage.bind(this);
+
+
     this.state = {
       contentFeed: {
-        posts: [
+        items: [
           {
             current_user_likes: true,
             text: "Runscope test",
@@ -61,7 +64,7 @@ export default class NewsFeed extends React.Component {
       file: null,
       fbPost: false,
       twPost: false,
-      message: " #SoftwareDemoDay",
+      message: "Post to the newsfeed...",
       user: // TODO: Receive this information somehow
         {
           id: 0,
@@ -93,13 +96,19 @@ export default class NewsFeed extends React.Component {
     });
   }
 
-  //
-  createPost() {
-    let text = document.getElementsByClassName(
-      "user-post-form")[0].getElementsByTagName('textarea')[0].value;
-    NewsFeedStore.createPost(text, this.state.file, this.state.fbPost, this.state.twPost);
+  getTextArea() {
+    return document.getElementsByClassName("user-post-form")[0].getElementsByTagName('textarea')[0].value;
+  }
 
-    console.log(text);
+  createPost() {
+    NewsFeedStore.createPost(this.getTextArea, this.state.file, this.state.fbPost, this.state.twPost);
+  }
+
+  updateMessage() {
+    this.setState({
+      message: this.getTextArea()
+    });
+    console.log(this.state.message);
   }
 
   uploadPhoto() {
@@ -130,90 +139,81 @@ export default class NewsFeed extends React.Component {
     console.log(this.state.file);
   }
 
-
   render() {
     const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
-
-    const NewsFeedPosts = contentFeed.posts.map((post) => {
+    const placeholder = "Post to newsfeed..."
+    const NewsFeedPosts = contentFeed.items.map((post) => {
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
 
-    // function displayTwitter() {
-    //   if (user.twIntegration) {
-    //     return (
-    //       <div>
-    //         <input
-    //           type="checkbox"
-    //           onClick={this.twToggle}
-    //           checked={this.state.twPost}
-    //         />
-    //         <span className="tw-check fsize">Twitter</span>
-    //       </div>
-    //     )
-    //   }
-    // }
-
-    function displayPaginate() {
-      console.log("THIS IS MY PAGINATION")
-      console.log(contentFeed.nextOffset)
+    function paginate() {
       if (contentFeed.nextOffset) {
-        return (
-          <div onClick={NewsFeedStore.get}>Load More...</div>
-        );
+        return (<div onClick={NewsFeedStore.get}>Load More...</div>);
       }
-      return(
-        <span>End of Content</span>
-      )
+      return(<span>End of Content</span>);
     }
 
+    function getTextPostLength() {
+      if (twPost) {
+        return "140";
+      }
+      return "1000";
+    }
+
+                // {this.state.user.fbIntegration &&
+                //   <div>
+                //     <input
+                //       type="checkbox"
+                //       onClick={this.fbToggle}
+                //       checked={this.state.fbPost}
+                //     />
+                //     <span>Facebook</span>
+                //   </div>
+                // }
+                // {this.state.user.twIntegration &&
+                //   <div>
+                //     <input
+                //       type="checkbox"
+                //       onClick={this.twToggle}
+                //       checked={this.state.twPost}
+                //     />
+                //     <span>Twitter</span>
+                //   </div>
+                // }
+
+
+
+
     return (
-      <div className="newsFeed">
-        <div class="user-post">
-          <div>
-            <form className="user-post-form upost">
-              <textarea className="fsize" maxLength="140" rows="4" cols="80" type="text"
-                defaultValue={message}></textarea>
-              <div className="alignLeft">
-                {this.state.user.fbIntegration &&
-                  <div>
-                    <input
-                      type="checkbox"
-                      onClick={this.fbToggle}
-                      checked={this.state.fbPost}
-                    />
-                    <span>Facebook</span>
-                  </div>
-                }
-                {this.state.user.twIntegration &&
-                  <div>
-                    <input
-                      type="checkbox"
-                      onClick={this.twToggle}
-                      checked={this.state.twPost}
-                    />
-                    <span>Twitter</span>
-                  </div>
-                }
+      <div>
+        <h1>News Feed</h1>
+        <div className="newsFeed">
+          <div class="user-post">
+            <form className="user-post-form">
+              <div className="left-input">
+                <textarea className="text-input"
+                  maxLength={getTextPostLength()} rows="4" type="text"
+                  placeholder={placeholder} onChange={this.updateMessage}></textarea>
               </div>
-              <div className="alignRight">
+              <div className="right-input">
                 <Dropzone multiple={false} accept="image/*" onDrop={this.onDrop}>
                   <p>Drop a file or click to open</p>
                 </Dropzone>
+              </div>
                 {this.state.file && <div><img src={this.state.file.preview}/></div>}
                 <a href="google.com">jfdsfhsdfsda</a>
                 <button className="submit-form btn btn-primary aright" onClick={this.createPost}>Make a post</button>
-              </div>
             </form>
           </div>
-        </div>
 
-        <div>
-          <div className="news-feed-posts">
-            {NewsFeedPosts}
-          </div>
           <div>
-            <hr/>
-            {displayPaginate()}
+            <div className="news-feed-posts">
+              {NewsFeedPosts}
+            </div>
+            <div class="paginate">
+              <hr/>
+              {paginate()}
+            </div>
           </div>
         </div>
       </div>
