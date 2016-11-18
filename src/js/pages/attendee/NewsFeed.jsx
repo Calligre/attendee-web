@@ -137,21 +137,21 @@ export default class NewsFeed extends React.Component {
     });
   }
 
-  // onDrop(files) {
-  //   console.log(files);
-  //   this.setState({
-  //     file: files[0]
-  //   });
-  //   console.log(this.state.file);
-  // }
-
   onDrop(files) {
+    console.log(files);
     this.setState({
-      preview: files[0].preview,
-      newPhoto: files[0],
-      uploadInProgress: true
-    })
+      file: files[0]
+    });
+    console.log(this.state.file);
   }
+
+  // onDrop(files) {
+  //   this.setState({
+  //     preview: files[0].preview,
+  //     newPhoto: files[0],
+  //     uploadInProgress: true
+  //   })
+  // }
 
   cancelDrop(e) {
     e.stopPropagation();
@@ -230,12 +230,15 @@ export default class NewsFeed extends React.Component {
                     </div>
                   </Dropzone>
                 </div>
-                <div>
-                </div>
+              </div>
 
+              <div className="left-input">
+              HI
+              </div>
+              <div className="right-input">
                 {this.state.file && <div><img src={this.state.file.preview}/></div>}
                 <a href="google.com">jfdsfhsdfsda</a>
-                <button className="submit-form btn btn-primary aright" onClick={this.createPost}>Make a post</button>
+                <button className="submit-form btn btn-primary aright" onClick={this.createPost}>Post</button>
               </div>
             </form>
           </div>

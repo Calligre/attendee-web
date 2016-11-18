@@ -1,70 +1,73 @@
 .newsFeed {
 
+
+  .border {
+    border-color: black;
+    border-width: 1px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+  }
+
+
   .user-post {
 
     margin-top: 40px;
+
+    .left-input {
+      float: left;
+      width: 79%;
+      height: inherit;
+      display: inline-block;
+    }
+
+    .right-input {
+      float: left;
+      margin-left: 1%;
+      height: inherit;
+      width: 20%;
+    }
+
 
     .input {
 
       height: 100px;
 
-      .border {
-        border-color: black;
-        border-width: 1px;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
+      .text-input {
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        outline: none;
       }
 
-      .left-input {
-        float: left;
-        width: 79%;
-        height: inherit;
-        display: inline-block;
-        .text-input {
-          width: 100%;
-          height: 100%;
-          font-size: 16px;
+      .dropzone {
+        width: 100%;
+        height: 100%;
+        border-style: dotted;
+        background-color: #e6e6e6;
+
+        img {
+          width: 200px;
+          height: 200px;
         }
 
-      }
+        .label {
+          color: #2d2d2d;
+          font-weight: normal;
+          font-size: 12px;
+          white-space: pre-wrap;
 
-      .right-input {
-        float: left;
-        margin-left: 1%;
-        height: inherit;
-        width: 20%;
-
-        .dropzone {
-          width: 100%;
-          height: 100%;
-          border-style: dotted;
-          background-color: #e6e6e6;
-
-          img {
-            width: 200px;
-            height: 200px;
+          .photo-icon {
+            display: block;
+            margin: 5% auto;
           }
+        }
 
-          .label {
-            color: #2d2d2d;
-            font-weight: normal;
-            font-size: 12px;
-            white-space: pre-wrap;
-
-            .photo-icon {
-              display: block;
-              margin: 5% auto;
-            }
-          }
-
-          .cancel {
-            top: 0;
-            right: 0;
-            font-size: 16px;
-          }
+        .cancel {
+          top: 0;
+          right: 0;
+          font-size: 16px;
         }
       }
     }
   }
-
 }
