@@ -2,6 +2,7 @@ import React from "react";
 import NewsFeedPost from "components/NewsFeedPost";
 import NewsFeedStore from "stores/NewsFeedStore";
 import Dropzone from 'react-dropzone';
+import MdPhotoCamera from 'react-icons/lib/md/photo-camera';
 // import style from '../../sass/newsfeed.scss';
 
 // TODO Twitter char limit
@@ -21,7 +22,7 @@ export default class NewsFeed extends React.Component {
     this.twToggle = this.twToggle.bind(this);
     this.fbToggle = this.fbToggle.bind(this);
     this.onDrop = this.onDrop.bind(this);
-    this.updateMessage = this.updateMessage.bind(this);
+    // this.updateMessage = this.updateMessage.bind(this);
 
 
     this.state = {
@@ -100,16 +101,21 @@ export default class NewsFeed extends React.Component {
     return document.getElementsByClassName("user-post-form")[0].getElementsByTagName('textarea')[0].value;
   }
 
-  createPost() {
-    NewsFeedStore.createPost(this.getTextArea, this.state.file, this.state.fbPost, this.state.twPost);
+  setTextArea(text) {
+    document.getElementsByClassName("user-post-form")[0].getElementsByTagName('textarea')[0].value = text;
   }
 
-  updateMessage() {
-    this.setState({
-      message: this.getTextArea()
-    });
-    console.log(this.state.message);
+  createPost() {
+    console.log(this.getTextArea());
+    NewsFeedStore.createPost(this.getTextArea(), this.state.file, this.state.fbPost, this.state.twPost);
+    this.setTextArea('');
   }
+
+  // updateMessage() {
+  //   this.setState({
+  //     message: this.getTextArea()
+  //   });
+  // }
 
   uploadPhoto() {
     console.log("Let's do a photo thing");
@@ -131,13 +137,31 @@ export default class NewsFeed extends React.Component {
     });
   }
 
+  // onDrop(files) {
+  //   console.log(files);
+  //   this.setState({
+  //     file: files[0]
+  //   });
+  //   console.log(this.state.file);
+  // }
+
   onDrop(files) {
-    console.log(files);
     this.setState({
-      file: files[0]
-    });
-    console.log(this.state.file);
+      preview: files[0].preview,
+      newPhoto: files[0],
+      uploadInProgress: true
+    })
   }
+
+  cancelDrop(e) {
+    e.stopPropagation();
+    this.setState({
+      preview: this.state.profile.photo,
+      newPhoto: null,
+      uploadInProgress: false
+    });
+  }
+
 
   render() {
     const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
@@ -145,6 +169,8 @@ export default class NewsFeed extends React.Component {
     const NewsFeedPosts = contentFeed.items.map((post) => {
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
+    const displayCancel = false && this.state.uploadInProgress ? "visible" : "hidden";
+
 
     function paginate() {
       if (contentFeed.nextOffset) {
@@ -190,19 +216,27 @@ export default class NewsFeed extends React.Component {
         <div className="newsFeed">
           <div class="user-post">
             <form className="user-post-form">
-              <div className="left-input">
-                <textarea className="text-input"
-                  maxLength={getTextPostLength()} rows="4" type="text"
-                  placeholder={placeholder} onChange={this.updateMessage}></textarea>
-              </div>
-              <div className="right-input">
-                <Dropzone multiple={false} accept="image/*" onDrop={this.onDrop}>
-                  <p>Drop a file or click to open</p>
-                </Dropzone>
-              </div>
+              <div className="input">
+                <div className="left-input">
+                  <textarea className="text-input border"
+                    maxLength={getTextPostLength()} rows="4" type="text"
+                    placeholder={placeholder}></textarea>
+                </div>
+                <div className="right-input">
+                  <Dropzone className='dropzone border' onDrop={this.onDrop} multiple={false}>
+                    <div className="label">
+                      <MdPhotoCamera className="photo-icon" size={30}/>
+                      <div>Click or drag to upload</div>
+                    </div>
+                  </Dropzone>
+                </div>
+                <div>
+                </div>
+
                 {this.state.file && <div><img src={this.state.file.preview}/></div>}
                 <a href="google.com">jfdsfhsdfsda</a>
                 <button className="submit-form btn btn-primary aright" onClick={this.createPost}>Make a post</button>
+              </div>
             </form>
           </div>
 
