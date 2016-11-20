@@ -2,14 +2,16 @@ import React from "react";
 import NewsFeedPost from "components/NewsFeedPost";
 import NewsFeedStore from "stores/NewsFeedStore";
 import Dropzone from 'react-dropzone';
+import MdHighlightRemove from 'react-icons/lib/md/highlight-remove';
 import MdPhotoCamera from 'react-icons/lib/md/photo-camera';
+import TiSocialFacebook from 'react-icons/lib/ti/social-facebook';
+import TiSocialTwitter from 'react-icons/lib/ti/social-twitter';
 // import style from '../../sass/newsfeed.scss';
 
-// TODO Twitter char limit
 // TODO Photo upload
 // TODO Configure likes - pull in likes by user
 //                        make API post to add or remove
-//
+// TODO: LIMIT NUMBER OF NEWLINES?
 // TODO
 //
 
@@ -63,6 +65,7 @@ export default class NewsFeed extends React.Component {
         count: 0,
       },
       file: null,
+      preivew: null,
       fbPost: false,
       twPost: false,
       message: "Post to the newsfeed...",
@@ -140,9 +143,9 @@ export default class NewsFeed extends React.Component {
   onDrop(files) {
     console.log(files);
     this.setState({
-      file: files[0]
+      file: files[0],
+      preview: files[0].preview,
     });
-    console.log(this.state.file);
   }
 
   // onDrop(files) {
@@ -164,8 +167,10 @@ export default class NewsFeed extends React.Component {
 
 
   render() {
-    const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle } = this.state;
-    const placeholder = "Post to newsfeed..."
+    const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle, preview } = this.state;
+    const placeholder = "Post to news feed..."
+    const socialStatus = true;// && this.state.fbIntegration ? "visible" : "hidden";
+
     const NewsFeedPosts = contentFeed.items.map((post) => {
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
@@ -207,8 +212,22 @@ export default class NewsFeed extends React.Component {
                 //   </div>
                 // }
 
-
-
+    function dropzoneDisplay() {
+      if (preview) {
+        return(
+            <div className="img-container">
+              <span class="helper"></span><img src={preview}/>
+            </div>
+        );
+      } else {
+        return(
+          <div className="label">
+            <MdPhotoCamera className="photo-icon" size={30}/>
+            <div>Click or drag to upload</div>
+          </div>
+        );
+      }
+    }
 
     return (
       <div>
@@ -221,24 +240,26 @@ export default class NewsFeed extends React.Component {
                   <textarea className="text-input border"
                     maxLength={getTextPostLength()} rows="4" type="text"
                     placeholder={placeholder}></textarea>
+                  <div className="social-submit">
+                    <button className={"btn social facebook " + socialStatus} onClick={this.fbToggle}>
+                      <TiSocialFacebook size={34}/>
+                    </button>
+                    <button className={"btn social twitter " + socialStatus} onClick={this.twToggle}>
+                      <TiSocialTwitter size={34}/>
+                    </button>
+                    <button className="submit-form btn btn-primary" onClick={this.createPost}>Submit Post</button>
+                  </div>
                 </div>
                 <div className="right-input">
                   <Dropzone className='dropzone border' onDrop={this.onDrop} multiple={false}>
-                    <div className="label">
-                      <MdPhotoCamera className="photo-icon" size={30}/>
-                      <div>Click or drag to upload</div>
-                    </div>
+                    {dropzoneDisplay()}
                   </Dropzone>
                 </div>
               </div>
 
               <div className="left-input">
-              HI
               </div>
               <div className="right-input">
-                {this.state.file && <div><img src={this.state.file.preview}/></div>}
-                <a href="google.com">jfdsfhsdfsda</a>
-                <button className="submit-form btn btn-primary aright" onClick={this.createPost}>Post</button>
               </div>
             </form>
           </div>
