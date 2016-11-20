@@ -65,7 +65,7 @@ export default class NewsFeed extends React.Component {
         count: 0,
       },
       file: null,
-      preivew: null,
+      preview: null,
       fbPost: false,
       twPost: false,
       message: "Post to the newsfeed...",
@@ -215,9 +215,11 @@ export default class NewsFeed extends React.Component {
     function dropzoneDisplay() {
       if (preview) {
         return(
+          <div className="preview-box">
             <div className="img-container">
-              <span class="helper"></span><img src={preview}/>
+              <span className="helper"></span><img src={preview}/>
             </div>
+          </div>
         );
       } else {
         return(
