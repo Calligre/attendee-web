@@ -24,6 +24,8 @@ export default class NewsFeed extends React.Component {
     this.twToggle = this.twToggle.bind(this);
     this.fbToggle = this.fbToggle.bind(this);
     this.onDrop = this.onDrop.bind(this);
+    this.deletePhoto = this.deletePhoto.bind(this);
+
     // this.updateMessage = this.updateMessage.bind(this);
 
 
@@ -141,10 +143,17 @@ export default class NewsFeed extends React.Component {
   }
 
   onDrop(files) {
-    console.log(files);
     this.setState({
       file: files[0],
       preview: files[0].preview,
+    });
+  }
+
+  deletePhoto(e) {
+    e.stopPropagation();
+    this.setState({
+      file: null,
+      preview: null,
     });
   }
 
@@ -212,12 +221,13 @@ export default class NewsFeed extends React.Component {
                 //   </div>
                 // }
 
-    function dropzoneDisplay() {
+    function dropzoneDisplay(deletePhoto) {
       if (preview) {
         return(
           <div className="preview-box">
+            <MdHighlightRemove className="photo-delete" onClick={deletePhoto} size={24}/>
             <div className="img-container">
-              <span className="helper"></span><img src={preview}/>
+              <span className="helper"></span><img className="border" src={preview}/>
             </div>
           </div>
         );
@@ -254,14 +264,9 @@ export default class NewsFeed extends React.Component {
                 </div>
                 <div className="right-input">
                   <Dropzone className='dropzone border' onDrop={this.onDrop} multiple={false}>
-                    {dropzoneDisplay()}
+                    {dropzoneDisplay(this.deletePhoto)}
                   </Dropzone>
                 </div>
-              </div>
-
-              <div className="left-input">
-              </div>
-              <div className="right-input">
               </div>
             </form>
           </div>

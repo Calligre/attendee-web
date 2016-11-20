@@ -26,7 +26,6 @@
     }
 
     .input {
-
       height: 125px;
 
       .text-input {
@@ -37,14 +36,7 @@
       }
 
       .social-submit {
-
         float: right;
-
-        span {
-          font-size: 24px;
-          display: inline-block;
-          vertical-align: middle;
-        }
 
         .social {
           padding: 2px !important;
@@ -64,21 +56,22 @@
         border-style: dotted;
         background-color: #e6e6e6;
 
-        .photo-delete {
-          float: right;
-          position: absolute;
-        }
-
         .preview-box {
           height: 100%;
           width: 100%;
           display: inline-block;
 
+          .photo-delete {
+            right: 16px;
+            position: absolute;
+            background-color: white;
+            -webkit-border-radius: 10px;
+          }
 
           .img-container {
             height: 100%;
             width: 100%;
-            padding: 2%;
+            padding: 1%;
             text-align: center;
 
             .helper {
