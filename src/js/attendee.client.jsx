@@ -20,11 +20,26 @@ import AuthService from 'util/AuthService';
 import * as config from 'auth0.config.js';
 
 const app = document.getElementById('app');
+const redirectCallback = (newProfile) => {
+  redirectAfterLogin()
+}
 
 // onEnter callback to validate authentication in private routes
 const requireAuth = (nextState, replace) => {
   if (!AuthService.loggedIn()) {
-    replace({ nextPathname: nextState.location.pathname }, '/login');
+    localStorage.setItem('redirect_after_login', nextState.location.pathname);
+    AppHistory.push('login')
+  } else {
+    AuthService.on('profile_updated', redirectCallback)
+  }
+};
+
+const redirectAfterLogin = () => {
+  const url = localStorage.getItem('redirect_after_login')
+  if (url) {
+    localStorage.removeItem('redirect_after_login')
+    AppHistory.push(url)
+    AuthService.removeListener('profile_updated', redirectCallback)
   }
 };
 
@@ -40,6 +55,7 @@ ReactDOM.render(
       <Route path="profile" component={Profile} onEnter={requireAuth}></Route>
       <Route path="info" apiBaseURL="https://dev.calligre.com/api" component={Info} onEnter={requireAuth}></Route>
       <Route path="login" component={Login}></Route>
+      <Route path="access_token=:token" component={Login} />
     </Route>
   </Router>,
 app);

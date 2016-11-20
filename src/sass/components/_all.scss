@@ -5,6 +5,7 @@ $darkBlue: #022F5A;
 $blue: #5F9EDF;
 $teal: #62D0DB;
 $grey: #D7D8DA;
+$darkGrey: #CCC;
 $black: #000;
 $white: #FFF;
 $error: #D83B31;
@@ -99,19 +100,19 @@ p {
 
 button {
   font-size: 16px;
-  padding: 10px 15px;
-  background-color: $purple;
-  border: none;
-  border-radius: 5px;
-  margin: 10px;
+  padding: 10px 15px !important;
+  background-color: $purple !important;
+  background-image: none !important;
+  border: none !important;
+  border-radius: 5px !important;
+  margin: 10px !important;
+  color: white !important;
 
   &:hover {
-    background-color: $darkBlue;
-    color: white;
+    background-color: $darkBlue !important;
   }
 
   &:disabled {
-    background-color: $grey;
-    color: black;
+    background-color: $grey !important;
   }
 }

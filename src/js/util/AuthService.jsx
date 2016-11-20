@@ -2,7 +2,6 @@ import { EventEmitter } from 'events'
 import { isTokenExpired } from './jwtHelper'
 import Auth0Lock from 'auth0-lock'
 import * as config from 'auth0.config.js';
-import AppHistory from 'util/AppHistory';
 import PeopleStore from 'stores/PeopleStore'
 
 var $ = require("jquery");
@@ -11,8 +10,16 @@ var url = "https://dev.calligre.com"
 class AuthService extends EventEmitter {
   constructor(clientId, domain) {
     super()
+    this.clientId = clientId
+    this.domain = domain
     // Configure Auth0
-    this.lock = new Auth0Lock(clientId, domain, {auth: {redirect: false}})
+    this.lock = new Auth0Lock(clientId, domain, {
+      auth: {
+        redirect: true,
+        responseType: 'token',
+        redirectUrl: window.location.origin + '/#',
+      }
+    })
     // Add callback for lock `authenticated` event
     this.lock.on('authenticated', this._doAuthentication.bind(this))
     // Add callback for lock `authorization_error` event
@@ -21,22 +28,28 @@ class AuthService extends EventEmitter {
     this.login = this.login.bind(this)
 
     this.lock.on('hide', () => {
-      AppHistory.push("/");
+      localStorage.removeItem('logging_in')
     })
   }
 
   _doAuthentication(authResult){
-    // Saves the user token
-    this.setToken(authResult.idToken)
-    // Async loads the user profile data
-    this.lock.getProfile(authResult.idToken, (error, profile) => {
-      if (error) {
-        console.log('Error loading the Profile', error)
-      } else {
-        this.setProfile(profile);
-        this._createUser();
-      }
-    })
+    if (authResult.state && authResult.state.includes('linking')) {
+      localStorage.setItem('redirect_after_login', 'profile')
+      this.linkAccount(authResult.idToken) // linkAccount when state is linking
+    } else {
+      // Saves the user token
+      this.setToken(authResult.idToken)
+      // Async loads the user profile data
+      this.lock.getProfile(authResult.idToken, (error, profile) => {
+        if (error) {
+          console.log('Error loading the Profile', error)
+        } else {
+          this.setProfile(profile);
+          this._createUser();
+        }
+        localStorage.removeItem('logging_in')
+      })
+    }
   }
 
   _createUser() {
@@ -68,8 +81,9 @@ class AuthService extends EventEmitter {
   }
 
   login() {
-    // Call the show method to display the widget.
+    // Call the show method to display the authentication window.
     this.lock.show()
+    localStorage.setItem('logging_in', true)
   }
 
   loggedIn(){
@@ -109,6 +123,58 @@ class AuthService extends EventEmitter {
     // Clear user token and profile data from localStorage
     localStorage.removeItem('id_token');
     localStorage.removeItem('profile');
+  }
+
+  fetchApi(url, options){
+    // performs api calls sending the required authentication headers
+    const headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.getToken()
+    }
+
+    const userId = this.getProfile().user_id
+    return fetch(`https://${this.domain}/api/v2/users/${userId}/${url}`, {
+      headers,
+      ...options
+    })
+    .then(response => response.json())
+  }
+
+  linkAccount(token){
+    // prepares api request body data
+    const data = {
+      link_with: token
+    }
+    // sends a post to auth0 api to create a new identity
+    return this.fetchApi('identities', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      const profile = this.getProfile()
+      if (response.error){
+        alert(response.message)
+      } else {
+        this.setProfile({...profile, identities: response}) // updates profile identities
+      }
+      localStorage.removeItem('logging_in')
+    })
+  }
+
+  unlinkAccount(identity){
+    // sends a delete request to unlink the account identity
+    this.fetchApi(`identities/${identity.provider}/${identity.user_id}`, {
+      method: 'DELETE'
+    })
+    .then(response => {
+      const profile = this.getProfile()
+      if (response.error){
+        alert(response.message)
+      } else {
+        this.setProfile({...profile, identities: response}) // updates profile identities
+      }
+    })
   }
 }
 

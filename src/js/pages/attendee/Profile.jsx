@@ -1,6 +1,7 @@
-import React from "react";
+import React, { PropTypes } from "react";
 import $ from 'jquery';
 
+import LinkedAccountsList from 'components/LinkedAccountsList';
 import PeopleStore from "stores/PeopleStore";
 import AuthService from "util/AuthService"
 import Dropzone from 'react-dropzone';
@@ -10,12 +11,20 @@ import Edit from 'react-icons/lib/md/mode-edit';
 export default class Profile extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { profile: {id: 0}, preview: '', uploadInProgress: false, newPhoto: null };
+    this.state = {
+      profile: {id: 0},
+      preview: '',
+      uploadInProgress: false,
+      newPhoto: null,
+    };
     this.getProfile = this.getProfile.bind(this);
     this.submitChanges = this.submitChanges.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.cancelDrop = this.cancelDrop.bind(this);
     PeopleStore.getAll();
+    AuthService.on('profile_updated', (newProfile) => {
+      this.getProfile()
+    })
   }
 
   componentWillMount() {
@@ -29,6 +38,9 @@ export default class Profile extends React.Component {
   }
 
   getProfile() {
+    if (!AuthService.getProfile().identities) {
+      return
+    }
     var id = AuthService.getCurrentUserId();
     if (this.props.params.hasOwnProperty("id")) {
       id = this.props.params.id;
@@ -92,9 +104,18 @@ export default class Profile extends React.Component {
     PeopleStore.updatePerson(profile);
   }
 
+  renderLinkedAccountsList(myProfile) {
+    if (myProfile) {
+      return (
+        <LinkedAccountsList profile={AuthService.getProfile()}></LinkedAccountsList>
+      )
+    }
+    return null
+  }
+
   render() {
-    if (this.state.profile.private) {
-      return;
+    if (this.state.profile.private || !AuthService.getProfile().identities) {
+      return (<div><h2>Loading</h2></div>)
     }
 
     const {id, first_name, last_name, organization, points, description} = this.state.profile;
@@ -117,17 +138,15 @@ export default class Profile extends React.Component {
         </Dropzone>
         <h2>{first_name} {last_name}</h2>
         <h4>Points: {points}</h4>
+        {this.renderLinkedAccountsList(myProfile)}
         <div className="editableContainer profileItem">
           <h3 contentEditable={myProfile} className="organization editable">{organization}</h3>
           <div className="editIcon">{editIcon}</div>
-        </div>
-        <div className="socialMediaContainer profileItem">
         </div>
         <div className="editableContainer profileItem">
           <p contentEditable={myProfile} className="description editable">{description}</p>
           <div className="editIcon">{editIcon}</div>
         </div>
-
         <button className="submitChanges" onClick={this.submitChanges}>Save changes</button>
       </div>
     );

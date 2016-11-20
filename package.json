@@ -24,6 +24,7 @@
     "moment": "^2.14.1",
     "randomcolor": "^0.4.4",
     "react": "^0.14.8",
+    "react-bootstrap": "^0.30.6",
     "react-date-picker": "^5.3.26",
     "react-dom": "^0.14.6",
     "react-dropzone": "^3.5.3",
@@ -32,6 +33,7 @@
     "react-router": "^2.0.0",
     "react-search-input": "^0.10.1",
     "react-select": "^1.0.0-beta14",
+    "react-social-icons": "^2.5.1",
     "remarkable": "^1.6.2",
     "sass-loader": "^4.0.0",
     "webpack-dev-server": "^1.14.1"
