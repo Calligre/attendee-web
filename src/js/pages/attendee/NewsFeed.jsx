@@ -12,7 +12,7 @@ import TiSocialTwitter from 'react-icons/lib/ti/social-twitter';
 // TODO Configure likes - pull in likes by user
 //                        make API post to add or remove
 // TODO: LIMIT NUMBER OF NEWLINES?
-// TODO
+// TODO: HOVER text?
 //
 
 export default class NewsFeed extends React.Component {
@@ -70,13 +70,13 @@ export default class NewsFeed extends React.Component {
       preview: null,
       fbPost: false,
       twPost: false,
+      twIntegration: true,
+      fbIntegration: true,
       message: "Post to the newsfeed...",
       user: // TODO: Receive this information somehow
         {
           id: 0,
           name: "",
-          twIntegration: true,
-          fbIntegration: true,
         },
     };
   }
@@ -116,12 +116,6 @@ export default class NewsFeed extends React.Component {
     this.setTextArea('');
   }
 
-  // updateMessage() {
-  //   this.setState({
-  //     message: this.getTextArea()
-  //   });
-  // }
-
   uploadPhoto() {
     console.log("Let's do a photo thing");
   }
@@ -131,15 +125,26 @@ export default class NewsFeed extends React.Component {
   }
 
   fbToggle() {
-    this.setState({
-      fbPost: !this.state.fbPost,
-    })
+    if (this.state.fbIntegration) {
+      this.setState({
+        fbPost: !this.state.fbPost,
+      });
+    } else {
+      console.log("TODO: Integrate Facebook window");
+      // TODO: On success change state
+    }
   }
 
   twToggle() {
-    this.setState({
-      twPost: !this.state.twPost,
-    });
+    if (this.state.twIntegration) {
+      this.setState({
+        twPost: !this.state.twPost,
+      });
+    }
+    else {
+      console.log("TODO: Integrate Twitter window");
+      // TODO: On success change state
+    }
   }
 
   onDrop(files) {
@@ -157,41 +162,16 @@ export default class NewsFeed extends React.Component {
     });
   }
 
-  // onDrop(files) {
-  //   this.setState({
-  //     preview: files[0].preview,
-  //     newPhoto: files[0],
-  //     uploadInProgress: true
-  //   })
-  // }
-
-  cancelDrop(e) {
-    e.stopPropagation();
-    this.setState({
-      preview: this.state.profile.photo,
-      newPhoto: null,
-      uploadInProgress: false
-    });
-  }
-
-
   render() {
     const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle, preview } = this.state;
     const placeholder = "Post to news feed..."
-    const socialStatus = true;// && this.state.fbIntegration ? "visible" : "hidden";
+
+    const twitterStatus =  this.state.twIntegration && this.state.twPost ? "twitter" : "disabled-social";
+    const facebookStatus =  this.state.fbIntegration && this.state.fbPost ? "facebook" : "disabled-social";
 
     const NewsFeedPosts = contentFeed.items.map((post) => {
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
-    const displayCancel = false && this.state.uploadInProgress ? "visible" : "hidden";
-
-
-    function paginate() {
-      if (contentFeed.nextOffset) {
-        return (<div onClick={NewsFeedStore.get}>Load More...</div>);
-      }
-      return(<span>End of Content</span>);
-    }
 
     function getTextPostLength() {
       if (twPost) {
@@ -200,34 +180,13 @@ export default class NewsFeed extends React.Component {
       return "1000";
     }
 
-                // {this.state.user.fbIntegration &&
-                //   <div>
-                //     <input
-                //       type="checkbox"
-                //       onClick={this.fbToggle}
-                //       checked={this.state.fbPost}
-                //     />
-                //     <span>Facebook</span>
-                //   </div>
-                // }
-                // {this.state.user.twIntegration &&
-                //   <div>
-                //     <input
-                //       type="checkbox"
-                //       onClick={this.twToggle}
-                //       checked={this.state.twPost}
-                //     />
-                //     <span>Twitter</span>
-                //   </div>
-                // }
-
     function dropzoneDisplay(deletePhoto) {
       if (preview) {
         return(
-          <div className="preview-box">
+          <div className="preview-box inline">
             <MdHighlightRemove className="photo-delete" onClick={deletePhoto} size={24}/>
             <div className="img-container">
-              <span className="helper"></span><img className="border" src={preview}/>
+              <span className="helper inline"></span><img className="border inline" src={preview}/>
             </div>
           </div>
         );
@@ -241,24 +200,34 @@ export default class NewsFeed extends React.Component {
       }
     }
 
+    function paginate() {
+      if (contentFeed.nextOffset)
+        return (<div className="true" onClick={NewsFeedStore.get}>Load more...</div>);
+      return(<div className="false">End of Content</div>);
+    }
+
     return (
       <div>
         <h1>News Feed</h1>
         <div className="newsFeed">
-          <div class="user-post">
+          <div className="user-post">
             <form className="user-post-form">
               <div className="input">
-                <div className="left-input">
+                <div className="left-input inline">
                   <textarea className="text-input border"
                     maxLength={getTextPostLength()} rows="4" type="text"
                     placeholder={placeholder}></textarea>
-                  <div className="social-submit">
-                    <button className={"btn social facebook " + socialStatus} onClick={this.fbToggle}>
-                      <TiSocialFacebook size={34}/>
-                    </button>
-                    <button className={"btn social twitter " + socialStatus} onClick={this.twToggle}>
-                      <TiSocialTwitter size={34}/>
-                    </button>
+                  <div className="social-submit inline">
+                    <div title="Post to Facebook" className="inline">
+                      <button className={"btn social " + facebookStatus} onClick={this.fbToggle}>
+                        <TiSocialFacebook size={34}/>
+                      </button>
+                    </div>
+                    <div title="Post to Twitter" className="inline">
+                      <button className={"btn social " + twitterStatus} onClick={this.twToggle}>
+                        <TiSocialTwitter size={34}/>
+                      </button>
+                    </div>
                     <button className="submit-form btn btn-primary" onClick={this.createPost}>Submit Post</button>
                   </div>
                 </div>
@@ -275,8 +244,8 @@ export default class NewsFeed extends React.Component {
             <div className="news-feed-posts">
               {NewsFeedPosts}
             </div>
-            <div class="paginate">
-              <hr/>
+            <hr/>
+            <div className="paginate">
               {paginate()}
             </div>
           </div>
