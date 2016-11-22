@@ -13,6 +13,11 @@
             }
         }
     },
+    "parser": "babel-eslint",
+    "parserOptions": {
+    "sourceType": "module",
+        "allowImportExportEverywhere": false
+    },
     "rules": {
         //These rules are in place because eslint import resolver webpack refuses to do its job
         "import/no-unresolved": 0,
