@@ -108,11 +108,10 @@ class NewsFeedStore extends EventEmitter {
         break;
       }
       case "NEWSFEED_GET": {
-        Array.prototype.push.apply(this.contentFeed.items, action.response.items);
-        this.contentFeed.nextOffset = action.response.nextOffset;
-        this.contentFeed.count = action.response.count;
+        Array.prototype.push.apply(this.contentFeed.items, action.response.data.posts[0]);
+        this.contentFeed.nextOffset = action.response.data.nextOffset;
+        this.contentFeed.count = action.response.data.count;
         this.emit("updated");
-        console.log(this);
         break;
       }
       case "ERROR": {

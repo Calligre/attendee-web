@@ -1,5 +1,7 @@
 import React from "react";
 import NewsFeedStore from "stores/NewsFeedStore";
+import FaHeart from 'react-icons/lib/fa/heart';
+import FaRetweet from 'react-icons/lib/fa/retweet';
 
 export default class NewsFeedPost extends React.Component {
 
@@ -55,10 +57,20 @@ export default class NewsFeedPost extends React.Component {
 
   render() {
 
-    const { id, posterid, text, like_count, media_link, timestamp } = this.props;
+    console.log("NEWS FEED PROPS")
+    console.log(this.state);
+
+    let { current_user_likes, like_count, poster_icon,
+            poster_id, poster_name, text, media_link } = this.props;
 
     // TODO: This is a dirty hack job until the API has a solution
     let likeCount = like_count + this.state.liked;
+    // TODO: Remove this
+    current_user_likes = true;
+
+    let heartColor = {
+      color: current_user_likes ? "red" : "inherit",
+    }
 
     let renderPicture;
     if (this.props.media_link === undefined || this.props.media_link === "") {
@@ -67,26 +79,37 @@ export default class NewsFeedPost extends React.Component {
       );
     } else if (!this.state.showPicture) {
       renderPicture = (
-        <span class="picture-text" onClick={this.togglePictureDisplay}>Show Photo...</span>
+        <span className="picture-text" onClick={this.togglePictureDisplay}>Show Photo...</span>
       );
     } else {
       renderPicture = (
-        <span class="picture" onClick={this.togglePictureDisplay}>
+        <span className="picture" onClick={this.togglePictureDisplay}>
           <img src={media_link}/>
         </span>
       );
     }
 
     return (
-      <div class="newsfeed-post">
-        <div class="test-post">
-          <span class="username">{posterid} - </span>
-          <span class="text">{text} </span>
+      <div className="newsfeed-post">
+        <div className="user-photo-container inline">
+          <img src={poster_icon} className="user-photo"/>
         </div>
-        <span class="likes" onClick={this.changeLike}>&hearts;</span>
-        <span>{like_count} - </span>
-        {renderPicture}
+        <div className="post-text inline">
+          <p className="username">hfsjkfhkdsahfjkdsfhjkdsfhjkfdhskajfhsd fsdhjkfhjkdsfsd</p>
+          <p className="text">{text}</p>
+          <div className="social-bar">
+            <FaHeart className={"heart-icon"} style={heartColor} size={20}/>
+            <span className="like-count">{like_count}</span>
+            <FaRetweet className="retweet-button" size={28}/>
+            {<span className="image-toggle">Show image</span>}
+          </div>
+        </div>
       </div>
     );
   }
 }
+
+// {renderPicture}
+
+
+

@@ -219,16 +219,18 @@ export default class NewsFeed extends React.Component {
                     placeholder={placeholder}></textarea>
                   <div className="social-submit inline">
                     <div title="Post to Facebook" className="inline">
-                      <button className={"btn social " + facebookStatus} onClick={this.fbToggle}>
+                      <button type="button" className={"btn social " + facebookStatus} onClick={this.fbToggle}>
                         <TiSocialFacebook size={34}/>
                       </button>
                     </div>
                     <div title="Post to Twitter" className="inline">
-                      <button className={"btn social " + twitterStatus} onClick={this.twToggle}>
+                      <button type="button" className={"btn social " + twitterStatus} onClick={this.twToggle}>
                         <TiSocialTwitter size={34}/>
                       </button>
                     </div>
-                    <button className="submit-form btn btn-primary" onClick={this.createPost}>Submit Post</button>
+                    <button type="button" className="submit-form btn btn-primary" onClick={this.createPost}>
+                      Submit Post
+                    </button>
                   </div>
                 </div>
                 <div className="right-input">
@@ -241,7 +243,7 @@ export default class NewsFeed extends React.Component {
           </div>
 
           <div>
-            <div className="news-feed-posts">
+            <div className="newsfeed-posts">
               {NewsFeedPosts}
             </div>
             <hr/>

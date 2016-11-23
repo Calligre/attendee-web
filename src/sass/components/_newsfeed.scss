@@ -20,7 +20,7 @@
   }
 
   .disabled-social {
-    background-color: $darkGrey !important;
+    background-color: $grey !important;
   }
 
   .user-post {
@@ -70,7 +70,7 @@
         height: 100%;
         max-height: 100%;
         border-style: dotted;
-        background-color: #e6e6e6;
+        background-color: $grey;
         cursor: pointer;
         cursor: hand;
 
@@ -125,6 +125,53 @@
     }
   }
 
+  .newsfeed-posts {
+    margin-top: 40px;
+
+    .newsfeed-post {
+      border: 1px solid $grey;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+      min-height: 122px;
+
+
+      .user-photo-container {
+        position: absolute;
+        display: inline-block;
+
+        .user-photo {
+          height: 100px;
+          width: 100px;
+        }
+      }
+
+      .post-text {
+        padding-left: 130px;
+        width: 100%;
+        vertical-align: top;
+        word-wrap: break-word;
+
+        .username {
+          font-size: 20px;
+          font-weight: bold;
+        }
+
+        .text {
+          font-size: 16px;
+        }
+
+        .social-bar {
+          vertical-align: bottom;
+          font-size: 20px;
+          font-weight: bold;
+          color: #949494;
+        }
+      }
+    }
+  }
+
+
   .paginate {
     text-align: center;
     font-size: 16px;
@@ -137,4 +184,5 @@
       cursor: default;
     }
   }
+
 }
