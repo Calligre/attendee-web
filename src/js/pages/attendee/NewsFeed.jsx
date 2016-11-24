@@ -8,12 +8,7 @@ import TiSocialFacebook from 'react-icons/lib/ti/social-facebook';
 import TiSocialTwitter from 'react-icons/lib/ti/social-twitter';
 // import style from '../../sass/newsfeed.scss';
 
-// TODO Photo upload
-// TODO Configure likes - pull in likes by user
-//                        make API post to add or remove
 // TODO: LIMIT NUMBER OF NEWLINES?
-// TODO: HOVER text?
-//
 
 export default class NewsFeed extends React.Component {
 
@@ -26,54 +21,19 @@ export default class NewsFeed extends React.Component {
     this.onDrop = this.onDrop.bind(this);
     this.deletePhoto = this.deletePhoto.bind(this);
 
-    // this.updateMessage = this.updateMessage.bind(this);
-
-
     this.state = {
       contentFeed: {
-        items: [
-          {
-            current_user_likes: true,
-            text: "Runscope test",
-            poster_name: "Lookup Name Result",
-            poster_id: "2",
-            like_count: 0,
-            timestamp: 1474834562.532806,
-            poster_icon: "http://calligre-profilepics.s3-website-us-west-2.amazonaws.com/profilepic-1.jpg",
-            id: "1474834562.532805919647216796875"
-        },
-        {
-            current_user_likes: true,
-            text: "testingpost",
-            poster_name: "Lookup Name Result",
-            poster_id: "adsku43oufo4ulf",
-            like_count: 0,
-            timestamp: 1474611177.963123,
-            poster_icon: "http://calligre-profilepics.s3-website-us-west-2.amazonaws.com/profilepic-1.jpg",
-            id: "1474611177.9631230831146240234375"
-        },
-        {
-            current_user_likes: true,
-            text: "No text provided",
-            poster_name: "Lookup Name Result",
-            poster_id: "1",
-            like_count: 1,
-            timestamp: 1474610782.024339,
-            poster_icon: "http://calligre-profilepics.s3-website-us-west-2.amazonaws.com/profilepic-1.jpg",
-            id: "1474610782.0243389606475830078125"
-          }
-        ],
+        items: [],
         nextOffset: null,
-        count: 0,
       },
       file: null,
       preview: null,
       fbPost: false,
       twPost: false,
+      // TODO: HOW CAN I GET THESE? (If user is integrated into social media channels)
       twIntegration: true,
       fbIntegration: true,
-      message: "Post to the newsfeed...",
-      user: // TODO: Receive this information somehow
+      user:
         {
           id: 0,
           name: "",
@@ -117,6 +77,7 @@ export default class NewsFeed extends React.Component {
   }
 
   uploadPhoto() {
+    // TODO: UPLOAD THE PHOTO
     console.log("Let's do a photo thing");
   }
 
@@ -131,7 +92,7 @@ export default class NewsFeed extends React.Component {
       });
     } else {
       console.log("TODO: Integrate Facebook window");
-      // TODO: On success change state
+      // TODO: Open add Facebook window and change state on success
     }
   }
 
@@ -143,7 +104,7 @@ export default class NewsFeed extends React.Component {
     }
     else {
       console.log("TODO: Integrate Twitter window");
-      // TODO: On success change state
+      // TODO: Open add Twitter window and change state on success
     }
   }
 
@@ -168,17 +129,17 @@ export default class NewsFeed extends React.Component {
 
     const twitterStatus =  this.state.twIntegration && this.state.twPost ? "twitter" : "disabled-social";
     const facebookStatus =  this.state.fbIntegration && this.state.fbPost ? "facebook" : "disabled-social";
+    const textPostLength = twPost ? "140" : "1000";
 
     const NewsFeedPosts = contentFeed.items.map((post) => {
         return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
 
-    function getTextPostLength() {
-      if (twPost) {
-        return "140";
-      }
-      return "1000";
+    let paginate = (<div className="default-cursor">End of Content</div>);
+    if (contentFeed.nextOffset) {
+      paginate = (<div className="clickable link" onClick={NewsFeedStore.get}>Load more...</div>);
     }
+
 
     function dropzoneDisplay(deletePhoto) {
       if (preview) {
@@ -200,12 +161,6 @@ export default class NewsFeed extends React.Component {
       }
     }
 
-    function paginate() {
-      if (contentFeed.nextOffset)
-        return (<div className="true" onClick={NewsFeedStore.get}>Load more...</div>);
-      return(<div className="false">End of Content</div>);
-    }
-
     return (
       <div>
         <h1>News Feed</h1>
@@ -215,7 +170,7 @@ export default class NewsFeed extends React.Component {
               <div className="input">
                 <div className="left-input inline">
                   <textarea className="text-input border"
-                    maxLength={getTextPostLength()} rows="4" type="text"
+                    maxLength={textPostLength} rows="4" type="text"
                     placeholder={placeholder}></textarea>
                   <div className="social-submit inline">
                     <div title="Post to Facebook" className="inline">
@@ -248,7 +203,7 @@ export default class NewsFeed extends React.Component {
             </div>
             <hr/>
             <div className="paginate">
-              {paginate()}
+              {paginate}
             </div>
           </div>
         </div>

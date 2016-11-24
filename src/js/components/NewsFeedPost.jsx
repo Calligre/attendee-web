@@ -7,17 +7,13 @@ export default class NewsFeedPost extends React.Component {
 
   constructor(props) {
     super(props);
-    this.togglePictureDisplay = this.togglePictureDisplay.bind(this);
+    // this.togglePictureDisplay = this.togglePictureDisplay.bind(this);
     this.changeLike = this.changeLike.bind(this);
     this.state = this.props;
-    console.log("THIS IS MY STATE");
-    console.log(this.state);
-
-    // likeStyle: {color: 'black', fontSize: "40px", marginLeft: "50px"},
   }
 
   // componentWillMount() {
-  //   NewsFeedStore.on("updated", this.getNewsFeedPosts); // TODO
+  //   NewsFeedStore.on("updated", this.getNewsFeedPosts);
   //   NewsFeedStore.on("error", this.showError);
   // }
 
@@ -30,61 +26,35 @@ export default class NewsFeedPost extends React.Component {
     console.log(NewsFeedStoreStore.error);
   }
 
-  togglePictureDisplay() {
-    this.setState({
-      showPicture: !this.state.showPicture
-    });
-  }
-
   changeLike() {
-    // TODO: How are we doing this on the backend?
-    if (this.state.liked) {
-      // When this works, remove liked attribute
+    if (this.state.current_user_likes) {
       NewsFeedStore.decrementLike();
       this.setState({
-        liked: 0,
-        // likeStyle: {color: 'black', fontSize: "40px", marginLeft: "50px"},
+        current_user_likes: false,
       });
     } else {
       NewsFeedStore.incrementLike();
       this.setState({
-        liked: 1,
-        // likeStyle: {color: 'red', fontSize: "40px", marginLeft: "50px"},
-      })
+        current_user_likes: true,
+      });
     }
 
   }
 
   render() {
 
-    console.log("NEWS FEED PROPS")
-    console.log(this.state);
-
     let { current_user_likes, like_count, poster_icon,
-            poster_id, poster_name, text, media_link } = this.props;
+          poster_id, poster_name, text, media_link } = this.state;
 
-    // TODO: This is a dirty hack job until the API has a solution
-    let likeCount = like_count + this.state.liked;
-    // TODO: Remove this
-    current_user_likes = true;
-
-    let heartColor = {
+    const heartColor = {
       color: current_user_likes ? "red" : "inherit",
     }
 
-    let renderPicture;
-    if (this.props.media_link === undefined || this.props.media_link === "") {
-      renderPicture = (
-        <span>NO MEDIA LINK</span>
-      );
-    } else if (!this.state.showPicture) {
-      renderPicture = (
-        <span className="picture-text" onClick={this.togglePictureDisplay}>Show Photo...</span>
-      );
-    } else {
-      renderPicture = (
-        <span className="picture" onClick={this.togglePictureDisplay}>
-          <img src={media_link}/>
+    let imageText = null;
+    if (media_link && media_link !== "") {
+      imageText = (
+        <span className="show-image link clickable no_selection">
+          Show Image
         </span>
       );
     }
@@ -95,21 +65,16 @@ export default class NewsFeedPost extends React.Component {
           <img src={poster_icon} className="user-photo"/>
         </div>
         <div className="post-text inline">
-          <p className="username">hfsjkfhkdsahfjkdsfhjkdsfhjkfdhskajfhsd fsdhjkfhjkdsfsd</p>
+          <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
           <div className="social-bar">
-            <FaHeart className={"heart-icon"} style={heartColor} size={20}/>
-            <span className="like-count">{like_count}</span>
-            <FaRetweet className="retweet-button" size={28}/>
-            {<span className="image-toggle">Show image</span>}
+            <FaHeart className="heart-icon clickable" onClick={this.changeLike} style={heartColor} size={20}/>
+            <span className="like-count no_selection">{like_count}</span>
+            <FaRetweet className="retweet-button clickable" size={28}/>
+            {imageText}
           </div>
         </div>
       </div>
     );
   }
 }
-
-// {renderPicture}
-
-
-

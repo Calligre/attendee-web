@@ -23,14 +23,38 @@
     background-color: $grey !important;
   }
 
+  .clickable {
+    cursor: pointer;
+    cursor: hand;
+  }
+
+  .link {
+    color: $blue;
+    text-decoration: underline;
+  }
+
+  .default-cursor {
+    cursor: default;
+  }
+
+  span.no_selection {
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+  }
+
   .user-post {
 
     margin-top: 40px;
 
     .left-input {
       float: left;
-      width: 79%;
       height: inherit;
+      width: 79%;
+      @media screen and (max-width: 540px) {
+        width: 69%;
+      }
     }
 
     .right-input {
@@ -38,6 +62,9 @@
       margin-left: 1%;
       height: inherit;
       width: 20%;
+      @media screen and (max-width: 540px) {
+        width: 30%;
+      }
     }
 
     .input {
@@ -61,6 +88,7 @@
 
         .submit-form {
           margin: 2px 0 2px 5px !important;
+          outline: none;
         }
       }
 
@@ -133,7 +161,7 @@
       border-radius: 5px;
       padding: 10px;
       margin: 10px 0;
-      min-height: 122px;
+      min-height: 102px;
 
 
       .user-photo-container {
@@ -141,16 +169,19 @@
         display: inline-block;
 
         .user-photo {
-          height: 100px;
-          width: 100px;
+          height: 80px;
+          width: 80px;
         }
       }
 
       .post-text {
-        padding-left: 130px;
         width: 100%;
         vertical-align: top;
         word-wrap: break-word;
+        padding-left: 110px;
+        @media screen and (max-width: 359px){
+          padding-left: 90px;
+        }
 
         .username {
           font-size: 20px;
@@ -166,23 +197,38 @@
           font-size: 20px;
           font-weight: bold;
           color: #949494;
+          margin-top: 20px;
+          width: 100%;
+          min-width: 185px;
+
+          @media screen and (min-width: 768px){
+            padding-left:25%;
+          }
+
+          .heart-icon {
+            vertical-align: text-bottom;
+            margin-right: 5px;
+            cursor: pointer;
+            cursor: hand;
+          }
+
+          .retweet-button {
+            margin-left: 10%;
+          }
+
+          .show-image {
+            margin-left: 8%;
+            font-size: 16px;
+            font-weight: normal;
+          }
         }
       }
     }
   }
 
-
   .paginate {
     text-align: center;
     font-size: 16px;
-
-    .true {
-      color: blue;
-      text-decoration: underline;
-    }
-    .false {
-      cursor: default;
-    }
   }
 
 }

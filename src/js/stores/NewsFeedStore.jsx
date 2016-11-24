@@ -19,13 +19,18 @@ class NewsFeedStore extends EventEmitter {
   get() {
     // TODO: Configure next page into API
     // if (this.contentFeed.nextpage) { add nextPage into query}
-    //
     $.ajax({
       url: url + "/api/social",
       dataType: "json",
+      type: "get",
       headers: {
         "Authorization": "Bearer " + AuthService.getToken()
       },
+      // TODO: Plug in this data
+      // data: {
+      //   "limit": "2"
+      //   "offset": offset
+      // },
       cache: false,
       success: function(response) {
         newsFeedStore.dataFetched = true;
@@ -37,21 +42,6 @@ class NewsFeedStore extends EventEmitter {
       }
     });
   }
-
-    // $.ajax({
-    //   url: "https://dev.calligre.com/api/user",
-    //   dataType: "json",
-    //   headers: {
-    //     "Authorization": "Bearer " + AuthService.getToken()
-    //   },
-    //   cache: false,
-    //   success: function(response){
-    //     dispatcher.dispatch({type: "PEOPLE_GET", people: response});
-    //   },
-    //   error: function(error){
-    //     dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
-    //   }
-    // });
 
   getOnLoad() {
     if (!this.dataFetched) {
@@ -70,19 +60,17 @@ class NewsFeedStore extends EventEmitter {
     console.log("TODO: decrementLike");
   }
 
-  createPost(text, photo, fbIntegration, twIntegration) {
-    // TODO: Userid isn't static
+  createPost(text, photo, post_fb, post_tw) {
     let data = {
-      posterid: 2,
       text: text,
-      media_link: "",
-      like_count: 0,
-      timestamp: Date.now(),
+      media_url: "https://i.ytimg.com/vi/EVCrmXW6-Pk/maxresdefault.jpg",
+      post_fb: post_fb,
+      post_tw: post_tw,
     }
 
     $.ajax({
       type: "POST",
-      url: "https://dev.calligre.com/api/content",
+      url: "https://dev.calligre.com/api/social",
       data: JSON.stringify(data),
       dataType: "json",
       headers: {
