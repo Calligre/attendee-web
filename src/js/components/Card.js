@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Event from 'components/Event';
 
 export default class Card extends React.Component {
