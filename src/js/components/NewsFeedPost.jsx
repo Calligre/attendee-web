@@ -26,7 +26,6 @@ export default class NewsFeedPost extends React.Component {
   }
 
   changeLike() {
-    console.log(this.state.id);
     if (this.state.current_user_likes) {
       NewsFeedStore.unlikePost(this.state.id);
       // TODO: Potentially move this logic to be based on emitted action?

@@ -3,7 +3,7 @@ import AuthService from "util/AuthService";
 import dispatcher from "dispatcher";
 
 var $ = require("jquery");
-var url = "https://dev.calligre.com"
+let url = "https://dev.calligre.com"
 
 class NewsFeedStore extends EventEmitter {
 
@@ -18,16 +18,12 @@ class NewsFeedStore extends EventEmitter {
   }
 
   get() {
-    // TODO: Configure next page into API
-    // if (this.contentFeed.nextpage) { add nextPage into query}
     let params = {};
     if (newsFeedStore.contentFeed.nextOffset) {
       params.offset = newsFeedStore.contentFeed.nextOffset;
     }
-    params.limit = 5;
-
-    console.log("I AM MAKING A REQUEST");
-    console.log(newsFeedStore.contentFeed.nextOffset);
+    // TODO: Should there be a way to specify limit?
+    // params.limit = 10;
 
     $.ajax({
       headers: {
@@ -60,45 +56,88 @@ class NewsFeedStore extends EventEmitter {
   }
 
   likePost(postId) {
-    console.log("TODO: Like post");
-  }
-
-  unlikePost(postId) {
-    console.log("TODO: decrementLike");
-  }
-
-  createPost(text, photo, post_fb, post_tw) {
-    let data = {
-      text: text,
-      media_url: "https://i.ytimg.com/vi/EVCrmXW6-Pk/maxresdefault.jpg",
-      post_fb: post_fb,
-      post_tw: post_tw,
-    }
-
     $.ajax({
       type: "POST",
-      url: "https://dev.calligre.com/api/social",
-      data: JSON.stringify(data),
-      dataType: "json",
+      url: url + "/api/social/" + postId + "/likes",
       headers: {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       contentType:"application/json",
       cache: false,
-      success: function(response) {
-        dispatcher.dispatch({type: "NEWSFEED_POST", post: response["id"]});
+      statusCode: {
+        500: function() {
+          alert("Unable to perform this action, please try again later");
+        }
       },
-      failure: function(error){
-        dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
+      success: function(response) {
+        console.log("LIKE SUCCESS")
+        dispatcher.dispatch({type: "POST_LIKE", response: response});
+      },
+      failure: function(error) {
+        console.log("LIKE FAILURE")
+        dispatcher.dispatch({type: "LIKE_ERROR", error: error});
       }
     });
+  }
+
+  unlikePost(postId) {
+    $.ajax({
+      type: "DELETE",
+      url: url + "/api/social/" + postId + "/likes",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      contentType:"application/json",
+      cache: false,
+      statusCode: {
+        500: function() {
+          alert("Unable to perform this action, please try again later");
+        }
+      },
+      success: function(response) {
+        console.log("UNLIKE SUCCESS")
+        dispatcher.dispatch({type: "POST_UNLIKE", response: response});
+      },
+      failure: function(error) {
+        console.log("UNLIKE FAILURE")
+        dispatcher.dispatch({type: "LIKE_ERROR", error: error});
+      }
+    });
+  }
+
+  createPost(text, photo, post_fb, post_tw) {
+    if (text || photo) {
+      let data = {
+        text: text,
+        media_link: "https://i.ytimg.com/vi/EVCrmXW6-Pk/maxresdefault.jpg",
+        post_fb: post_fb,
+        post_tw: post_tw,
+      }
+
+      $.ajax({
+        type: "POST",
+        url: url + "/api/social",
+        data: JSON.stringify(data),
+        dataType: "json",
+        headers: {
+          "Authorization": "Bearer " + AuthService.getToken()
+        },
+        contentType:"application/json",
+        cache: false,
+        success: function(response) {
+          dispatcher.dispatch({type: "NEWSFEED_POST", post: response["id"]});
+        },
+        failure: function(error) {
+          dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
+        }
+      });
+    }
   }
 
 
   handleActions(action) {
     switch(action.type) {
       case "NEWSFEED_POST": {
-        // TODO: ensure that client sees their post on the front end
         this.emit("post");
         break;
       }
@@ -109,6 +148,10 @@ class NewsFeedStore extends EventEmitter {
         this.emit("updated");
         break;
       }
+      // case "POST_LIKE": {
+      //   this.emit("post_like");
+      //   break;
+      // }
       case "ERROR": {
         this.error = action.error;
         this.emit("error");

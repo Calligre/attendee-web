@@ -26,6 +26,7 @@ export default class NewsFeed extends React.Component {
         items: [],
         // offset is stored in the NewsFeedStore
       },
+      text: '',
       file: null,
       preview: null,
       fbPost: false,
@@ -74,11 +75,6 @@ export default class NewsFeed extends React.Component {
     console.log(this.getTextArea());
     NewsFeedStore.createPost(this.getTextArea(), this.state.file, this.state.fbPost, this.state.twPost);
     this.setTextArea('');
-  }
-
-  uploadPhoto() {
-    // TODO: UPLOAD THE PHOTO
-    console.log("Let's do a photo thing");
   }
 
   showError(){
