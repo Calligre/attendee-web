@@ -20,11 +20,12 @@ export default class NewsFeed extends React.Component {
     this.fbToggle = this.fbToggle.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.deletePhoto = this.deletePhoto.bind(this);
+    this.changeText = this.changeText.bind(this);
 
     this.state = {
       contentFeed: {
         items: [],
-        // offset is stored in the NewsFeedStore
+        // nextOffset is stored in the NewsFeedStore
       },
       text: '',
       file: null,
@@ -63,18 +64,11 @@ export default class NewsFeed extends React.Component {
     });
   }
 
-  getTextArea() {
-    return document.getElementsByClassName("user-post-form")[0].getElementsByTagName('textarea')[0].value;
-  }
-
-  setTextArea(text) {
-    document.getElementsByClassName("user-post-form")[0].getElementsByTagName('textarea')[0].value = text;
-  }
-
   createPost() {
-    console.log(this.getTextArea());
-    NewsFeedStore.createPost(this.getTextArea(), this.state.file, this.state.fbPost, this.state.twPost);
-    this.setTextArea('');
+    NewsFeedStore.createPost(this.state.text, this.state.file, this.state.fbPost, this.state.twPost);
+    this.setState({
+      text: '',
+    });
   }
 
   showError(){
@@ -119,8 +113,16 @@ export default class NewsFeed extends React.Component {
     });
   }
 
+  changeText(event) {
+    console.log("CHANGE TEXT");
+    this.setState({
+      text: event.target.value
+    });
+    console.log(event.target.value);
+  }
+
   render() {
-    const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle, preview } = this.state;
+    const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle, preview, text } = this.state;
     const placeholder = "Post to news feed..."
 
     const twitterStatus =  this.state.twIntegration && this.state.twPost ? "twitter" : "disabled-social";
@@ -128,7 +130,6 @@ export default class NewsFeed extends React.Component {
     const textPostLength = twPost ? "140" : "1000";
 
     const NewsFeedPosts = contentFeed.items.map((post) => {
-      console.log(post);
       return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
 
@@ -136,7 +137,7 @@ export default class NewsFeed extends React.Component {
     if (contentFeed.nextOffset) {
       paginate = (<div className="clickable link" onClick={NewsFeedStore.get}>Load more...</div>);
     }
-
+    console.log(text);
 
     function dropzoneDisplay(deletePhoto) {
       if (preview) {
@@ -168,7 +169,8 @@ export default class NewsFeed extends React.Component {
                 <div className="left-input inline">
                   <textarea className="text-input border"
                     maxLength={textPostLength} rows="4" type="text"
-                    placeholder={placeholder}></textarea>
+                    placeholder={placeholder} onChange={this.changeText}
+                    value={text}></textarea>
                   <div className="social-submit inline">
                     <div title="Post to Facebook" className="inline">
                       <button type="button" className={"btn social " + facebookStatus} onClick={this.fbToggle}>
