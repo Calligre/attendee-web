@@ -24,7 +24,7 @@ export default class NewsFeed extends React.Component {
     this.state = {
       contentFeed: {
         items: [],
-        nextOffset: null,
+        // offset is stored in the NewsFeedStore
       },
       file: null,
       preview: null,
@@ -132,7 +132,8 @@ export default class NewsFeed extends React.Component {
     const textPostLength = twPost ? "140" : "1000";
 
     const NewsFeedPosts = contentFeed.items.map((post) => {
-        return <NewsFeedPost key={post.timestamp} {...post}/>;
+      console.log(post);
+      return <NewsFeedPost key={post.timestamp} {...post}/>;
     });
 
     let paginate = (<div className="default-cursor">End of Content</div>);

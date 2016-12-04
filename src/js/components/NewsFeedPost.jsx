@@ -7,7 +7,6 @@ export default class NewsFeedPost extends React.Component {
 
   constructor(props) {
     super(props);
-    // this.togglePictureDisplay = this.togglePictureDisplay.bind(this);
     this.changeLike = this.changeLike.bind(this);
     this.state = this.props;
   }
@@ -27,15 +26,20 @@ export default class NewsFeedPost extends React.Component {
   }
 
   changeLike() {
+    console.log(this.state.id);
     if (this.state.current_user_likes) {
-      NewsFeedStore.decrementLike();
+      NewsFeedStore.unlikePost(this.state.id);
+      // TODO: Potentially move this logic to be based on emitted action?
       this.setState({
         current_user_likes: false,
+        like_count: (parseInt(this.state.like_count) - 1).toString(),
       });
+
     } else {
-      NewsFeedStore.incrementLike();
+      NewsFeedStore.likePost(this.state.id);
       this.setState({
         current_user_likes: true,
+        like_count: (parseInt(this.state.like_count) + 1).toString(),
       });
     }
 
@@ -43,8 +47,15 @@ export default class NewsFeedPost extends React.Component {
 
   render() {
 
-    let { current_user_likes, like_count, poster_icon,
-          poster_id, poster_name, text, media_link } = this.state;
+    let {
+      current_user_likes,
+      like_count,
+      media_link,
+      poster_icon,
+      poster_id,
+      poster_name,
+      text,
+    } = this.state;
 
     const heartColor = {
       color: current_user_likes ? "red" : "inherit",

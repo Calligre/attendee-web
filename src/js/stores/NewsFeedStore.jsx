@@ -11,6 +11,7 @@ class NewsFeedStore extends EventEmitter {
     super()
     this.contentFeed = {
       items: [],
+      nextOffset: null,
     }
     this.error = null;
     this.dataFetched = false;
@@ -19,20 +20,26 @@ class NewsFeedStore extends EventEmitter {
   get() {
     // TODO: Configure next page into API
     // if (this.contentFeed.nextpage) { add nextPage into query}
+    let params = {};
+    if (newsFeedStore.contentFeed.nextOffset) {
+      params.offset = newsFeedStore.contentFeed.nextOffset;
+    }
+    params.limit = 5;
+
+    console.log("I AM MAKING A REQUEST");
+    console.log(newsFeedStore.contentFeed.nextOffset);
+
     $.ajax({
-      url: url + "/api/social",
-      dataType: "json",
-      type: "get",
       headers: {
         "Authorization": "Bearer " + AuthService.getToken()
       },
-      // TODO: Plug in this data
-      // data: {
-      //   "limit": "2"
-      //   "offset": offset
-      // },
+      type: "GET",
+      url: url + "/api/social",
+      data: params,
+      dataType: "json",
       cache: false,
       success: function(response) {
+        console.log(response);
         newsFeedStore.dataFetched = true;
         dispatcher.dispatch({type: "NEWSFEED_GET", response: response});
       },
@@ -52,11 +59,11 @@ class NewsFeedStore extends EventEmitter {
     }
   }
 
-  incrementLike() {
-    console.log("TODO: incrementLike");
+  likePost(postId) {
+    console.log("TODO: Like post");
   }
 
-  decrementLike() {
+  unlikePost(postId) {
     console.log("TODO: decrementLike");
   }
 
