@@ -95,43 +95,85 @@ class NewsFeedStore extends EventEmitter {
         }
       },
       success: function(response) {
-        console.log("UNLIKE SUCCESS")
         dispatcher.dispatch({type: "POST_UNLIKE", response: response});
       },
       failure: function(error) {
-        console.log("UNLIKE FAILURE")
         dispatcher.dispatch({type: "LIKE_ERROR", error: error});
       }
     });
   }
 
   createPost(text, photo, post_fb, post_tw) {
-    if (text || photo) {
-      let data = {
-        text: text,
-        media_link: "https://i.ytimg.com/vi/EVCrmXW6-Pk/maxresdefault.jpg",
-        post_fb: post_fb,
-        post_tw: post_tw,
-      }
-
+    if (photo) {
       $.ajax({
-        type: "POST",
-        url: url + "/api/social",
-        data: JSON.stringify(data),
-        dataType: "json",
         headers: {
           "Authorization": "Bearer " + AuthService.getToken()
         },
+        type: "GET",
+        url: url + "/api/social-image-upload-url",
         contentType:"application/json",
         cache: false,
         success: function(response) {
-          dispatcher.dispatch({type: "NEWSFEED_POST", post: response["id"]});
+          console.log(response);
+          const self = this;
+
+          const fileReader = new FileReader();
+          fileReader.readAsDataURL(photo);
+          fileReader.onloadend = function (e) {
+            let data = response.fields;
+            data.data = this.result;
+
+            $.ajax({
+              url: response.url,
+              contentType : 'application/json',
+              type: 'put',
+              data: data,
+              processData: false,
+              cache: false,
+              success: function(response){
+                console.log("HOLY SHIT IT WORKED")
+              },
+              error: function(error){
+                console.log(error);
+                console.log("FUCK");
+              }
+            });
+          }
+          // newsFeedStore.dataFetched = true;
+          // dispatcher.dispatch({type: "NEWSFEED_GET", response: response});
         },
         failure: function(error) {
-          dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
+          console.log("FAILURE");
+          // newsFeedStore.dataFetched = false;
+          // dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
         }
       });
     }
+
+    let data = {
+      text: text,
+      media_link: "https://i.ytimg.com/vi/EVCrmXW6-Pk/maxresdefault.jpg",
+      post_fb: post_fb,
+      post_tw: post_tw,
+    }
+
+    $.ajax({
+      type: "POST",
+      url: url + "/api/social",
+      data: JSON.stringify(data),
+      dataType: "json",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      contentType:"application/json",
+      cache: false,
+      success: function(response) {
+        dispatcher.dispatch({type: "NEWSFEED_POST", post: response["id"]});
+      },
+      failure: function(error) {
+        dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
+      }
+    });
   }
 
 

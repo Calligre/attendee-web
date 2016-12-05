@@ -8,6 +8,7 @@ export default class NewsFeedPost extends React.Component {
   constructor(props) {
     super(props);
     this.changeLike = this.changeLike.bind(this);
+    this.retweet = this.retweet.bind(this);
     this.state = this.props;
   }
 
@@ -41,7 +42,12 @@ export default class NewsFeedPost extends React.Component {
         like_count: (parseInt(this.state.like_count) + 1).toString(),
       });
     }
+  }
 
+  retweet() {
+    console.log("RETWEET");
+    this.props.rt("\"" + this.state.text + "\" - " + this.state.poster_name + "\n");
+    window.scrollTo(0, 0);
   }
 
   render() {
@@ -63,7 +69,7 @@ export default class NewsFeedPost extends React.Component {
     let imageText = null;
     if (media_link && media_link !== "") {
       imageText = (
-        <span className="show-image link clickable no_selection">
+        <span className="show-image link clickable no-selection">
           Show Image
         </span>
       );
@@ -72,15 +78,15 @@ export default class NewsFeedPost extends React.Component {
     return (
       <div className="newsfeed-post">
         <div className="user-photo-container inline">
-          <img src={poster_icon} className="user-photo"/>
+          <img src={poster_icon} className="user-photo no-selection"/>
         </div>
         <div className="post-text inline">
           <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
           <div className="social-bar">
             <FaHeart className="heart-icon clickable" onClick={this.changeLike} style={heartColor} size={20}/>
-            <span className="like-count no_selection">{like_count}</span>
-            <FaRetweet className="retweet-button clickable" size={28}/>
+            <span className="like-count no-selection">{like_count}</span>
+            <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28}/>
             {imageText}
           </div>
         </div>

@@ -6,9 +6,6 @@ import MdHighlightRemove from 'react-icons/lib/md/highlight-remove';
 import MdPhotoCamera from 'react-icons/lib/md/photo-camera';
 import TiSocialFacebook from 'react-icons/lib/ti/social-facebook';
 import TiSocialTwitter from 'react-icons/lib/ti/social-twitter';
-// import style from '../../sass/newsfeed.scss';
-
-// TODO: LIMIT NUMBER OF NEWLINES?
 
 export default class NewsFeed extends React.Component {
 
@@ -21,6 +18,7 @@ export default class NewsFeed extends React.Component {
     this.onDrop = this.onDrop.bind(this);
     this.deletePhoto = this.deletePhoto.bind(this);
     this.changeText = this.changeText.bind(this);
+    this.setRetweet = this.setRetweet.bind(this);
 
     this.state = {
       contentFeed: {
@@ -35,11 +33,6 @@ export default class NewsFeed extends React.Component {
       // TODO: HOW CAN I GET THESE? (If user is integrated into social media channels)
       twIntegration: true,
       fbIntegration: true,
-      user:
-        {
-          id: 0,
-          name: "",
-        },
     };
   }
 
@@ -114,11 +107,15 @@ export default class NewsFeed extends React.Component {
   }
 
   changeText(event) {
-    console.log("CHANGE TEXT");
     this.setState({
       text: event.target.value
     });
-    console.log(event.target.value);
+  }
+
+  setRetweet(text) {
+    this.setState({
+      text: text,
+    })
   }
 
   render() {
@@ -130,14 +127,13 @@ export default class NewsFeed extends React.Component {
     const textPostLength = twPost ? "140" : "1000";
 
     const NewsFeedPosts = contentFeed.items.map((post) => {
-      return <NewsFeedPost key={post.timestamp} {...post}/>;
+      return <NewsFeedPost key={post.timestamp} {...post} rt={this.setRetweet}/>;
     });
 
     let paginate = (<div className="default-cursor">End of Content</div>);
     if (contentFeed.nextOffset) {
       paginate = (<div className="clickable link" onClick={NewsFeedStore.get}>Load more...</div>);
     }
-    console.log(text);
 
     function dropzoneDisplay(deletePhoto) {
       if (preview) {
