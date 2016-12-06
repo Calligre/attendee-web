@@ -3,6 +3,7 @@ import NewsFeedPost from "components/NewsFeedPost";
 import NewsFeedStore from "stores/NewsFeedStore";
 import Dropzone from 'react-dropzone';
 import MdHighlightRemove from 'react-icons/lib/md/highlight-remove';
+import MdClose from 'react-icons/lib/md/close';
 import MdPhotoCamera from 'react-icons/lib/md/photo-camera';
 import TiSocialFacebook from 'react-icons/lib/ti/social-facebook';
 import TiSocialTwitter from 'react-icons/lib/ti/social-twitter';
@@ -19,6 +20,8 @@ export default class NewsFeed extends React.Component {
     this.deletePhoto = this.deletePhoto.bind(this);
     this.changeText = this.changeText.bind(this);
     this.setRetweet = this.setRetweet.bind(this);
+    this.setImageOverlay = this.setImageOverlay.bind(this);
+    this.closeImageOverlay = this.closeImageOverlay.bind(this);
 
     this.state = {
       contentFeed: {
@@ -28,6 +31,7 @@ export default class NewsFeed extends React.Component {
       text: '',
       file: null,
       preview: null,
+      imageOverlay: null,
       fbPost: false,
       twPost: false,
       // TODO: HOW CAN I GET THESE? (If user is integrated into social media channels)
@@ -115,19 +119,39 @@ export default class NewsFeed extends React.Component {
   setRetweet(text) {
     this.setState({
       text: text,
-    })
+    });
   }
 
-  render() {
-    const { contentFeed, fbPost, message, twPost, user, fbToggle, twToggle, preview, text } = this.state;
-    const placeholder = "Post to news feed..."
+  setImageOverlay(value) {
+    this.setState({
+      imageOverlay: value,
+    });
+  }
 
+  closeImageOverlay() {
+    this.setImageOverlay(null);
+  }
+
+
+  render() {
+
+    const {
+      contentFeed,
+      fbPost,
+      imageOverlay,
+      message,
+      preview,
+      text,
+      twPost,
+    } = this.state;
+
+    const placeholder = "Post to news feed..."
     const twitterStatus =  this.state.twIntegration && this.state.twPost ? "twitter" : "disabled-social";
     const facebookStatus =  this.state.fbIntegration && this.state.fbPost ? "facebook" : "disabled-social";
     const textPostLength = twPost ? "140" : "1000";
 
     const NewsFeedPosts = contentFeed.items.map((post) => {
-      return <NewsFeedPost key={post.timestamp} {...post} rt={this.setRetweet}/>;
+      return <NewsFeedPost key={post.timestamp} {...post} rt={this.setRetweet} imgOverlay={this.setImageOverlay} />;
     });
 
     let paginate = (<div className="default-cursor">End of Content</div>);
@@ -149,16 +173,31 @@ export default class NewsFeed extends React.Component {
         return(
           <div className="label">
             <MdPhotoCamera className="photo-icon" size={30}/>
-            <div>Click or drag to upload</div>
+            <div className="no-selection">Click or drag to upload</div>
           </div>
         );
       }
+    }
+
+    function imageOverlayDisplay(closeImageOverlay) {
+      if (imageOverlay) {
+        return (
+          <div className="fullscreen-frame" onClick={closeImageOverlay}>
+            <MdClose className="img-overlay-close clickable" size={40}/>
+            <div className="img-container">
+              <span className="helper inline"></span><img className="inline" src={imageOverlay}/>
+            </div>
+          </div>
+        );
+      }
+      return <div></div>;
     }
 
     return (
       <div>
         <h1>News Feed</h1>
         <div className="newsFeed">
+          {imageOverlayDisplay(this.closeImageOverlay)}
           <div className="user-post">
             <form className="user-post-form">
               <div className="input">

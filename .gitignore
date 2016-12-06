@@ -1,3 +1,4 @@
 node_modules/
 *.min.js
 src/js/*.config.js
+npm-debug.log

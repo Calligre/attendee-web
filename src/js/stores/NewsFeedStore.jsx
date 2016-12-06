@@ -125,7 +125,7 @@ class NewsFeedStore extends EventEmitter {
 
             $.ajax({
               url: response.url,
-              contentType : 'application/json',
+              contentType : false,
               type: 'put',
               data: data,
               processData: false,

@@ -7,9 +7,10 @@ export default class NewsFeedPost extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = this.props;
     this.changeLike = this.changeLike.bind(this);
     this.retweet = this.retweet.bind(this);
-    this.state = this.props;
+    this.showImage = this.showImage.bind(this);
   }
 
   // componentWillMount() {
@@ -34,7 +35,6 @@ export default class NewsFeedPost extends React.Component {
         current_user_likes: false,
         like_count: (parseInt(this.state.like_count) - 1).toString(),
       });
-
     } else {
       NewsFeedStore.likePost(this.state.id);
       this.setState({
@@ -45,9 +45,12 @@ export default class NewsFeedPost extends React.Component {
   }
 
   retweet() {
-    console.log("RETWEET");
     this.props.rt("\"" + this.state.text + "\" - " + this.state.poster_name + "\n");
     window.scrollTo(0, 0);
+  }
+
+  showImage() {
+    this.props.imgOverlay(this.state.media_link);
   }
 
   render() {
@@ -69,17 +72,20 @@ export default class NewsFeedPost extends React.Component {
     let imageText = null;
     if (media_link && media_link !== "") {
       imageText = (
-        <span className="show-image link clickable no-selection">
+        <span className="show-image link clickable no-selection" onClick={this.showImage}>
           Show Image
         </span>
       );
     }
+
+        // <div className="box">FOUR</div>
 
     return (
       <div className="newsfeed-post">
         <div className="user-photo-container inline">
           <img src={poster_icon} className="user-photo no-selection"/>
         </div>
+
         <div className="post-text inline">
           <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
