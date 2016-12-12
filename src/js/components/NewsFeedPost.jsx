@@ -1,5 +1,5 @@
-import React from "react";
-import NewsFeedStore from "stores/NewsFeedStore";
+import React from 'react';
+import NewsFeedStore from 'stores/NewsFeedStore';
 import FaHeart from 'react-icons/lib/fa/heart';
 import FaRetweet from 'react-icons/lib/fa/retweet';
 
@@ -35,7 +35,8 @@ export default class NewsFeedPost extends React.Component {
   }
 
   retweet() {
-    this.props.rt("\"" + this.state.text + "\" - " + this.state.poster_name + "\n");
+    const retweetText = '"' + this.state.text + '" - ' + this.state.poster_name + '\n';
+    this.props.rt(retweetText);
     window.scrollTo(0, 0);
   }
 
@@ -44,23 +45,21 @@ export default class NewsFeedPost extends React.Component {
   }
 
   render() {
-
-    let {
+    const {
       current_user_likes,
       like_count,
       media_link,
       poster_icon,
-      poster_id,
       poster_name,
       text,
     } = this.state;
 
     const heartColor = {
-      color: current_user_likes ? "red" : "inherit",
-    }
+      color: current_user_likes ?'red' : 'inherit',
+    };
 
     let imageText = null;
-    if (media_link && media_link !== "") {
+    if (media_link && media_link !== '') {
       imageText = (
         <span className="show-image link clickable no-selection" onClick={this.showImage}>
           Show Image
@@ -68,21 +67,22 @@ export default class NewsFeedPost extends React.Component {
       );
     }
 
-        // <div className="box">FOUR</div>
-
     return (
       <div className="newsfeed-post">
         <div className="user-photo-container inline">
-          <img src={poster_icon} className="user-photo no-selection"/>
+          <img src={poster_icon} className="user-photo no-selection" />
         </div>
-
         <div className="post-text inline">
           <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
           <div className="social-bar">
-            <FaHeart className="heart-icon clickable" onClick={this.changeLike} style={heartColor} size={20}/>
+            <FaHeart className="heart-icon clickable"
+              onClick={this.changeLike}
+              style={heartColor}
+              size={20}
+            />
             <span className="like-count no-selection">{like_count}</span>
-            <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28}/>
+            <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28} />
             {imageText}
           </div>
         </div>

@@ -1,6 +1,6 @@
-import React from "react";
-import NewsFeedPost from "components/NewsFeedPost";
-import NewsFeedStore from "stores/NewsFeedStore";
+import React from 'react';
+import NewsFeedPost from 'components/NewsFeedPost';
+import NewsFeedStore from 'stores/NewsFeedStore';
 import Dropzone from 'react-dropzone';
 import MdHighlightRemove from 'react-icons/lib/md/highlight-remove';
 import MdClose from 'react-icons/lib/md/close';
@@ -13,7 +13,6 @@ export default class NewsFeed extends React.Component {
   constructor() {
     super();
     this.getNewsFeedPosts = this.getNewsFeedPosts.bind(this);
-    this.createPost = this.createPost.bind(this);
     this.twToggle = this.twToggle.bind(this);
     this.fbToggle = this.fbToggle.bind(this);
     this.onDrop = this.onDrop.bind(this);
@@ -21,6 +20,7 @@ export default class NewsFeed extends React.Component {
     this.changeText = this.changeText.bind(this);
     this.setRetweet = this.setRetweet.bind(this);
     this.setImageOverlay = this.setImageOverlay.bind(this);
+    this.createPost = this.createPost.bind(this);
     this.closeImageOverlay = this.closeImageOverlay.bind(this);
 
     this.state = {
@@ -41,17 +41,17 @@ export default class NewsFeed extends React.Component {
   }
 
   componentWillMount() {
-    NewsFeedStore.on("post", this.getNewsFeedPosts);
-    NewsFeedStore.on("updated", this.getNewsFeedPosts);
-    NewsFeedStore.on("error", this.showError);
+    NewsFeedStore.on('post', this.getNewsFeedPosts);
+    NewsFeedStore.on('updated', this.getNewsFeedPosts);
+    NewsFeedStore.on('error', this.showError);
     // Grab data here. Emitted events aren't picked up until here
     NewsFeedStore.getOnLoad();
   }
 
   componentWillUnmount() {
-    NewsFeedStore.removeListener("post", this.getNewsFeedPosts);
-    NewsFeedStore.removeListener("updated", this.getNewsFeedPosts);
-    NewsFeedStore.removeListener("error", this.showError);
+    NewsFeedStore.removeListener('post', this.getNewsFeedPosts);
+    NewsFeedStore.removeListener('updated', this.getNewsFeedPosts);
+    NewsFeedStore.removeListener('error', this.showError);
   }
 
   // Grab the News Feed Posts that the user has retrieved from the store
@@ -61,19 +61,10 @@ export default class NewsFeed extends React.Component {
     });
   }
 
-  createPost() {
-    NewsFeedStore.createPost(this.state.text, this.state.file, this.state.fbPost, this.state.twPost);
+  setImageOverlay(value) {
     this.setState({
-      text: '',
-      file: null,
-      preview: null,
-      fbPost: false,
-      twPost: false,
+      imageOverlay: value,
     });
-  }
-
-  showError(){
-    console.log(NewsFeedStore.error);
   }
 
   fbToggle() {
@@ -82,7 +73,7 @@ export default class NewsFeed extends React.Component {
         fbPost: !this.state.fbPost,
       });
     } else {
-      console.log("TODO: Integrate Facebook window");
+      console.log('TODO: Integrate Facebook window');
       // TODO: Open add Facebook window and change state on success
     }
   }
@@ -94,7 +85,7 @@ export default class NewsFeed extends React.Component {
       });
     }
     else {
-      console.log("TODO: Integrate Twitter window");
+      console.log('TODO: Integrate Twitter window');
       // TODO: Open add Twitter window and change state on success
     }
   }
@@ -126,16 +117,29 @@ export default class NewsFeed extends React.Component {
     });
   }
 
-  setImageOverlay(value) {
+  showError(){
+    console.log(NewsFeedStore.error);
+  }
+
+  createPost() {
+    NewsFeedStore.createPost(
+      this.state.text,
+      this.state.file,
+      this.state.fbPost,
+      this.state.twPost
+    );
     this.setState({
-      imageOverlay: value,
+      text: '',
+      file: null,
+      preview: null,
+      fbPost: false,
+      twPost: false,
     });
   }
 
   closeImageOverlay() {
     this.setImageOverlay(null);
   }
-
 
   render() {
 
