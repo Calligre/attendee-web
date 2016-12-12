@@ -103,7 +103,7 @@ class NewsFeedStore extends EventEmitter {
     });
   }
 
-  postPhoto(data) {
+  postToNewsFeed(data) {
     $.ajax({
       type: "POST",
       url: url + "/api/social",
@@ -131,6 +131,7 @@ class NewsFeedStore extends EventEmitter {
       post_fb: post_fb,
       post_tw: post_tw,
     }
+    let self = this;
     // Did the user want to upload a photo?
     if (photo) {
       let photoType = {
@@ -163,7 +164,7 @@ class NewsFeedStore extends EventEmitter {
               data.media_link = photoUploadURL;
               console.log(data);
               // Finish the upload using our photo url
-              postPhoto(data);
+              self.postToNewsFeed(data);
             },
             failure: function(error){
               dispatcher.dispatch({type: "PHOTO_ERROR", response: response});
@@ -179,7 +180,7 @@ class NewsFeedStore extends EventEmitter {
     }
     else {
       // No need to make photo calls, just post with the text
-      postPhoto(data);
+      postToNewsFeed(data);
     }
   }
 

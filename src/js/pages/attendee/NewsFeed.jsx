@@ -107,7 +107,7 @@ export default class NewsFeed extends React.Component {
 
   changeText(event) {
     this.setState({
-      text: event.target.value
+      text: event.target.value,
     });
   }
 
@@ -117,7 +117,7 @@ export default class NewsFeed extends React.Component {
     });
   }
 
-  showError(){
+  showError() {
     console.log(NewsFeedStore.error);
   }
 
@@ -142,25 +142,30 @@ export default class NewsFeed extends React.Component {
   }
 
   render() {
-
     const {
       contentFeed,
+      fbIntegration,
       fbPost,
       imageOverlay,
-      message,
       preview,
       text,
+      twIntegration,
       twPost,
     } = this.state;
 
-    const placeholder = "Post to news feed..."
-    const twitterStatus =  this.state.twIntegration && this.state.twPost ? "twitter" : "disabled-social";
-    const facebookStatus =  this.state.fbIntegration && this.state.fbPost ? "facebook" : "disabled-social";
-    const textPostLength = twPost ? "140" : "1000";
+    const placeholder = 'Post to news feed...';
+    const twitterStatus = twIntegration && twPost ? 'twitter' : 'disabled-social';
+    const facebookStatus = fbIntegration && fbPost ? 'facebook' : 'disabled-social';
+    const textPostLength = twPost ? '140' : '1000';
 
-    const NewsFeedPosts = contentFeed.items.map((post) => {
-      return <NewsFeedPost key={post.timestamp} {...post} rt={this.setRetweet} imgOverlay={this.setImageOverlay} />;
-    });
+    const NewsFeedPosts = contentFeed.items.map(post =>
+      <NewsFeedPost
+        key={post.timestamp}
+        {...post}
+        rt={this.setRetweet}
+        imgOverlay={this.setImageOverlay}
+      />
+    );
 
     let paginate = (<div className="default-cursor">End of Content</div>);
     if (contentFeed.nextOffset) {
@@ -169,36 +174,36 @@ export default class NewsFeed extends React.Component {
 
     function dropzoneDisplay(deletePhoto) {
       if (preview) {
-        return(
+        return (
           <div className="preview-box inline">
-            <MdHighlightRemove className="photo-delete" onClick={deletePhoto} size={24}/>
+            <MdHighlightRemove className="photo-delete" onClick={deletePhoto} size={24} />
             <div className="img-container">
-              <span className="helper inline"></span><img className="border inline" src={preview}/>
+              <span className="helper inline" /><img className="border inline" src={preview} />
             </div>
           </div>
         );
-      } else {
-        return(
-          <div className="label">
-            <MdPhotoCamera className="photo-icon" size={30}/>
-            <div className="no-selection">Click or drag to upload</div>
-          </div>
-        );
       }
+
+      return (
+        <div className="label">
+          <MdPhotoCamera className="photo-icon" size={30} />
+          <div className="no-selection">Click or drag to upload</div>
+        </div>
+      );
     }
 
     function imageOverlayDisplay(closeImageOverlay) {
       if (imageOverlay) {
         return (
           <div className="fullscreen-frame" onClick={closeImageOverlay}>
-            <MdClose className="img-overlay-close clickable" size={40}/>
+            <MdClose className="img-overlay-close clickable" size={40} />
             <div className="img-container">
-              <span className="helper inline"></span><img className="inline" src={imageOverlay}/>
+              <span className="helper inline" /><img className="inline" src={imageOverlay} />
             </div>
           </div>
         );
       }
-      return <div></div>;
+      return <div />;
     }
 
     return (
@@ -210,22 +215,39 @@ export default class NewsFeed extends React.Component {
             <form className="user-post-form">
               <div className="input">
                 <div className="left-input inline">
-                  <textarea className="text-input border"
-                    maxLength={textPostLength} rows="4" type="text"
-                    placeholder={placeholder} onChange={this.changeText}
-                    value={text}></textarea>
+                  <textarea
+                    className="text-input border"
+                    maxLength={textPostLength}
+                    rows="4"
+                    type="text"
+                    placeholder={placeholder}
+                    onChange={this.changeText}
+                    value={text}
+                  />
                   <div className="social-submit inline">
                     <div title="Post to Facebook" className="inline">
-                      <button type="button" className={"btn social " + facebookStatus} onClick={this.fbToggle}>
+                      <button
+                        type="button"
+                        className={"btn social " + facebookStatus}
+                        onClick={this.fbToggle}
+                      >
                         <TiSocialFacebook size={34}/>
                       </button>
                     </div>
                     <div title="Post to Twitter" className="inline">
-                      <button type="button" className={"btn social " + twitterStatus} onClick={this.twToggle}>
+                      <button
+                        type="button"
+                        className={"btn social " + twitterStatus}
+                        onClick={this.twToggle}
+                      >
                         <TiSocialTwitter size={34}/>
                       </button>
                     </div>
-                    <button type="button" className="submit-form btn btn-primary" onClick={this.createPost}>
+                    <button
+                      type="button"
+                      className="submit-form btn btn-primary"
+                      onClick={this.createPost}
+                    >
                       Submit Post
                     </button>
                   </div>
