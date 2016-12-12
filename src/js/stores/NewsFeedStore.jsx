@@ -103,60 +103,7 @@ class NewsFeedStore extends EventEmitter {
     });
   }
 
-  createPost(text, photo, post_fb, post_tw) {
-    if (photo) {
-      $.ajax({
-        headers: {
-          "Authorization": "Bearer " + AuthService.getToken()
-        },
-        type: "GET",
-        url: url + "/api/social-image-upload-url",
-        contentType:"application/json",
-        cache: false,
-        success: function(response) {
-          console.log(response);
-          const self = this;
-
-          const fileReader = new FileReader();
-          fileReader.readAsDataURL(photo);
-          fileReader.onloadend = function (e) {
-            let data = response.fields;
-            data.data = this.result;
-
-            $.ajax({
-              url: response.url,
-              contentType : false,
-              type: 'put',
-              data: data,
-              processData: false,
-              cache: false,
-              success: function(response){
-                console.log("HOLY SHIT IT WORKED")
-              },
-              error: function(error){
-                console.log(error);
-                console.log("FUCK");
-              }
-            });
-          }
-          // newsFeedStore.dataFetched = true;
-          // dispatcher.dispatch({type: "NEWSFEED_GET", response: response});
-        },
-        failure: function(error) {
-          console.log("FAILURE");
-          // newsFeedStore.dataFetched = false;
-          // dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
-        }
-      });
-    }
-
-    let data = {
-      text: text,
-      media_link: "https://i.ytimg.com/vi/EVCrmXW6-Pk/maxresdefault.jpg",
-      post_fb: post_fb,
-      post_tw: post_tw,
-    }
-
+  postPhoto(data) {
     $.ajax({
       type: "POST",
       url: url + "/api/social",
@@ -168,12 +115,72 @@ class NewsFeedStore extends EventEmitter {
       contentType:"application/json",
       cache: false,
       success: function(response) {
-        dispatcher.dispatch({type: "NEWSFEED_POST", post: response["id"]});
+        console.log("THIS ACTUALLY FINISHED");
+        dispatcher.dispatch({type: "PHOTO_POST", post: response["id"]});
       },
       failure: function(error) {
-        dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
+        dispatcher.dispatch({type: "PHOTO_ERROR", error: error});
       }
     });
+  }
+
+  createPost(text, photo, post_fb, post_tw) {
+    // Set the base data fields for photo or text post
+    let data = {
+      text: text,
+      post_fb: post_fb,
+      post_tw: post_tw,
+    }
+    // Did the user want to upload a photo?
+    if (photo) {
+      let photoType = {
+        "Content-Type": photo.type,
+      };
+
+      // Obtain the media URL to post our photo to
+      $.ajax({
+        headers: {
+          "Authorization": "Bearer " + AuthService.getToken()
+        },
+        type: "GET",
+        data: photoType,
+        dataType: "json",
+        url: url + "/api/social-image-upload-url",
+        contentType:"application/json",
+        cache: false,
+        success: function(response) {
+          let photoUploadURL = response.data
+
+          // Put the photo at the url
+          $.ajax({
+            url: photoUploadURL,
+            type: 'put',
+            data: photo,
+            contentType: photo.type,
+            processData: false,
+            cache: false,
+            success: function(response){
+              data.media_link = photoUploadURL;
+              console.log(data);
+              // Finish the upload using our photo url
+              postPhoto(data);
+            },
+            failure: function(error){
+              dispatcher.dispatch({type: "PHOTO_ERROR", response: response});
+              console.log("FUCK");
+            }
+          });
+        },
+        failure: function(error) {
+          console.log("FAILURE");
+          dispatcher.dispatch({type: "PHOTO_ERROR", error: error});
+        }
+      });
+    }
+    else {
+      // No need to make photo calls, just post with the text
+      postPhoto(data);
+    }
   }
 
 
@@ -190,10 +197,6 @@ class NewsFeedStore extends EventEmitter {
         this.emit("updated");
         break;
       }
-      // case "POST_LIKE": {
-      //   this.emit("post_like");
-      //   break;
-      // }
       case "ERROR": {
         this.error = action.error;
         this.emit("error");

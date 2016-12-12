@@ -65,6 +65,10 @@ export default class NewsFeed extends React.Component {
     NewsFeedStore.createPost(this.state.text, this.state.file, this.state.fbPost, this.state.twPost);
     this.setState({
       text: '',
+      file: null,
+      preview: null,
+      fbPost: false,
+      twPost: false,
     });
   }
 

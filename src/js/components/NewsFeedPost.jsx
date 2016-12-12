@@ -13,19 +13,9 @@ export default class NewsFeedPost extends React.Component {
     this.showImage = this.showImage.bind(this);
   }
 
-  // componentWillMount() {
-  //   NewsFeedStore.on("updated", this.getNewsFeedPosts);
-  //   NewsFeedStore.on("error", this.showError);
-  // }
+  // componentWillMount() {}
 
-  // componentWillUnmount() {
-  //   NewsFeedStore.removeListener("updated", this.getNewsFeedPosts);
-  //   NewsFeedStore.removeListener("error", this.showError);
-  // }
-
-  showError() {
-    console.log(NewsFeedStoreStore.error);
-  }
+  // componentWillUnmount() {}
 
   changeLike() {
     if (this.state.current_user_likes) {
