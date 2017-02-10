@@ -1,5 +1,8 @@
 import React from 'react';
 
+import PreferenceStore from 'stores/PreferenceStore.jsx';
+
+
 export default class Preferences extends React.Component {
   constructor(props) {
     super(props);
@@ -12,24 +15,26 @@ export default class Preferences extends React.Component {
       twitter: false,
       reposts: false,
     };
+
+    PreferenceStore.loadAll();
   }
 
-  componentWillMount() {
-    // PreferenceStored.on('received', this.getPeople);
-    // PreferenceStore.on('error', this.showError);
+  componentWillMount = () => {
+    PreferenceStore.on('loaded', this.resetState);
+    PreferenceStore.on('error', this.showError);
   }
 
-  componentWillUnmount() {
-    // PreferenceStored.removeastener('received', this.getPeople);
-    // PreferenceStore.removeListener('error', this.showError);
+  componentWillUnmount = () => {
+    PreferenceStore.removeListener('loaded', this.resetState);
+    PreferenceStore.removeListener('error', this.showError);
   }
 
-  getPeople = () => {
-    // this.setState(PreferenceStore.preferences);
+  resetState = () => {
+    this.setState(PreferenceStore.preferences);
   }
 
-  showError () {
-    // console.log(PreferenceStore.error);
+  showError = () => {
+    console.log(PreferenceStore.error);
   }
 
   handleChange = (event) => {
@@ -86,15 +91,19 @@ class TabPages extends React.Component {
     this.state = props;
   }
 
+  componentWillReceiveProps(props) {
+    this.state = props;
+  }
+
   render() {
     return (
       <div>
         <div>
           <label>Newsfeed
             <input type="checkbox"
-              name="newsFeed"
+              name="newsfeed"
               onChange={this.props.handleChange}
-              value={this.state.newsfeed}
+              checked={this.state.newsfeed}
             />
           </label>
         </div>
@@ -106,6 +115,10 @@ class TabPages extends React.Component {
 class TabSocialMedia extends React.Component {
   constructor(props) {
     super(props);
+    this.state = props;
+  }
+
+  componentWillReceiveProps(props) {
     this.state = props;
   }
 
