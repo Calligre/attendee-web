@@ -8,8 +8,11 @@ import Calendar from 'pages/organizer/Calendar';
 import Cards from 'pages/organizer/Cards';
 import Preferences from 'pages/organizer/Preferences';
 import Results from 'pages/organizer/Results';
+import Login from 'pages/attendee/Login';
 
 import AppHistory from 'util/AppHistory';
+import AuthService from 'util/AuthService';
+import * as config from 'auth0.config.js';
 
 require('!style!css!sass!../sass/main.scss');
 
@@ -17,9 +20,9 @@ const app = document.getElementById('app');
 
 // onEnter callback to validate authentication in private routes
 const requireAuth = (nextState, replace) => {
-  // if (!AuthService.loggedIn()) {
-  //   replace({ nextPathname: nextState.location.pathname }, '/login');
-  // }
+  if (!AuthService.loggedIn()) {
+    replace({ nextPathname: nextState.location.pathname }, '/login');
+  }
 };
 
 ReactDOM.render(
@@ -30,6 +33,7 @@ ReactDOM.render(
       <Route path="cards" component={Cards} />
       <Route path="preferences" component={Preferences} />
       <Route path="results" component={Results} />
+      <Route path="login" component={Login}></Route>
     </Route>
   </Router>,
 app);
