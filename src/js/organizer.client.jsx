@@ -9,7 +9,7 @@ import Calendar from 'pages/organizer/Calendar';
 import Cards from 'pages/organizer/Cards';
 import Preferences from 'pages/organizer/Preferences';
 import Results from 'pages/organizer/Results';
-import Login from 'pages/attendee/Login';
+import Login from 'pages/Login';
 
 import AppHistory from 'util/AppHistory';
 import AuthService from 'util/AuthService';
