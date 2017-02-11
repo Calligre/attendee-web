@@ -47,11 +47,12 @@ class PreferenceStore extends EventEmitter {
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      type: 'POST',
+      type: 'PATCH',
+      contentType: "application/json",
       data: JSON.stringify({ [key]: value }),
       cache: false,
       success(response) {
-        dispatcher.dispatch({ type: 'PREFERENCES_UPDATE', preferences: response.data.attributes });
+        dispatcher.dispatch({ type: 'PREFERENCES_UPDATE', key: key, value: value });
       },
       failure(error) {
         dispatcher.dispatch({ type: 'PREFERENCES_ERROR', error: error.error });
@@ -69,7 +70,8 @@ class PreferenceStore extends EventEmitter {
         break;
       }
       case 'PREFERENCES_UPDATE': {
-        this.emit('received');
+        this.preferences[action.key] = action.value;
+        this.emit('loaded');
         break;
       }
       case 'ERROR': {
