@@ -29,11 +29,11 @@ const requireAuth = (nextState, replace) => {
 ReactDOM.render(
   <Router history={AppHistory}>
     <Route path="/" component={Layout}>
-      <IndexRoute apiBaseURL="https://dev.calligre.com/api" component={Branding} />
-      <Route path="calendar" component={Calendar} />
-      <Route path="cards" component={Cards} />
-      <Route path="preferences" component={Preferences} />
-      <Route path="results" component={Results} />
+      <IndexRoute apiBaseURL="https://dev.calligre.com/api" component={Branding} onEnter={requireAuth}/>
+      <Route path="calendar" component={Calendar} onEnter={requireAuth}/>
+      <Route path="cards" component={Cards} onEnter={requireAuth}/>
+      <Route path="preferences" component={Preferences} onEnter={requireAuth}/>
+      <Route path="results" component={Results} onEnter={requireAuth}/>
       <Route path="login" component={Login}></Route>
     </Route>
   </Router>,
