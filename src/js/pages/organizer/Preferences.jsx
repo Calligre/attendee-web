@@ -38,11 +38,10 @@ export default class Preferences extends React.Component {
   }
 
   handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
-  handleCheckboxChange = (event) => {
-    this.setState({ [event.target.name]: event.target.checked });
+    var key = event.target.name;
+    var value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
+    PreferenceStore.update(key, value);
+    this.setState({ [key]: value });
   }
 
   handleTabSwitch = (event) => {
@@ -55,10 +54,10 @@ export default class Preferences extends React.Component {
     let tab = null;
     switch (activeTab) {
       case 'pages':
-        tab = <TabPages {...this.state} handleChange={this.handleCheckboxChange} />;
+        tab = <TabPages {...this.state} handleChange={this.handleChange} />;
         break;
       case 'social-media':
-        tab = <TabSocialMedia {...this.state} handleChange={this.handleCheckboxChange} />;
+        tab = <TabSocialMedia {...this.state} handleChange={this.handleChange} />;
         break;
       case 'surveys':
         tab = <TabSurveys/>;
