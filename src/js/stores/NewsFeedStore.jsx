@@ -35,7 +35,6 @@ class NewsFeedStore extends EventEmitter {
       dataType: "json",
       cache: false,
       success: function(response) {
-        console.log(response);
         newsFeedStore.dataFetched = true;
         dispatcher.dispatch({type: "NEWSFEED_GET", response: response});
       },
@@ -50,12 +49,13 @@ class NewsFeedStore extends EventEmitter {
     if (!this.dataFetched) {
       this.get();
     } else {
-      console.log("Data was already loaded. Retrieving from store instead")
-      this.emit("updated");
+      console.log("Data was already loaded. Retrieving from store instead");
+      dispatcher.dispatch({ type: "NEWSFEED_FROM_STORE" });
     }
   }
 
   likePost(postId) {
+    let pid = postId;
     $.ajax({
       type: "POST",
       url: url + "/api/social/" + postId + "/likes",
@@ -69,18 +69,17 @@ class NewsFeedStore extends EventEmitter {
           alert("Unable to perform this action, please try again later");
         }
       },
-      success: function(response) {
-        console.log("LIKE SUCCESS")
-        dispatcher.dispatch({type: "POST_LIKE", response: response});
+      success: function() {
+        dispatcher.dispatch({type: "POST_LIKE", postId: pid});
       },
       failure: function(error) {
-        console.log("LIKE FAILURE")
-        dispatcher.dispatch({type: "LIKE_ERROR", error: error});
+        dispatcher.dispatch({type: "POST_LIKE_ERROR", error: error});
       }
     });
   }
 
   unlikePost(postId) {
+    let pid = postId;
     $.ajax({
       type: "DELETE",
       url: url + "/api/social/" + postId + "/likes",
@@ -95,10 +94,10 @@ class NewsFeedStore extends EventEmitter {
         }
       },
       success: function(response) {
-        dispatcher.dispatch({type: "POST_UNLIKE", response: response});
+        dispatcher.dispatch({type: "POST_UNLIKE", postId: pid});
       },
       failure: function(error) {
-        dispatcher.dispatch({type: "LIKE_ERROR", error: error});
+        dispatcher.dispatch({type: "POST_UNLIKE_ERROR", error: error});
       }
     });
   }
@@ -115,11 +114,10 @@ class NewsFeedStore extends EventEmitter {
       contentType:"application/json",
       cache: false,
       success: function(response) {
-        console.log("THIS ACTUALLY FINISHED");
-        dispatcher.dispatch({type: "PHOTO_POST", post: response["id"]});
+        dispatcher.dispatch({type: "POST_SUCCESS", post: response["id"]});
       },
       failure: function(error) {
-        dispatcher.dispatch({type: "PHOTO_ERROR", error: error});
+        dispatcher.dispatch({type: "POST_FAILURE", error: error});
       }
     });
   }
@@ -163,12 +161,10 @@ class NewsFeedStore extends EventEmitter {
             success: function(response){
               data.media_link = photoUploadURL;
               console.log(data);
-              // Finish the upload using our photo url
               self.postToNewsFeed(data);
             },
             failure: function(error){
               dispatcher.dispatch({type: "PHOTO_ERROR", response: response});
-              console.log("FUCK");
             }
           });
         },
@@ -180,13 +176,13 @@ class NewsFeedStore extends EventEmitter {
     }
     else {
       // No need to make photo calls, just post with the text
-      postToNewsFeed(data);
+      self.postToNewsFeed(data);
     }
   }
 
 
   handleActions(action) {
-    switch(action.type) {
+    switch(action.type){
       case "NEWSFEED_POST": {
         this.emit("post");
         break;
@@ -196,6 +192,43 @@ class NewsFeedStore extends EventEmitter {
         this.contentFeed.nextOffset = action.response.data.nextOffset;
         this.contentFeed.count = action.response.data.count;
         this.emit("updated");
+        break;
+      }
+      case "NEWSFEED_FROM_STORE": {
+        // Data is already in the store
+        this.emit("updated");
+        break;
+      }
+      case "POST_LIKE": {
+        var arrayLength = this.contentFeed.items.length;
+        for (var i = 0; i < arrayLength; i++) {
+          if (this.contentFeed.items[i].id === action.postId) {
+            this.contentFeed.items[i].current_user_likes = true;
+            this.contentFeed.items[i].like_count = (parseInt(this.contentFeed.items[i].like_count) + 1).toString();
+            this.emit("updated");
+          }
+        }
+        console.log("LIKE SUCCESS");
+        break;
+      }
+      case "POST_LIKE_ERROR": {
+        console.log("LIKE FAIL");
+        break;
+      }
+      case "POST_UNLIKE": {
+        var arrayLength = this.contentFeed.items.length;
+        for (var i = 0; i < arrayLength; i++) {
+          if (this.contentFeed.items[i].id === action.postId) {
+            this.contentFeed.items[i].current_user_likes = false;
+            this.contentFeed.items[i].like_count = (parseInt(this.contentFeed.items[i].like_count) - 1).toString();
+            this.emit("updated");
+          }
+        }
+        console.log("POST UNLIKE SUCCESS");
+        break;
+      }
+      case "POST_UNLIKE_ERROR": {
+        console.log("POST UNLIKE FAIL");
         break;
       }
       case "ERROR": {

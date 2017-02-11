@@ -13,14 +13,23 @@ export default class NewsFeedPost extends React.Component {
     this.showImage = this.showImage.bind(this);
   }
 
-  // componentWillMount() {}
+  componentWillReceiveProps(nextProps) {
+    console.log("CHECKING FOR CHANGE");
+    if (this.state.current_user_likes !== nextProps.current_user_likes) {
+      this.setState({
+        current_user_likes: nextProps.current_user_likes,
+        like_count: nextProps.like_count,
+      });
+    }
+  }
 
-  // componentWillUnmount() {}
+  componentWillMount() {}
+
+  componentWillUnmount() {}
 
   changeLike() {
     if (this.state.current_user_likes) {
       NewsFeedStore.unlikePost(this.state.id);
-      // TODO: Potentially move this logic to be based on emitted action?
       this.setState({
         current_user_likes: false,
         like_count: (parseInt(this.state.like_count) - 1).toString(),
