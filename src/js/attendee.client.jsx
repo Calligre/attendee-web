@@ -13,7 +13,7 @@ import Events from "pages/attendee/Events";
 import EventPage from "pages/attendee/Event";
 import Profile from "pages/attendee/Profile";
 import Info from "pages/attendee/Info";
-import Login from "pages/attendee/Login";
+import Login from "pages/Login";
 
 import AppHistory from 'util/AppHistory';
 import AuthService from 'util/AuthService';
