@@ -13,6 +13,7 @@ export default class NewsFeed extends React.Component {
   constructor() {
     super();
     this.getNewsFeedPosts = this.getNewsFeedPosts.bind(this);
+    this.revertNewsFeedPosts = this.revertNewsFeedPosts.bind(this);
     this.twToggle = this.twToggle.bind(this);
     this.fbToggle = this.fbToggle.bind(this);
     this.onDrop = this.onDrop.bind(this);
@@ -42,7 +43,7 @@ export default class NewsFeed extends React.Component {
 
   componentWillMount() {
     NewsFeedStore.on('updated', this.getNewsFeedPosts);
-    NewsFeedStore.on('revert', this.getNewsFeedPosts);
+    NewsFeedStore.on('revert', this.revertNewsFeedPosts);
     NewsFeedStore.on('error', this.showError);
     // Grab data here. Emitted events aren't picked up until here
     NewsFeedStore.getOnLoad();
@@ -50,7 +51,7 @@ export default class NewsFeed extends React.Component {
 
   componentWillUnmount() {
     NewsFeedStore.removeListener('updated', this.getNewsFeedPosts);
-    NewsFeedStore.removeListener('revert', this.getNewsFeedPosts);
+    NewsFeedStore.removeListener('revert', this.revertNewsFeedPosts);
     NewsFeedStore.removeListener('error', this.showError);
   }
 
@@ -59,6 +60,15 @@ export default class NewsFeed extends React.Component {
     this.setState({
       contentFeed: NewsFeedStore.contentFeed,
     });
+  }
+
+  revertNewsFeedPosts() {
+    this.setState({
+      contentFeed: NewsFeedStore.contentFeed,
+    });
+    if (NewsFeedStore.error) {
+      this.showError;
+    }
   }
 
   setImageOverlay(value) {
