@@ -41,16 +41,16 @@ export default class NewsFeed extends React.Component {
   }
 
   componentWillMount() {
-    NewsFeedStore.on('post', this.getNewsFeedPosts);
     NewsFeedStore.on('updated', this.getNewsFeedPosts);
+    NewsFeedStore.on('revert', this.getNewsFeedPosts);
     NewsFeedStore.on('error', this.showError);
     // Grab data here. Emitted events aren't picked up until here
     NewsFeedStore.getOnLoad();
   }
 
   componentWillUnmount() {
-    NewsFeedStore.removeListener('post', this.getNewsFeedPosts);
     NewsFeedStore.removeListener('updated', this.getNewsFeedPosts);
+    NewsFeedStore.removeListener('revert', this.getNewsFeedPosts);
     NewsFeedStore.removeListener('error', this.showError);
   }
 
@@ -118,7 +118,7 @@ export default class NewsFeed extends React.Component {
   }
 
   showError() {
-    console.log(NewsFeedStore.error);
+    alert(NewsFeedStore.error);
   }
 
   createPost() {

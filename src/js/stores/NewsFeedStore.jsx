@@ -38,7 +38,7 @@ class NewsFeedStore extends EventEmitter {
         newsFeedStore.dataFetched = true;
         dispatcher.dispatch({type: "NEWSFEED_GET", response: response});
       },
-      failure: function(error) {
+      error: function(error) {
         newsFeedStore.dataFetched = false;
         dispatcher.dispatch({type: "NEWSFEED_ERROR", error: error});
       }
@@ -49,7 +49,6 @@ class NewsFeedStore extends EventEmitter {
     if (!this.dataFetched) {
       this.get();
     } else {
-      console.log("Data was already loaded. Retrieving from store instead");
       dispatcher.dispatch({ type: "NEWSFEED_FROM_STORE" });
     }
   }
@@ -72,7 +71,7 @@ class NewsFeedStore extends EventEmitter {
       success: function() {
         dispatcher.dispatch({type: "POST_LIKE", postId: pid});
       },
-      failure: function(error) {
+      error: function(error) {
         dispatcher.dispatch({type: "POST_LIKE_ERROR", error: error});
       }
     });
@@ -88,15 +87,10 @@ class NewsFeedStore extends EventEmitter {
       },
       contentType:"application/json",
       cache: false,
-      statusCode: {
-        500: function() {
-          alert("Unable to perform this action, please try again later");
-        }
-      },
       success: function(response) {
         dispatcher.dispatch({type: "POST_UNLIKE", postId: pid});
       },
-      failure: function(error) {
+      error: function(error) {
         dispatcher.dispatch({type: "POST_UNLIKE_ERROR", error: error});
       }
     });
@@ -116,7 +110,7 @@ class NewsFeedStore extends EventEmitter {
       success: function(response) {
         dispatcher.dispatch({type: "POST_SUCCESS", post: response["id"]});
       },
-      failure: function(error) {
+      error: function(error) {
         dispatcher.dispatch({type: "POST_FAILURE", error: error});
       }
     });
@@ -163,12 +157,12 @@ class NewsFeedStore extends EventEmitter {
               console.log(data);
               self.postToNewsFeed(data);
             },
-            failure: function(error){
+            error: function(error){
               dispatcher.dispatch({type: "PHOTO_ERROR", response: response});
             }
           });
         },
-        failure: function(error) {
+        error: function(error) {
           console.log("FAILURE");
           dispatcher.dispatch({type: "PHOTO_ERROR", error: error});
         }
@@ -184,7 +178,7 @@ class NewsFeedStore extends EventEmitter {
   handleActions(action) {
     switch(action.type){
       case "NEWSFEED_POST": {
-        this.emit("post");
+        this.emit("updated");
         break;
       }
       case "NEWSFEED_GET": {
@@ -205,13 +199,17 @@ class NewsFeedStore extends EventEmitter {
           if (this.contentFeed.items[i].id === action.postId) {
             this.contentFeed.items[i].current_user_likes = true;
             this.contentFeed.items[i].like_count = (parseInt(this.contentFeed.items[i].like_count) + 1).toString();
-            this.emit("updated");
+            // Assume that store and UI are in sync if action was correct
+            // this.emit("updated");
           }
         }
         console.log("LIKE SUCCESS");
         break;
       }
       case "POST_LIKE_ERROR": {
+        this.emit("revert");
+        this.error = "Error liking post";
+        this.emit("error");
         console.log("LIKE FAIL");
         break;
       }
@@ -221,13 +219,17 @@ class NewsFeedStore extends EventEmitter {
           if (this.contentFeed.items[i].id === action.postId) {
             this.contentFeed.items[i].current_user_likes = false;
             this.contentFeed.items[i].like_count = (parseInt(this.contentFeed.items[i].like_count) - 1).toString();
-            this.emit("updated");
+            // Assume that store and UI are in sync if action was correct
+            // this.emit("updated");
           }
         }
-        console.log("POST UNLIKE SUCCESS");
+        console.log("UNLIKE SUCCESS");
         break;
       }
       case "POST_UNLIKE_ERROR": {
+        this.emit("revert");
+        this.error = "Error unliking post";
+        this.emit("error");
         console.log("POST UNLIKE FAIL");
         break;
       }

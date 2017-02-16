@@ -14,8 +14,9 @@ export default class NewsFeedPost extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("CHECKING FOR CHANGE");
+    console.log("CHECKING FOR CHANGE U");
     if (this.state.current_user_likes !== nextProps.current_user_likes) {
+      console.log("There was a change");
       this.setState({
         current_user_likes: nextProps.current_user_likes,
         like_count: nextProps.like_count,
