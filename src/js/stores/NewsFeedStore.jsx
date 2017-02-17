@@ -15,6 +15,7 @@ class NewsFeedStore extends EventEmitter {
     }
     this.error = null;
     this.dataFetched = false;
+    this.retweetText = '';
   }
 
   get() {
@@ -174,6 +175,11 @@ class NewsFeedStore extends EventEmitter {
     }
   }
 
+  setRetweet(text) {
+    this.retweetText = text;
+    console.log("TEXT IS SET");
+    dispatcher.dispatch({type: "RETWEET"});
+  }
 
   handleActions(action) {
     switch(action.type){
@@ -230,7 +236,11 @@ class NewsFeedStore extends EventEmitter {
         this.emit("revert");
         this.error = "Error unliking post";
         this.emit("error");
-        console.log("POST UNLIKE FAIL");
+        console.log("UNLIKE FAIL");
+        break;
+      }
+      case "RETWEET": {
+        this.emit("retweet");
         break;
       }
       case "ERROR": {

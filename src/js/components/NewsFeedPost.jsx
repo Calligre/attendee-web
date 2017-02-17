@@ -46,7 +46,7 @@ export default class NewsFeedPost extends React.Component {
 
   retweet() {
     const retweetText = '"' + this.state.text + '" - ' + this.state.poster_name + '\n';
-    this.props.rt(retweetText);
+    NewsFeedStore.setRetweet(retweetText);
     window.scrollTo(0, 0);
   }
 
