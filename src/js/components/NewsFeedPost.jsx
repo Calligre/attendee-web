@@ -14,9 +14,7 @@ export default class NewsFeedPost extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("Receiving new props");
     if (this.state.current_user_likes !== nextProps.current_user_likes) {
-      console.log("There was a change");
       this.setState({
         current_user_likes: nextProps.current_user_likes,
         like_count: nextProps.like_count,
@@ -24,9 +22,6 @@ export default class NewsFeedPost extends React.Component {
     }
   }
 
-  componentWillMount() {}
-
-  componentWillUnmount() {}
 
   changeLike() {
     if (this.state.current_user_likes) {
@@ -45,9 +40,8 @@ export default class NewsFeedPost extends React.Component {
   }
 
   retweet() {
-    const retweetText = '"' + this.state.text + '" - ' + this.state.poster_name + '\n';
+    const retweetText = '"' + this.state.text + '" (' + this.state.poster_name + ')';
     NewsFeedStore.setRetweet(retweetText);
-    window.scrollTo(0, 0);
   }
 
   showImage() {
@@ -89,8 +83,7 @@ export default class NewsFeedPost extends React.Component {
             <FaHeart className="heart-icon clickable"
               onClick={this.changeLike}
               style={heartColor}
-              size={20}
-            />
+              size={20} />
             <span className="like-count no-selection">{like_count}</span>
             <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28} />
             {imageText}

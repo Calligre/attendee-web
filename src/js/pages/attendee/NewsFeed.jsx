@@ -108,7 +108,7 @@ export default class NewsFeed extends React.Component {
 
     return (
       <div>
-        <h1>News Feed 2</h1>
+        <h1>News Feed</h1>
         <div className="newsFeed">
           {imageOverlayDisplay(this.closeImageOverlay)}
           <CreatePost />

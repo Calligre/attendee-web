@@ -10,12 +10,13 @@ export default class NewsFeed extends React.Component {
 
   constructor(props) {
     super(props);
+    this.getRetweetText = this.getRetweetText.bind(this);
+    this.setPostText = this.setPostText.bind(this);
     this.twToggle = this.twToggle.bind(this);
     this.fbToggle = this.fbToggle.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.deletePhoto = this.deletePhoto.bind(this);
     this.changeText = this.changeText.bind(this);
-    this.getRetweetText = this.getRetweetText.bind(this);
     this.createPost = this.createPost.bind(this);
 
     this.state = {
@@ -32,15 +33,29 @@ export default class NewsFeed extends React.Component {
 
   componentWillMount() {
     NewsFeedStore.on('retweet', this.getRetweetText);
+    NewsFeedStore.on('post', this.setPostText);
   }
 
   componentWillUnmount() {
     NewsFeedStore.removeListener('retweet', this.getRetweetText);
+    NewsFeedStore.removeListener('post', this.setPostText);
   }
 
   getRetweetText() {
     this.setState({
       text: NewsFeedStore.retweetText,
+    });
+    this.textInput.focus();
+    window.scrollTo(0, 0);
+  }
+
+  setPostText() {
+    this.setState({
+      text: '',
+      file: null,
+      preview: null,
+      fbPost: false,
+      twPost: false,
     });
   }
 
@@ -95,13 +110,6 @@ export default class NewsFeed extends React.Component {
       this.state.fbPost,
       this.state.twPost
     );
-    this.setState({
-      text: '',
-      file: null,
-      preview: null,
-      fbPost: false,
-      twPost: false,
-    });
   }
 
   render() {
@@ -147,6 +155,7 @@ export default class NewsFeed extends React.Component {
             <div className="input">
               <div className="left-input inline">
                 <textarea
+                  ref={(input) => { this.textInput = input; }}
                   className="text-input border"
                   maxLength={textPostLength}
                   rows="4"

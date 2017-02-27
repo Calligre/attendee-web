@@ -109,10 +109,10 @@ class NewsFeedStore extends EventEmitter {
       contentType:"application/json",
       cache: false,
       success: function(response) {
-        dispatcher.dispatch({type: "POST_SUCCESS", post: response["id"]});
+        dispatcher.dispatch({type: "CREATE_POST_SUCCESS", post: response["id"]});
       },
       error: function(error) {
-        dispatcher.dispatch({type: "POST_FAILURE", error: error});
+        dispatcher.dispatch({type: "CREATE_POST_ERROR", error: error});
       }
     });
   }
@@ -155,16 +155,14 @@ class NewsFeedStore extends EventEmitter {
             cache: false,
             success: function(response){
               data.media_link = photoUploadURL;
-              console.log(data);
               self.postToNewsFeed(data);
             },
             error: function(error){
-              dispatcher.dispatch({type: "PHOTO_ERROR", response: response});
+              dispatcher.dispatch({type: "PHOTO_ERROR", error: error});
             }
           });
         },
         error: function(error) {
-          console.log("FAILURE");
           dispatcher.dispatch({type: "PHOTO_ERROR", error: error});
         }
       });
@@ -177,16 +175,11 @@ class NewsFeedStore extends EventEmitter {
 
   setRetweet(text) {
     this.retweetText = text;
-    console.log("TEXT IS SET");
     dispatcher.dispatch({type: "RETWEET"});
   }
 
   handleActions(action) {
     switch(action.type){
-      case "NEWSFEED_POST": {
-        this.emit("updated");
-        break;
-      }
       case "NEWSFEED_GET": {
         Array.prototype.push.apply(this.contentFeed.items, action.response.data.posts[0]);
         this.contentFeed.nextOffset = action.response.data.nextOffset;
@@ -199,6 +192,10 @@ class NewsFeedStore extends EventEmitter {
         this.emit("updated");
         break;
       }
+      case "CREATE_POST_SUCCESS": {
+        this.emit("post");
+        break;
+      }
       case "POST_LIKE": {
         var arrayLength = this.contentFeed.items.length;
         for (var i = 0; i < arrayLength; i++) {
@@ -209,14 +206,6 @@ class NewsFeedStore extends EventEmitter {
             // this.emit("updated");
           }
         }
-        console.log("LIKE SUCCESS");
-        break;
-      }
-      case "POST_LIKE_ERROR": {
-        this.emit("revert");
-        this.error = "Error liking post";
-        this.emit("error");
-        console.log("LIKE FAIL");
         break;
       }
       case "POST_UNLIKE": {
@@ -229,22 +218,36 @@ class NewsFeedStore extends EventEmitter {
             // this.emit("updated");
           }
         }
-        console.log("UNLIKE SUCCESS");
-        break;
-      }
-      case "POST_UNLIKE_ERROR": {
-        this.emit("revert");
-        this.error = "Error unliking post";
-        this.emit("error");
-        console.log("UNLIKE FAIL");
         break;
       }
       case "RETWEET": {
         this.emit("retweet");
         break;
       }
+      case "POST_LIKE_ERROR": {
+        this.emit("revert");
+        this.error = "Error liking post";
+        this.emit("error");
+        break;
+      }
+      case "POST_UNLIKE_ERROR": {
+        this.emit("revert");
+        this.error = "Error unliking post";
+        this.emit("error");
+        break;
+      }
+      case "CREATE_POST_ERROR": {
+        this.error = "Error creating post: " + action.error.statusText;
+        this.emit("error");
+        break;
+      }
+      case "PHOTO_ERROR": {
+        this.error = "Error uploading photo: " + action.error.statusText;
+        this.emit("error");
+        break;
+      }
       case "ERROR": {
-        this.error = action.error;
+        this.error = "Error: " + action.error.statusText;
         this.emit("error");
         break;
       }
