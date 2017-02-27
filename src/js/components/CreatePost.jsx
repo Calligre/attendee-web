@@ -10,13 +10,13 @@ export default class NewsFeed extends React.Component {
 
   constructor(props) {
     super(props);
+    this.onPhotoDrop = this.onPhotoDrop.bind(this);
     this.getRetweetText = this.getRetweetText.bind(this);
     this.setPostText = this.setPostText.bind(this);
+    this.changeText = this.changeText.bind(this);
     this.twToggle = this.twToggle.bind(this);
     this.fbToggle = this.fbToggle.bind(this);
-    this.onDrop = this.onDrop.bind(this);
     this.deletePhoto = this.deletePhoto.bind(this);
-    this.changeText = this.changeText.bind(this);
     this.createPost = this.createPost.bind(this);
 
     this.state = {
@@ -41,6 +41,13 @@ export default class NewsFeed extends React.Component {
     NewsFeedStore.removeListener('post', this.setPostText);
   }
 
+  onPhotoDrop(files) {
+    this.setState({
+      file: files[0],
+      preview: files[0].preview,
+    });
+  }
+
   getRetweetText() {
     this.setState({
       text: NewsFeedStore.retweetText,
@@ -56,6 +63,12 @@ export default class NewsFeed extends React.Component {
       preview: null,
       fbPost: false,
       twPost: false,
+    });
+  }
+
+  changeText(event) {
+    this.setState({
+      text: event.target.value,
     });
   }
 
@@ -75,18 +88,10 @@ export default class NewsFeed extends React.Component {
       this.setState({
         twPost: !this.state.twPost,
       });
-    }
-    else {
+    } else {
       console.log('TODO: Integrate Twitter window');
       // TODO: Open add Twitter window and change state on success
     }
-  }
-
-  onDrop(files) {
-    this.setState({
-      file: files[0],
-      preview: files[0].preview,
-    });
   }
 
   deletePhoto(e) {
@@ -94,12 +99,6 @@ export default class NewsFeed extends React.Component {
     this.setState({
       file: null,
       preview: null,
-    });
-  }
-
-  changeText(event) {
-    this.setState({
-      text: event.target.value,
     });
   }
 
@@ -116,7 +115,6 @@ export default class NewsFeed extends React.Component {
     const {
       fbIntegration,
       fbPost,
-      imageOverlay,
       preview,
       text,
       twIntegration,
@@ -162,24 +160,25 @@ export default class NewsFeed extends React.Component {
                   type="text"
                   placeholder={placeholder}
                   onChange={this.changeText}
-                  value={text} />
+                  value={text}
+                />
                 <div className="social-submit inline">
                   <div title="Post to Facebook" className="inline">
                     <button
                       type="button"
-                      className={"btn social " + facebookStatus}
+                      className={`btn social ${facebookStatus}`}
                       onClick={this.fbToggle}
                     >
-                      <TiSocialFacebook size={34}/>
+                      <TiSocialFacebook size={34} />
                     </button>
                   </div>
                   <div title="Post to Twitter" className="inline">
                     <button
                       type="button"
-                      className={"btn social " + twitterStatus}
+                      className={`btn social ${twitterStatus}`}
                       onClick={this.twToggle}
                     >
-                      <TiSocialTwitter size={34}/>
+                      <TiSocialTwitter size={34} />
                     </button>
                   </div>
                   <button
@@ -192,7 +191,7 @@ export default class NewsFeed extends React.Component {
                 </div>
               </div>
               <div className="right-input">
-                <Dropzone className='dropzone border' onDrop={this.onDrop} multiple={false}>
+                <Dropzone className="dropzone border" onDrop={this.onPhotoDrop} multiple={false}>
                   {dropzoneDisplay(this.deletePhoto)}
                 </Dropzone>
               </div>

@@ -28,24 +28,24 @@ export default class NewsFeedPost extends React.Component {
       NewsFeedStore.unlikePost(this.state.id);
       this.setState({
         current_user_likes: false,
-        like_count: (parseInt(this.state.like_count) - 1).toString(),
+        like_count: (parseInt(this.state.like_count, 10) - 1).toString(),
       });
     } else {
       NewsFeedStore.likePost(this.state.id);
       this.setState({
         current_user_likes: true,
-        like_count: (parseInt(this.state.like_count) + 1).toString(),
+        like_count: (parseInt(this.state.like_count, 10) + 1).toString(),
       });
     }
   }
 
   retweet() {
-    const retweetText = '"' + this.state.text + '" (' + this.state.poster_name + ')';
+    const retweetText = `"${this.state.text}" (${this.state.poster_name})`;
     NewsFeedStore.setRetweet(retweetText);
   }
 
   showImage() {
-    this.props.imgOverlay(this.state.media_link);
+    this.state.imgOverlay(this.state.media_link);
   }
 
   render() {
@@ -59,7 +59,7 @@ export default class NewsFeedPost extends React.Component {
     } = this.state;
 
     const heartColor = {
-      color: current_user_likes ?'red' : 'inherit',
+      color: current_user_likes ? 'red' : 'inherit',
     };
 
     let imageText = null;
@@ -80,10 +80,12 @@ export default class NewsFeedPost extends React.Component {
           <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
           <div className="social-bar">
-            <FaHeart className="heart-icon clickable"
+            <FaHeart
+              className="heart-icon clickable"
               onClick={this.changeLike}
               style={heartColor}
-              size={20} />
+              size={20}
+            />
             <span className="like-count no-selection">{like_count}</span>
             <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28} />
             {imageText}

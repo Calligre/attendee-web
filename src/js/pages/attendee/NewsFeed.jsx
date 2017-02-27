@@ -48,19 +48,19 @@ export default class NewsFeed extends React.Component {
     });
   }
 
+  setImageOverlay(value) {
+    this.setState({
+      imageOverlay: value,
+    });
+  }
+
   revertNewsFeedPosts() {
     this.setState({
       contentFeed: NewsFeedStore.contentFeed,
     });
     if (NewsFeedStore.error) {
-      this.showError;
+      this.showError();
     }
-  }
-
-  setImageOverlay(value) {
-    this.setState({
-      imageOverlay: value,
-    });
   }
 
   showError() {
@@ -84,7 +84,8 @@ export default class NewsFeed extends React.Component {
         key={post.timestamp}
         {...post}
         rt={this.setText}
-        imgOverlay={this.setImageOverlay} />
+        imgOverlay={this.setImageOverlay}
+      />
     );
 
     let paginate = (<div className="default-cursor">End of Content</div>);
@@ -95,8 +96,12 @@ export default class NewsFeed extends React.Component {
     function imageOverlayDisplay(closeImageOverlay) {
       if (imageOverlay) {
         return (
-          <div className="fullscreen-frame" onClick={closeImageOverlay}>
-            <MdClose className="img-overlay-close clickable" size={40} />
+          <div className="fullscreen-frame">
+            <MdClose
+              className="img-overlay-close clickable"
+              size={40}
+              onClick={closeImageOverlay}
+            />
             <div className="img-container">
               <span className="helper inline" /><img className="inline" src={imageOverlay} />
             </div>
@@ -116,7 +121,7 @@ export default class NewsFeed extends React.Component {
             <div className="newsfeed-posts">
               {NewsFeedPosts}
             </div>
-            <hr/>
+            <hr />
             <div className="paginate">
               {paginate}
             </div>
