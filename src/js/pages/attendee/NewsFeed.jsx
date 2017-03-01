@@ -12,6 +12,7 @@ export default class NewsFeed extends React.Component {
     this.getNewsFeedPosts = this.getNewsFeedPosts.bind(this);
     this.revertNewsFeedPosts = this.revertNewsFeedPosts.bind(this);
     this.setImageOverlay = this.setImageOverlay.bind(this);
+    this.paginatePosts = this.paginatePosts.bind(this);
     this.closeImageOverlay = this.closeImageOverlay.bind(this);
     this.showError = this.showError.bind(this);
 
@@ -63,12 +64,16 @@ export default class NewsFeed extends React.Component {
     }
   }
 
-  showError() {
-    alert(NewsFeedStore.error);
+  paginatePosts() {
+    NewsFeedStore.get();
   }
 
   closeImageOverlay() {
     this.setImageOverlay(null);
+  }
+
+  showError() {
+    alert(NewsFeedStore.error);
   }
 
   render() {
@@ -90,7 +95,7 @@ export default class NewsFeed extends React.Component {
 
     let paginate = (<div className="default-cursor">End of Content</div>);
     if (contentFeed.nextOffset) {
-      paginate = (<div className="clickable link" onClick={NewsFeedStore.get}>Load more...</div>);
+      paginate = (<div className="clickable link" onClick={this.paginatePosts}>Load more...</div>);
     }
 
     function imageOverlayDisplay(closeImageOverlay) {
