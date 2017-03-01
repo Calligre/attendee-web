@@ -56,7 +56,7 @@ export default class Preferences extends React.Component {
       case 'pages':
         tab = <TabPages {...this.state} handleChange={this.handleChange} />;
         break;
-      case 'social-media':
+      case 'social':
         tab = <TabSocialMedia {...this.state} handleChange={this.handleChange} />;
         break;
       case 'surveys':
@@ -74,7 +74,7 @@ export default class Preferences extends React.Component {
       <div>
         <div className="sidebar">
           <div id="pages" onClick={this.handleTabSwitch}>Pages</div>
-          <div id="social-media" onClick={this.handleTabSwitch}>Social Media</div>
+          <div id="social" onClick={this.handleTabSwitch}>Social Media</div>
           <div id="surveys" onClick={this.handleTabSwitch}>Surveys</div>
           <div id="other" onClick={this.handleTabSwitch}>Other</div>
         </div>
