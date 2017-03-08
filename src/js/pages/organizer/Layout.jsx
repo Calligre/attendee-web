@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router";
 
 import Footer from "components/layout/Footer";
-import Nav from "components/layout/attendee/Nav";
+import Nav from "components/layout/organizer/Nav";
 
 export default class Layout extends React.Component {
   render() {
@@ -10,7 +10,7 @@ export default class Layout extends React.Component {
 
     return (
       <div>
-        <Nav location={location}/>
+        <Nav location={location} auth={this.props.route.auth}/>
         <div class="container navHeader">
           <div class="row">
             <div class="col-lg-12">
@@ -20,6 +20,7 @@ export default class Layout extends React.Component {
           <Footer/>
         </div>
       </div>
+
     );
   }
 }
