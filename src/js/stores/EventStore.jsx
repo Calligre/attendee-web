@@ -14,6 +14,25 @@ class EventStore extends EventEmitter {
     super()
     this.events = [];
     this.error = null;
+    this.streamMap = {};
+    this.loadStreamMap();
+  }
+
+  loadStreamMap = () => {
+    $.ajax({
+      url: url + "/api/stream",
+      dataType: "json",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      cache: false,
+      success: function(response){
+        dispatcher.dispatch({type: "STREAMS_GET", streams: response.data});
+      },
+      failure: function(error){
+        dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
+      }
+   });
   }
 
   getAll() {
@@ -110,6 +129,13 @@ class EventStore extends EventEmitter {
 
   handleActions(action) {
     switch(action.type) {
+      case "STREAMS_GET": {
+        action.streams.forEach((stream) => {
+            streamMap[stream.name] = randomColor();
+        });
+        this.emit("streams");
+        break;
+      }
       case "EVENTS_GET": {
         action.events.forEach((event) => {
           if(typeof streamMap[event.attributes.stream] == "undefined"){
