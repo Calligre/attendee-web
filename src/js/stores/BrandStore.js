@@ -16,45 +16,45 @@ class BrandStore extends EventEmitter {
 
   getBranding() {
     $.ajax({
-      url: url + '/api/info',
+      url: `${url}/api/info`,
       dataType: 'json',
       type: 'GET',
       headers: {
-        'Authorization': 'Bearer ' + AuthService.getToken(),
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
 
       cache: false,
-      success: function (response) {
+      success(response) {
         dispatcher.dispatch({ type: 'BRANDING_GET', branding: response.data.attributes });
       },
-      error: function (error) {
-        console.log(error.status + ': ' + error.statusText);
+      error(error) {
+        console.log(`${error.status}: ${error.statusText}`);
       },
     });
   }
 
   saveBranding(data) {
     $.ajax({
-      url: url + '/api/info',
+      url: `${url}/api/info`,
       dataType: 'json',
       contentType: 'application/json',
       data: JSON.stringify(data),
       type: 'PATCH',
       headers: {
-        'Authorization': 'Bearer ' + AuthService.getToken(),
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
       cache: false,
-      success: function (response) {
+      success() {
         dispatcher.dispatch({ type: 'BRANDING_SAVED' });
       },
-      error: function (error) {
-        console.log(error.status + ': ' + error.statusText);
+      error(error) {
+        console.log(`${error.status}: ${error.statusText}`);
       },
     });
   }
 
   handleActions(action) {
-    switch(action.type) {
+    switch (action.type) {
       case 'BRANDING_GET': {
         this.branding = action.branding;
         this.emit('receivedBranding');
@@ -74,7 +74,7 @@ class BrandStore extends EventEmitter {
   }
 }
 
-const brandStore = new BrandStore;
+const brandStore = new BrandStore();
 dispatcher.register(brandStore.handleActions.bind(brandStore));
 
 export default brandStore;
