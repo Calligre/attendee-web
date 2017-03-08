@@ -34,12 +34,8 @@ export default class Branding extends React.Component {
 
   setBranding = () => {
     let branding = BrandStore.branding;
-    
-    Object.keys(branding).forEach(function(key) {
-      if (key == 'starttime' || key == 'endtime') {
-        branding[key] = moment.unix(branding[key]).format('YYYY-MM-DD[T]HH:mm');
-      }
-    });
+    branding['starttime'] = moment.unix(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
+    branding['endtime'] = moment.unix(branding['endtime']).format('YYYY-MM-DD[T]HH:mm');
     this.setState(branding);
   }
 
@@ -78,7 +74,7 @@ export default class Branding extends React.Component {
         <table width="100%" height="100%">
           <tbody>
             <tr>
-              <td width="50%">
+              <td>
                 <div> Name: <input type="text" value={this.state.name} name="name" placeholder="Name" onChange={this.handleChange} /> </div>
                 <div> Organization: <input type="text" value={this.state.organization} name="organization" placeholder="Organization" onChange={this.handleChange} /> </div>
                 <div> Start Date: <input type="datetime-local" value={this.state.starttime} name="starttime" onChange={this.handleChange} /> </div>
@@ -96,7 +92,7 @@ export default class Branding extends React.Component {
 
                 <button onClick={this.handleSave}> Save </button>
               </td>
-              <td width="50%">
+              <td>
                 PREVIEW:
 
                 <div> {this.state.name} </div>

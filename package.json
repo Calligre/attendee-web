@@ -6,8 +6,7 @@
   "dependencies": {
     "auth0-lock": "10.11.0",
     "babel-core": "6.22.1",
-    "babel-eslint": "7.1.0",
-    "babel-loader": "6.2.0",
+    "babel-loader": "6.2.10",
     "babel-plugin-add-module-exports": "0.1.4",
     "babel-plugin-react-html-attrs": "2.0.0",
     "babel-plugin-transform-class-properties": "6.22.0",
@@ -17,7 +16,6 @@
     "babel-preset-stage-0": "6.22.0",
     "components": "0.1.0",
     "css-loader": "0.23.1",
-    "eslint-import-resolver-webpack": "0.7.0",
     "extract-text-webpack-plugin": "1.0.1",
     "flux": "2.1.1",
     "history": "1.17.0",
@@ -47,7 +45,9 @@
     "webpack-dev-server": "1.16.3"
   },
   "devDependencies": {
+    "babel-eslint": "7.1.0",
     "eslint": "3.15.0",
+    "eslint-import-resolver-webpack": "0.7.0",
     "eslint-config-airbnb": "13.0.0",
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-jsx-a11y": "2.2.3",

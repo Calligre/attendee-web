@@ -10,7 +10,7 @@ export default class Layout extends React.Component {
 
     return (
       <div>
-        <Nav location={location} auth={this.props.route.auth}/>
+        <Nav location={location}/>
         <div class="container navHeader">
           <div class="row">
             <div class="col-lg-12">
