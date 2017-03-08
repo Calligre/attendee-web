@@ -2,7 +2,6 @@ import { EventEmitter } from 'events'
 import { isTokenExpired } from './jwtHelper'
 import Auth0Lock from 'auth0-lock'
 import * as config from 'auth0.config.js';
-import AppHistory from 'util/AppHistory';
 import PeopleStore from 'stores/PeopleStore'
 
 var $ = require("jquery");
@@ -14,13 +13,23 @@ class AuthService extends EventEmitter {
     this.clientId = clientId
     this.domain = domain
     // Configure Auth0
-    this.lock = new Auth0Lock(clientId, domain, {auth: {redirect: true}})
+    this.lock = new Auth0Lock(clientId, domain, {
+      auth: {
+        redirect: true,
+        responseType: 'token',
+        redirectUrl: window.location.origin + '/#',
+      }
+    })
     // Add callback for lock `authenticated` event
     this.lock.on('authenticated', this._doAuthentication.bind(this))
     // Add callback for lock `authorization_error` event
     this.lock.on('authorization_error', this._authorizationError.bind(this))
     // binds login functions to keep this context
     this.login = this.login.bind(this)
+
+    this.lock.on('hide', () => {
+      localStorage.removeItem('logging_in')
+    })
   }
 
   _doAuthentication(authResult){
@@ -38,6 +47,7 @@ class AuthService extends EventEmitter {
           this.setProfile(profile);
           this._createUser();
         }
+        localStorage.removeItem('logging_in')
       })
     }
   }
@@ -73,6 +83,7 @@ class AuthService extends EventEmitter {
   login() {
     // Call the show method to display the authentication window.
     this.lock.show()
+    localStorage.setItem('logging_in', true)
   }
 
   loggedIn(){
@@ -147,6 +158,7 @@ class AuthService extends EventEmitter {
       } else {
         this.setProfile({...profile, identities: response}) // updates profile identities
       }
+      localStorage.removeItem('logging_in')
     })
   }
 

@@ -116,6 +116,11 @@
     display: none;
   }
 
+  .list-group {
+    margin-top: 30px;
+    display: inline;
+  }
+
   .linkedAccount {
     display: inline-block;
     vertical-align: top;
@@ -152,7 +157,7 @@
     }
 
     .submitChanges {
-      display: inherit;
+      display: inline;
     }
 
     .editableContainer {
