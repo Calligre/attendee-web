@@ -68,13 +68,13 @@ export default class People extends React.Component {
       filterTerms: terms,
     })
   }
-  
+
   sortKeyUpdated (key) {
     this.setState({
       sortKey: key,
     })
   }
-  
+
   sortDirectionUpdated () {
     this.setState({
       sortDirection: -this.state.sortDirection,
@@ -93,7 +93,7 @@ export default class People extends React.Component {
       if (sortKey == 'points') {
         return (b[sortKey] - a[sortKey]) * sortDirection;
       }
-      
+
       return (a[sortKey] - b[sortKey]) * sortDirection;
     });
 

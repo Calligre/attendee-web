@@ -2,3 +2,4 @@ node_modules/
 *.min.js
 src/js/*.config.js
 .DS_Store
+npm-debug.log
