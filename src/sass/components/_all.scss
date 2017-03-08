@@ -5,6 +5,7 @@ $darkBlue: #022F5A;
 $blue: #5F9EDF;
 $teal: #62D0DB;
 $grey: #D7D8DA;
+$darkGrey: #CCC;
 $black: #000;
 $white: #FFF;
 $error: #D83B31;
@@ -13,25 +14,80 @@ $secondary: $purple;
 $tertiary: $blue;
 $highlight: $teal;
 
+/* Social media colors */
+$twitter: #00aced;
+$facebook: #3b5998;
+$linkedin: #007bb6;
+$instagram: #bc2a8d;
+
+
 body {
   font: 100% $font-stack;
   color: $black;
 }
 
+$h1-font-sizes: (
+  null  : 8vw,
+  460px : 40px,
+  1024px : 48px
+);
+
 h1 {
   color: $primary;
+  @include font-size($h1-font-sizes);
 }
+
+$h2-font-sizes: (
+  null  : 6vw,
+  460px : 32px,
+  1024px : 36px
+);
 
 h2 {
   color: $secondary;
+  @include font-size($h2-font-sizes);
 }
+
+$h3-font-sizes: (
+  null  : 24px,
+  460px : 24px,
+  1024px : 28px
+);
 
 h3 {
   color: $tertiary;
+  @include font-size($h3-font-sizes);
 }
 
-p {
-  font-size: 12px;
+$h4-font-sizes: (
+  null  : 20px,
+  460px : 20px,
+  1024px : 24px
+);
+
+h4 {
+  color: $black;
+  @include font-size($h4-font-sizes);
+}
+
+$p-font-sizes: (
+  null  : 16px,
+  480px : 16px,
+  1024px : 20px
+);
+
+p, body, div, a {
+  @include font-size($p-font-sizes);
+}
+
+a {
+  color: $black;
+  text-decoration: none;
+
+  &:hover {
+    color: $black;
+    text-decoration: none;
+  }
 }
 
 .navbar {
@@ -99,20 +155,20 @@ p {
 
 button {
   font-size: 16px;
-  padding: 10px 15px;
-  background-color: $purple;
-  border: none;
-  border-radius: 5px;
-  margin: 10px;
+  padding: 10px 15px !important;
+  background-color: $purple !important;
+  background-image: none !important;
+  border: none !important;
+  border-radius: 5px !important;
+  margin: 10px !important;
+  color: white !important;
 
   &:hover {
-    background-color: $darkBlue;
-    color: white;
+    background-color: $darkBlue !important;
   }
 
   &:disabled {
-    background-color: $grey;
-    color: black;
+    background-color: $grey !important;
   }
 }
 

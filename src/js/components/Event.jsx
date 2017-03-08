@@ -24,11 +24,11 @@ export default class Event extends React.Component {
       <div className="eventPageEvent">
         <IndexLink to={{ pathname: 'events/' + this.props.id }}>
           <div id={"event-" + id} className="event">
-            <div className="time" style={streamStyle}>
+            <div className="time">
               <p className="start">{moment.unix(starttime).format("hh:mma")}</p>
               <p className="end">{moment.unix(endtime).format("hh:mma")}</p>
             </div>
-            <div className="details">
+            <div className="details" style={streamStyle}>
               <h4 className="title">{name}</h4>
               <p className="location">{location}</p>
             </div>

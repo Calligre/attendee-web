@@ -64,14 +64,17 @@ export default class Events extends React.Component {
     return (
         <div id={"event-" + id} class="event-item">
           <div className="nameContainer" style={streamStyle}>
-            <div class="dates">
-              <div class="date">{moment.unix(starttime).format("h:mm a")}</div>
-              <div class="date">{moment.unix(endtime).format("h:mm a")}</div>
+            <div class="header">
+              <div class="dates">
+                <h4 class="date">{moment.unix(starttime).format("h:mm a")}</h4>
+                <h4 class="date">{moment.unix(endtime).format("h:mm a")}</h4>
+              </div>
+              <h1>{name}</h1>
             </div>
-            <h1>{name}</h1>
             <SubscribeButton className="isSubscribed" id={this.state.event.id} subscribed={isSubscribed}/>
           </div>
           <div class="info">
+            <div id="avoidSubscribeButton"></div>
             <h2 class="location">{location}</h2>
             <div class="description">{description}</div>
           </div>                

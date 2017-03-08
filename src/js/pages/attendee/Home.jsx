@@ -58,6 +58,9 @@ export default class Featured extends React.Component {
   }
 
   render() {
+    if (localStorage.getItem('redirect_after_login')) {
+      return (<div></div>)
+    }
     const { messages, events, notifications } = this.state;
 
     const EventComponents = events.map((event) => {

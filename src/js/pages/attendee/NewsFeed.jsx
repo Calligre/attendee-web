@@ -1,130 +1,135 @@
-import React from "react";
-
-import NewsFeedPost from "components/NewsFeedPost";
-import NewsFeedStore from "stores/NewsFeedStore";
-// import style from 'sass/newsfeed.scss';
+import React from 'react';
+import NewsFeedPost from 'components/NewsFeedPost';
+import CreatePost from 'components/CreatePost';
+import NewsFeedStore from 'stores/NewsFeedStore';
+import MdClose from 'react-icons/lib/md/close';
 
 
 export default class NewsFeed extends React.Component {
 
-	constructor() {
+  constructor() {
     super();
     this.getNewsFeedPosts = this.getNewsFeedPosts.bind(this);
-    this.createPost = this.createPost.bind(this);
-    this.twToggle = this.twToggle.bind(this);
-    this.fbToggle = this.fbToggle.bind(this);
+    this.revertNewsFeedPosts = this.revertNewsFeedPosts.bind(this);
+    this.setImageOverlay = this.setImageOverlay.bind(this);
+    this.paginatePosts = this.paginatePosts.bind(this);
+    this.closeImageOverlay = this.closeImageOverlay.bind(this);
+    this.showError = this.showError.bind(this);
+
     this.state = {
-      posts: NewsFeedStore.getAll(),
-      fbPost: false,
-      twPost: false,
-      userText: "#SoftwareDemoDay",
+      contentFeed: {
+        items: [],
+        // nextOffset is stored in the NewsFeedStore
+      },
+      imageOverlay: null,
+      // TODO: HOW CAN I GET THESE? (If user is integrated into social media channels)
+      twIntegration: true,
+      fbIntegration: true,
     };
   }
 
   componentWillMount() {
-    NewsFeedStore.on("updated", this.getNewsFeedPosts);
-    NewsFeedStore.on("error", this.showError);
+    NewsFeedStore.on('updated', this.getNewsFeedPosts);
+    NewsFeedStore.on('revert', this.revertNewsFeedPosts);
+    NewsFeedStore.on('error', this.showError);
+    // Grab data here. Emitted events aren't picked up until here
+    NewsFeedStore.getOnLoad();
   }
 
   componentWillUnmount() {
-    NewsFeedStore.removeListener("updated", this.getNewsFeedPosts);
-    NewsFeedStore.removeListener("error", this.showError);
+    NewsFeedStore.removeListener('updated', this.getNewsFeedPosts);
+    NewsFeedStore.removeListener('revert', this.revertNewsFeedPosts);
+    NewsFeedStore.removeListener('error', this.showError);
   }
 
+  // Grab the News Feed Posts that the user has retrieved from the store
   getNewsFeedPosts() {
     this.setState({
-      posts: NewsFeedStore.posts
+      contentFeed: NewsFeedStore.contentFeed,
     });
   }
 
-  createPost() {
-    let text = document.getElementsByClassName(
-      "user-post-form")[0].getElementsByTagName('textarea')[0].value;
-    NewsFeedStore.createPost(text, this.state.fbPost, this.state.twPost);
-
-    console.log(text);
-  }
-
-  showError(){
-    console.log(EventStore.error);
-  }
-
-  fbToggle() {
+  setImageOverlay(value) {
     this.setState({
-      fbPost: !this.state.fbPost,
-    })
-  }
-
-  twToggle() {
-    this.setState({
-      twPost: !this.state.twPost,
+      imageOverlay: value,
     });
   }
 
+  revertNewsFeedPosts() {
+    this.setState({
+      contentFeed: NewsFeedStore.contentFeed,
+    });
+    if (NewsFeedStore.error) {
+      this.showError();
+    }
+  }
+
+  paginatePosts() {
+    NewsFeedStore.get();
+  }
+
+  closeImageOverlay() {
+    this.setImageOverlay(null);
+  }
+
+  showError() {
+    alert(NewsFeedStore.error);
+  }
 
   render() {
-    console.log(this.state.fbPost);
-    console.log(this.state.twPost);
-    const { posts } = this.state;
+    const {
+      contentFeed,
+      fbIntegration,
+      imageOverlay,
+      twIntegration,
+    } = this.state;
 
-    const NewsFeedPosts = posts.map((post) => {
-        console.log(post)
-        return <NewsFeedPost key={post.timestamp} {...post}/>;
-    });
+    const NewsFeedPosts = contentFeed.items.map(post =>
+      <NewsFeedPost
+        key={post.timestamp}
+        {...post}
+        rt={this.setText}
+        imgOverlay={this.setImageOverlay}
+      />
+    );
 
-    var upost = {
-      margin: "30px 20% 15px 20%",
-      display: "inline-block"
+    let paginate = (<div className="default-cursor">End of Content</div>);
+    if (contentFeed.nextOffset) {
+      paginate = (<div className="clickable link" onClick={this.paginatePosts}>Load more...</div>);
     }
 
-    var alignLeft = {
-      align: "left",
-      width: "50%",
-      display: "inline-block"
+    function imageOverlayDisplay(closeImageOverlay) {
+      if (imageOverlay) {
+        return (
+          <div className="fullscreen-frame">
+            <MdClose
+              className="img-overlay-close clickable"
+              size={40}
+              onClick={closeImageOverlay}
+            />
+            <div className="img-container">
+              <span className="helper inline" /><img className="inline" src={imageOverlay} />
+            </div>
+          </div>
+        );
+      }
+      return <div />;
     }
-
-    var alignRight = {
-      align: "right",
-      width: "49%",
-      display: "inline-block",
-      marginTop: "-30px",
-    }
-
-    var aright = {
-      float: "right",
-    }
-
-    var width100 = {
-      width: "100%"
-    }
-
-    var fsize = {
-      fontSize: "24px"
-    }
-
 
     return (
-      <div style={width100}>
-        <div class="user-post">
+      <div>
+        <h1>News Feed</h1>
+        <div className="newsFeed">
+          {imageOverlayDisplay(this.closeImageOverlay)}
+          <CreatePost />
           <div>
-            <form class="user-post-form" style={upost}>
-              <textarea style={fsize} maxLength="140" rows="4" cols="80" type="text"
-                defaultValue={this.state.userText}></textarea>
-              <div style={alignLeft}>
-                <span class="fb-check" style={fsize}><input type="checkbox"
-                  onChange={this.fbToggle}/>Facebook</span><br/>
-                <span class="tw-check" style={fsize}><input type="checkbox"
-                  onChange={this.twToggle}/>Twitter</span>
-              </div>
-              <div style={alignRight}>
-                <button class="submit-form btn btn-primary" style={aright} onClick={this.createPost}>Make a post</button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div>
-          <div className="news-feed-posts">
-            {NewsFeedPosts}
+            <div className="newsfeed-posts">
+              {NewsFeedPosts}
+            </div>
+            <hr />
+            <div className="paginate">
+              {paginate}
+            </div>
           </div>
         </div>
       </div>

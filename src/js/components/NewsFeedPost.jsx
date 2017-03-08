@@ -1,122 +1,96 @@
-import React from "react";
-
-import NewsFeedStore from "stores/NewsFeedStore";
+import React from 'react';
+import NewsFeedStore from 'stores/NewsFeedStore';
+import FaHeart from 'react-icons/lib/fa/heart';
+import FaRetweet from 'react-icons/lib/fa/retweet';
 
 export default class NewsFeedPost extends React.Component {
 
-  constructor() {
-    super();
-    this.togglePictureDisplay = this.togglePictureDisplay.bind(this);
+  constructor(props) {
+    super(props);
+    this.state = this.props;
     this.changeLike = this.changeLike.bind(this);
-    this.state = {
-      showPicture: false,
-      liked: 0,
-      likeStyle: {color: 'black', fontSize: "40px", marginLeft: "50px"},
-    };
+    this.retweet = this.retweet.bind(this);
+    this.showImage = this.showImage.bind(this);
   }
 
-  // componentWillMount() {
-  //   NewsFeedStore.on("updated", this.getNewsFeedPosts); // TODO
-  //   NewsFeedStore.on("error", this.showError);
-  // }
-
-  // componentWillUnmount() {
-  //   NewsFeedStore.removeListener("updated", this.getNewsFeedPosts);
-  //   NewsFeedStore.removeListener("error", this.showError);
-  // }
-
-  showError(){
-    console.log(NewsFeedStoreStore.error);
+  componentWillReceiveProps(nextProps) {
+    if (this.state.current_user_likes !== nextProps.current_user_likes) {
+      this.setState({
+        current_user_likes: nextProps.current_user_likes,
+        like_count: nextProps.like_count,
+      });
+    }
   }
 
-  togglePictureDisplay() {
-    this.setState({
-      showPicture: !this.state.showPicture
-    });
-  }
 
   changeLike() {
-    // TODO: How are we doing this on the backend?
-    if (this.state.liked) {
-      // When this works, remove liked attribute
-      NewsFeedStore.decrementLike();
+    if (this.state.current_user_likes) {
+      NewsFeedStore.unlikePost(this.state.id);
       this.setState({
-        liked: 0,
-        likeStyle: {color: 'black', fontSize: "40px", marginLeft: "50px"},
+        current_user_likes: false,
+        like_count: (parseInt(this.state.like_count, 10) - 1).toString(),
       });
     } else {
-      NewsFeedStore.incrementLike();
+      NewsFeedStore.likePost(this.state.id);
       this.setState({
-        liked: 1,
-        likeStyle: {color: 'red', fontSize: "40px", marginLeft: "50px"},
-      })
+        current_user_likes: true,
+        like_count: (parseInt(this.state.like_count, 10) + 1).toString(),
+      });
     }
+  }
 
+  retweet() {
+    const retweetText = `"${this.state.text}" (${this.state.poster_name})`;
+    NewsFeedStore.setRetweet(retweetText);
+  }
+
+  showImage() {
+    this.state.imgOverlay(this.state.media_link);
   }
 
   render() {
+    const {
+      current_user_likes,
+      like_count,
+      media_link,
+      poster_icon,
+      poster_name,
+      text,
+    } = this.state;
 
-    const { id, posterid, text, like_count, media_link, timestamp } = this.props;
+    const heartColor = {
+      color: current_user_likes ? 'red' : 'inherit',
+    };
 
-    // TODO: This is a dirty hack job until the API has a solution
-    let likeCount = like_count + this.state.liked;
-
-
-
-    var width100 = {
-      margin: "30px -10% 15px 20%",
-    }
-
-    var font30 = {
-      fontSize: "26px"
-    }
-
-    var font40 = {
-      fontSize: "32px"
-    }
-
-    var font24 = {
-      fontSize: "20px",
-    }
-
-    var fleft = {
-      float: "left"
-    }
-
-    var fcenter = {
-      float: "center"
-    }
-
-
-    let renderPicture;
-    if (this.props.media_link === undefined || this.props.media_link === "") {
-      renderPicture = (
-        <span style={font24}>NO MEDIA LINK</span>
-      );
-    } else if (!this.state.showPicture) {
-      renderPicture = (
-        <span class="picture-text" style={font30} onClick={this.togglePictureDisplay}>Show Photo...</span>
-      );
-    } else {
-      renderPicture = (
-        <span class="picture" onClick={this.togglePictureDisplay}>
-          <img src={media_link}/>
+    let imageText = null;
+    if (media_link && media_link !== '') {
+      imageText = (
+        <span className="show-image link clickable no-selection" onClick={this.showImage}>
+          Show Image
         </span>
       );
     }
 
-
-
-
     return (
-      <div class="newsfeed-post" style={width100}>
-        <div class="test-post">
-          <span class="username" style={font40}>{posterid} - </span>
-          <span class="text" style={font30}>{text} </span>
+      <div className="newsfeed-post">
+        <div className="user-photo-container inline">
+          <img src={poster_icon} className="user-photo no-selection" />
         </div>
-        <span class="likes" style={this.state.likeStyle} onClick={this.changeLike}>&hearts;</span>
-        <span style={font40}>{likeCount} - </span>
-        {renderPicture}
+        <div className="post-text inline">
+          <p className="username">{poster_name}</p>
+          <p className="text">{text}</p>
+          <div className="social-bar">
+            <FaHeart
+              className="heart-icon clickable"
+              onClick={this.changeLike}
+              style={heartColor}
+              size={20}
+            />
+            <span className="like-count no-selection">{like_count}</span>
+            <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28} />
+            {imageText}
+          </div>
+        </div>
       </div>
     );
   }
