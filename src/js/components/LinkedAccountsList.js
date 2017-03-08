@@ -11,7 +11,7 @@ export class LinkedAccountsList extends React.Component {
     if (profile && profile.identities) {
       items = profile.identities.map((identity) => {
         return (
-          <LinkedAccountItem profile={profile} identity={identity} />
+          <LinkedAccountItem profile={profile} identity={identity} key={identity.provider.toString()} />
         );
       });
     }
