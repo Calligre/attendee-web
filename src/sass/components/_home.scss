@@ -1,6 +1,6 @@
 .notification-list {
   position: relative;
-  
+
   .notification-bar {
     position: relative !important;
     bottom: auto !important;
@@ -10,4 +10,8 @@
     font-size: 12px !important;
     background-color: $error !important;
   }
+}
+
+.dismiss-card {
+  cursor: pointer;
 }
