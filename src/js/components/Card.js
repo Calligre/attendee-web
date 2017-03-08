@@ -1,6 +1,9 @@
 import React from 'react';
 import Event from 'components/Event';
 
+import Clear from 'react-icons/lib/fa/times-circle';
+
+
 export default class Card extends React.Component {
   constructor(props) {
     super(props);
@@ -29,8 +32,8 @@ export default class Card extends React.Component {
     }
 
     return (
-      <div className="card">
-        <span className="dismiss" onClick={this.handleDismiss}>x</span>
+      <div class="card">
+        <Clear size={15} color={'tomato'} onClick={this.handleDismiss}/>
         {renderedContent}
       </div>
     );
