@@ -5,7 +5,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 
 module.exports = {
-  context: path.join(__dirname, "src"),
+  context: path.resolve(__dirname, "src"),
   devtool: debug ? "inline-sourcemap" : null,
   entry: {
     attendee: "attendee.client",
@@ -29,14 +29,12 @@ module.exports = {
     ]
   },
   output: {
-    path:  path.resolve(__dirname, 'build/'),
+    path: path.resolve(__dirname, 'build/'),
     filename: "[name]/[name].client.min.js"
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
-    root: [
-      path.resolve(__dirname, "./src/js")
-    ]
+    root: path.resolve(__dirname, "./src/js")
   },
   plugins: debug ? [] : [
     new ExtractTextPlugin('dist/styles/main.css', { allChunks: true }),
