@@ -1,4 +1,5 @@
 import AuthService from 'util/AuthService';
+import BrandStore from 'stores/BrandStore';
 import React from 'react';
 
 const moment = require('moment');
@@ -9,59 +10,63 @@ export default class Info extends React.Component {
     super();
 
     this.state = {
+      name: '',
+      organization: '',
+      starttime: '',
+      endtime: '',
+      location: '',
+      other: '',
+      color_primary: '#000000',
+      color_secondary: '#000000',
       logo: '',
-      conf_name: 'Loading...',
-      location: 'Loading...',
-      startDate: moment().unix(),
-      endDate: moment().unix(),
-      other: 'Loading...',
-      twitter: 'Loading...',
-      facebook: 'Loading...',
+      logo_square: '',
+      icon: '',
+      facebook: '',
+      twitter: '',
     };
+
+    BrandStore.on('receivedBranding', this.setBranding);
+    BrandStore.getBranding();
   }
 
-  componentDidMount() {
-    const self = this;
-    $.ajax({
-      url: `${this.props.route.apiBaseURL}/info`,
-      dataType: 'json',
-      type: 'GET',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-
-      cache: true,
-      success(response) {
-        self.setState({
-          logo: response.data.attributes.logo,
-          conf_name: response.data.attributes.name,
-          location: response.data.attributes.location,
-          starttime: response.data.attributes.starttime,
-          endtime: response.data.attributes.endtime,
-          other: response.data.attributes.other,
-          twitter: response.data.attributes.twitter,
-          facebook: response.data.attributes.facebook,
-        });
-      },
-    });
+  setBranding = () => {
+    let branding = BrandStore.branding;
+    branding['starttime'] = moment.unix(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
+    branding['endtime'] = moment.unix(branding['endtime']).format('YYYY-MM-DD[T]HH:mm');
+    this.setState(branding);
   }
 
   render() {
-    const { logo, conf_name, location, starttime, endtime, other, twitter, facebook } = this.state;
+    const { name, organization, starttime, endtime, location, other, color_primary,
+      color_secondary, logo, logo_square, icon, facebook, twitter } = this.state;
     return (
       <div id="conference-info">
         <img className="logo" alt="Logo" src={logo} />
-        <h3 className="other">{other}</h3>
-        <div className="info-container">
-          <h1>You're at: {conf_name}</h1>
-          <h2> The location is: {location}</h2>
-          <h2> It begins: {moment.unix(starttime).format('ddd MMMM Do YYYY hh:mm')}</h2>
-          <h2> and ends: {moment.unix(endtime).format('ddd MMMM Do YYYY hh:mm')}</h2>
-          <a href={twitter}> <img alt="Twitter" src="https://abs.twimg.com/favicons/favicon.ico" /></a>
-          <a href={facebook}> <img alt="Facebook" src="https://www.facebook.com/rsrc.php/yl/r/H3nktOa7ZMg.ico" /></a>
-        </div>
+        <h1>You're at: {name}</h1>
+        <h2> It begins: {starttime} </h2>
+        <h2> and ends: {endtime} </h2>
+        <h2> It's happeneing at {location} </h2>
+        <h3> {other} </h3>
+        <h3> Brought to you by: {organization} </h3>
+        <div> <input type="color" value={color_primary} disabled/>
+              <input type="color" value={color_secondary} disabled/> </div>
+
+        <div> <img src={logo_square} alt="Square Logo" height="100 "/>
+              <img src={icon} alt="Icon" height="100 "/> </div>
+        <div> <a href={facebook}> <img src="https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png" alt="Facebook" height="50" /> </a> 
+              <a href={twitter}> <img src="https://upload.wikimedia.org/wikipedia/en/archive/9/9f/20161107041729!Twitter_bird_logo_2012.svg" alt="Twitter" height="50" /> </a> </div>
       </div>
     );
   }
 }
 
+
+        // <h3 className="other">{other}</h3>
+        // <div className="info-container">
+        //   <h1>You're at: {conf_name}</h1>
+        //   <h2> The location is: {location}</h2>
+        //   <h2> It begins: {moment.unix(starttime).format('ddd MMMM Do YYYY hh:mm')}</h2>
+        //   <h2> and ends: {moment.unix(endtime).format('ddd MMMM Do YYYY hh:mm')}</h2>
+        //   <a href={twitter}> <img alt="Twitter" src="https://abs.twimg.com/favicons/favicon.ico" /></a>
+        //   <a href={facebook}> <img alt="Facebook" src="https://www.facebook.com/rsrc.php/yl/r/H3nktOa7ZMg.ico" /></a>
+        // </div>
