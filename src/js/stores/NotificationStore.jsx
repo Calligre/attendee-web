@@ -11,7 +11,6 @@ class NotificationStore extends EventEmitter {
   constructor() {
     super()
     this.notifications = [];
-    this.viewedNotifications = JSON.parse(localStorage.getItem("viewedNotifications"));
     this.error = null;
   }
 
