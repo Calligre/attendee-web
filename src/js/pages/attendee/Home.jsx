@@ -5,6 +5,7 @@ var _ = require('lodash');
 import BroadcastMessage from "components/BroadcastMessage";
 import EventStore from "stores/EventStore";
 import NotificationStore from "stores/NotificationStore";
+import BrandStore from 'stores/BrandStore';
 import Card from "components/Card";
 
 import { NotificationStack } from 'react-notification';
@@ -19,7 +20,11 @@ export default class Featured extends React.Component {
       notifications: [],
       events: [],
       apiBaseURL: props.route.apiBaseURL,
+      logo: '',
     };
+
+    BrandStore.on('receivedBranding', this.setBranding);
+    BrandStore.getBranding();
   };
 
   componentWillMount() {
@@ -56,12 +61,19 @@ export default class Featured extends React.Component {
   showEventStoreError(){
     console.log(EventStore.error)
   }
+  
+  setBranding = () => {
+    let branding = BrandStore.branding;
+    branding['starttime'] = moment.unix(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
+    branding['endtime'] = moment.unix(branding['endtime']).format('YYYY-MM-DD[T]HH:mm');
+    this.setState(branding);
+  }
 
   render() {
     if (localStorage.getItem('redirect_after_login')) {
       return (<div></div>)
     }
-    const { messages, events, notifications } = this.state;
+    const { messages, events, notifications, logo} = this.state;
 
     const EventComponents = events.map((event) => {
       return <Card type="event" key={"event-" + event.id} item={event}/>;
@@ -72,6 +84,7 @@ export default class Featured extends React.Component {
           notifications={notifications}
           onDismiss={() => {}}
         />
+        <img className="logo" alt="Logo" src={logo} />
         <h2>Your Upcoming Events</h2>
         <div>
           {EventComponents}
