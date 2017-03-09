@@ -50,6 +50,8 @@ BrandStore.on('receivedBranding', () => {
   myStyle.insertRule(".primaryBackground { background-color: " + branding.color_primary + " !important }", 0);
   myStyle.insertRule(".secondaryText { color: " + branding.color_secondary + " !important }", 0);
   myStyle.insertRule(".secondaryBackground { background-color: " + branding.color_secondary + " !important }", 0);
+});
+BrandStore.getBranding();
 
   ReactDOM.render(
     <Router history={AppHistory}>
@@ -67,5 +69,5 @@ BrandStore.on('receivedBranding', () => {
       </Route>
     </Router>,
   app);
-});
-BrandStore.getBranding();
+//});
+//BrandStore.getBranding();

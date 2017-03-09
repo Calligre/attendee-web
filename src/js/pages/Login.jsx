@@ -17,10 +17,10 @@ export default class Login extends React.Component {
     return (
       <div id="loginContainer">
         <div className="logo">
-          <div className="c"></div>
+          <div className="c primaryBackground"></div>
           <div className="rest">alligre</div>
         </div>
-        <button onClick={AuthService.login}>Login or Sign Up</button>
+        <button className="secondaryBackground" onClick={AuthService.login}>Login or Sign Up</button>
       </div>
     )
   }
