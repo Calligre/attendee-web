@@ -39,8 +39,8 @@ export default class Featured extends React.Component {
   };
 
   getNotifications() {
-    let unexpired = NotificationStore.getUnexpired();
-    this.setState({notifications: unexpired});
+    let validNotifications = NotificationStore.getValid();
+    this.setState({notifications: validNotifications});
   };
 
   showNotificationStoreError() {
