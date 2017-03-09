@@ -9,9 +9,40 @@
     margin: 5px 0px !important;
     font-size: 12px !important;
     background-color: $error !important;
+
+    .notification-bar-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .notification-bar-action {
+        color: black !important;
+        font-size: 1rem !important;
+        position: absolute;
+        right: 5px;
+        font-weight: bold !important;
+      }
+    }
   }
 }
 
-.dismiss-card {
-  cursor: pointer;
+.card {
+  display: inline-block;
+  position: relative;
+
+  .dismiss-card {
+    cursor: pointer;
+    background-color: grey;
+    border-radius: 10px 0 0 10px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 100%;
+  }
+
+  .eventPageEvent {
+    margin-left: 50px;
+  }
 }
