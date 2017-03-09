@@ -79,7 +79,7 @@ export default class NewsFeedPost extends React.Component {
         <div className="post-text inline">
           <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
-          <div className="social-bar">
+          <div className="soc-bar">
             <FaHeart
               className="heart-icon clickable"
               onClick={this.changeLike}

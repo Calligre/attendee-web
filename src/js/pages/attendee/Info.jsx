@@ -59,14 +59,3 @@ export default class Info extends React.Component {
     );
   }
 }
-
-
-        // <h3 className="other">{other}</h3>
-        // <div className="info-container">
-        //   <h1>You're at: {conf_name}</h1>
-        //   <h2> The location is: {location}</h2>
-        //   <h2> It begins: {moment.unix(starttime).format('ddd MMMM Do YYYY hh:mm')}</h2>
-        //   <h2> and ends: {moment.unix(endtime).format('ddd MMMM Do YYYY hh:mm')}</h2>
-        //   <a href={twitter}> <img alt="Twitter" src="https://abs.twimg.com/favicons/favicon.ico" /></a>
-        //   <a href={facebook}> <img alt="Facebook" src="https://www.facebook.com/rsrc.php/yl/r/H3nktOa7ZMg.ico" /></a>
-        // </div>

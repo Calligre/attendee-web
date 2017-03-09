@@ -162,20 +162,20 @@ export default class NewsFeed extends React.Component {
                   onChange={this.changeText}
                   value={text}
                 />
-                <div className="social-submit inline">
-                  <div title="Post to Facebook" className="inline">
+                <div className="soc-submit inline">
+                  <div className="inline">
                     <button
                       type="button"
-                      className={`btn social ${facebookStatus}`}
+                      className={`btn soc ${facebookStatus}`}
                       onClick={this.fbToggle}
                     >
                       <TiSocialFacebook size={34} />
                     </button>
                   </div>
-                  <div title="Post to Twitter" className="inline">
+                  <div className="inline">
                     <button
                       type="button"
-                      className={`btn social ${twitterStatus}`}
+                      className={`btn soc ${twitterStatus}`}
                       onClick={this.twToggle}
                     >
                       <TiSocialTwitter size={34} />

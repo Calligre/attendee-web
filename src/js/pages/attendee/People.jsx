@@ -145,7 +145,7 @@ var PeopleList = React.createClass({
       // TODO: Determine rank
       var rank = 1;
       return (
-        <Person name={person.first_name + ' ' + person.last_name} photo={person.photo} points={person.points} organization={person.organization} profileID={person.id} rank={rank}/>
+        <Person name={person.first_name + ' ' + person.last_name} photo={person.photo} points={person.points} organization={person.organization} profileID={person.id} key={person.id.toString()} rank={rank}/>
       );
     });
     return (
