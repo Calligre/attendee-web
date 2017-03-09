@@ -82,6 +82,33 @@ export default class Featured extends React.Component {
         return <Card type="event" key={"event-" + event.id} item={event}/>;
       }
     });
+
+    const locations = [
+      {
+        "name": "Conference",
+        "address": "Davis Center (DC)",
+      },
+      {
+        "name": "Hotel",
+        "address": "Waterloo Inn - 999 King St.",
+      },
+    ];
+
+    const contacts = [ 
+      {
+        "name": "Clarisse Schneider",
+        "phone": "519-729-1893",
+      },
+      {
+        "name": "Kieran Broekhoven",
+        "phone": "519-572-1785",
+      },
+      {
+        "name": "Police",
+        "phone": "911",
+      }
+    ];
+
     return (
       <div>
         <NotificationStack
@@ -92,6 +119,12 @@ export default class Featured extends React.Component {
         <h2 className="secondaryText">Your Upcoming Events</h2>
         <div>
           {EventComponents}
+        </div>
+        <h2 className="secondaryText">Conference Information</h2>
+        <div>
+         <Card type="location" item={locations}/>
+         <Card type="contact" item={contacts}/>
+         <Card type="content" item="I hope you're having a great day!"/>
         </div>
       </div>
     );
