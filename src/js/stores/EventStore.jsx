@@ -39,12 +39,12 @@ class EventStore extends EventEmitter {
             });
             dispatcher.dispatch({type: "EVENTS_GET", events: events, subscriptions: subscription});
           },
-          failure: function(error){
+          error: function(error){
             dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
           }
         });
       },
-      failure: function(error){
+      error: function(error){
         dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
       }
     });
@@ -62,7 +62,7 @@ class EventStore extends EventEmitter {
       success: function(response){
         dispatcher.dispatch({type: "EVENT_GET", event: response.data});
       },
-      failure: function(error){
+      error: function(error){
         dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
       }
     });
@@ -83,7 +83,7 @@ class EventStore extends EventEmitter {
       success: function(response){
         dispatcher.dispatch({type: "EVENT_SUBSCRIBE", event: id, isSubscribed: true});
       },
-      failure: function(error){
+      error: function(error){
         dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
       }
     });
@@ -101,7 +101,7 @@ class EventStore extends EventEmitter {
       success: function(response){
         dispatcher.dispatch({type: "EVENT_UNSUBSCRIBE", event: id, isSubscribed: false});
       },
-      failure: function(error){
+      error: function(error){
         dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
       }
     });

@@ -66,9 +66,10 @@ class AuthService extends EventEmitter {
       error: function(error){
         const userData = {
           id: profile.identities[0].user_id,
-          first_name: profile.given_name,
-          last_name: profile.family_name,
-          email: profile.email,
+          first_name: profile.given_name || profile.name.split(" ")[0],
+          last_name: profile.family_name || profile.name.split(" ")[profile.name.split(" ").length - 1],
+          email: profile.email || "test@example.com",
+          photo: profile.picture,
         }
         PeopleStore.create(userData);
       }
@@ -121,8 +122,7 @@ class AuthService extends EventEmitter {
 
   logout(){
     // Clear user token and profile data from localStorage
-    localStorage.removeItem('id_token');
-    localStorage.removeItem('profile');
+    localStorage.clear();
   }
 
   fetchApi(url, options){
