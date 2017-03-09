@@ -69,13 +69,13 @@ export default class Events extends React.Component {
                 <h4 class="date">{moment.unix(starttime).format("h:mm a")}</h4>
                 <h4 class="date">{moment.unix(endtime).format("h:mm a")}</h4>
               </div>
-              <h1>{name}</h1>
+              <h1 className="primaryText">{name}</h1>
             </div>
             <SubscribeButton className="isSubscribed" id={this.state.event.id} subscribed={isSubscribed}/>
           </div>
           <div class="info">
             <div id="avoidSubscribeButton"></div>
-            <h2 class="location">{location}</h2>
+            <h2 className="secondaryText location">{location}</h2>
             <div class="description">{description}</div>
           </div>                
         </div>                

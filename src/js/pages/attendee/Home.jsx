@@ -85,7 +85,7 @@ export default class Featured extends React.Component {
           onDismiss={() => {}}
         />
         <img className="logo" alt="Logo" src={logo} />
-        <h2>Your Upcoming Events</h2>
+        <h2 className="secondaryText">Your Upcoming Events</h2>
         <div>
           {EventComponents}
         </div>

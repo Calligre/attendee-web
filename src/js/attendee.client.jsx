@@ -17,6 +17,7 @@ import Login from "pages/Login";
 
 import AppHistory from 'util/AppHistory';
 import AuthService from 'util/AuthService';
+import BrandStore from 'stores/BrandStore';
 import * as config from 'auth0.config.js';
 
 const app = document.getElementById('app');
@@ -42,20 +43,29 @@ const redirectAfterLogin = () => {
     AuthService.removeListener('profile_updated', redirectCallback)
   }
 };
+BrandStore.on('receivedBranding', () => {
+  let branding = BrandStore.branding;
+  let myStyle = document.styleSheets[6];
+  myStyle.insertRule(".primaryText { color: " + branding.color_primary + " !important }", 0);
+  myStyle.insertRule(".primaryBackground { background-color: " + branding.color_primary + " !important }", 0);
+  myStyle.insertRule(".secondaryText { color: " + branding.color_secondary + " !important }", 0);
+  myStyle.insertRule(".secondaryBackground { background-color: " + branding.color_secondary + " !important }", 0);
 
-ReactDOM.render(
-  <Router history={AppHistory}>
-    <Route path="/" component={Layout}>
-      <IndexRoute apiBaseURL="https://dev.calligre.com/api" component={Home} onEnter={requireAuth}></IndexRoute>
-      <Route path="people" component={People} onEnter={requireAuth}></Route>
-      <Route path='people/:id' component={Profile} onEnter={requireAuth} />
-      <Route path="newsfeed" component={NewsFeed} onEnter={requireAuth}></Route>
-      <Route path="events" component={Events} onEnter={requireAuth}></Route>
-      <Route path="events/:eventId" component={EventPage} onEnter={requireAuth}></Route>
-      <Route path="profile" component={Profile} onEnter={requireAuth}></Route>
-      <Route path="info" apiBaseURL="https://dev.calligre.com/api" component={Info} onEnter={requireAuth}></Route>
-      <Route path="login" component={Login}></Route>
-      <Route path="access_token=:token" component={Login} />
-    </Route>
-  </Router>,
-app);
+  ReactDOM.render(
+    <Router history={AppHistory}>
+      <Route path="/" component={Layout}>
+        <IndexRoute apiBaseURL="https://dev.calligre.com/api" component={Home} onEnter={requireAuth}></IndexRoute>
+        <Route path="people" component={People} onEnter={requireAuth}></Route>
+        <Route path='people/:id' component={Profile} onEnter={requireAuth} />
+        <Route path="newsfeed" component={NewsFeed} onEnter={requireAuth}></Route>
+        <Route path="events" component={Events} onEnter={requireAuth}></Route>
+        <Route path="events/:eventId" component={EventPage} onEnter={requireAuth}></Route>
+        <Route path="profile" component={Profile} onEnter={requireAuth}></Route>
+        <Route path="info" apiBaseURL="https://dev.calligre.com/api" component={Info} onEnter={requireAuth}></Route>
+        <Route path="login" component={Login}></Route>
+        <Route path="access_token=:token" component={Login} />
+      </Route>
+    </Router>,
+  app);
+});
+BrandStore.getBranding();

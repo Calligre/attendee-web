@@ -9,9 +9,6 @@ $darkGrey: #CCC;
 $black: #000;
 $white: #FFF;
 $error: #D83B31;
-$primary: $red;
-$secondary: $purple;
-$tertiary: $blue;
 $highlight: $teal;
 
 /* Social media colors */
@@ -19,6 +16,22 @@ $twitter: #00aced;
 $facebook: #3b5998;
 $linkedin: #007bb6;
 $instagram: #bc2a8d;
+
+.primaryText {
+  color: $red;
+}
+
+.primaryBackground {
+  background-color: $red;
+}
+
+.secondaryText {
+  color: $purple;
+}
+
+.secondaryBackground {
+  background-color: $purple;
+}
 
 
 body {
@@ -34,7 +47,6 @@ $h1-font-sizes: (
 );
 
 h1 {
-  color: $primary;
   @include font-size($h1-font-sizes);
 }
 
@@ -45,7 +57,6 @@ $h2-font-sizes: (
 );
 
 h2 {
-  color: $secondary;
   @include font-size($h2-font-sizes);
 }
 
@@ -56,7 +67,7 @@ $h3-font-sizes: (
 );
 
 h3 {
-  color: $tertiary;
+  color: $darkGrey;
   @include font-size($h3-font-sizes);
 }
 
@@ -92,7 +103,6 @@ a {
 }
 
 .navbar {
-  background-color: $purple;
   background-image: none !important;
   border: none;
 
@@ -157,7 +167,6 @@ a {
 button {
   font-size: 16px;
   padding: 10px 15px !important;
-  background-color: $purple !important;
   background-image: none !important;
   border: none !important;
   border-radius: 5px !important;
@@ -194,7 +203,6 @@ button {
       height: 100%;
       width: 100%;
       border-radius: 100%;
-      background-color: $purple;
       position: absolute;
       top: 0;
       left: 0;

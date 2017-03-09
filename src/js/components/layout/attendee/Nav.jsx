@@ -2,6 +2,7 @@ import React from "react";
 import { IndexLink, Link } from "react-router";
 
 import AuthService from "util/AuthService";
+import BrandStore from 'stores/BrandStore';
 
 export default class Nav extends React.Component {
   constructor() {
@@ -28,7 +29,7 @@ export default class Nav extends React.Component {
     const navClass = collapsed ? "collapse" : "";
 
     return (
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <nav class="navbar navbar-inverse navbar-fixed-top secondaryBackground" role="navigation">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" onClick={this.toggleCollapse.bind(this)} >
