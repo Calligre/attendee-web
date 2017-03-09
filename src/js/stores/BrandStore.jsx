@@ -64,8 +64,7 @@ class BrandStore extends EventEmitter {
         this.emit('savedBranding');
         break;
       }
-      case 'ERROR':
-      default: {
+      case 'ERROR': {
         this.error = action.error;
         this.emit('error');
         break;
