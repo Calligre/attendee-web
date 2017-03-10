@@ -28,6 +28,9 @@ export default class Card extends React.Component {
       case 'location':
         renderedContent = <LocationCard data={item} />;
         break;
+      case 'download':
+        renderedContent = <DownloadCard data={item} />;
+        break;
       default:
         return null;
     }
@@ -73,6 +76,20 @@ var LocationCard = React.createClass({
       <div className="locationCard cardContent">
         <h2 className="primaryText">Locations</h2>
         {locationNodes}
+      </div>
+    );
+  }
+});
+
+var DownloadCard = React.createClass({
+  render: function() {
+    return (
+      <div className="downloadCard cardContent">
+        <h2 className="primaryText">{this.props.data.name}</h2>
+        <p>{this.props.data.description}</p>
+        <a href={this.props.data.link} download>
+          <button className="secondaryBackground">Download</button>
+        </a>
       </div>
     );
   }
