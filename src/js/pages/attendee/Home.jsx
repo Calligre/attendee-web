@@ -105,6 +105,22 @@ export default class Featured extends React.Component {
       }
     ];
 
+    const downloads = [
+      {
+        "name": "Map",
+        "description": "Map of the UWaterloo Campus",
+        "link": "https://uwaterloo.ca/map/pdf/map_bw.pdf",
+      },
+      {
+        "name": "Conference Package",
+        "link": "https://uwaterloo.ca/map/pdf/map_bw.pdf",
+      },
+    ];
+
+    const downloadCards = downloads.map((download) =>
+      <Card type="download" item={download}/>
+    );
+
     return (
       <div>
         <NotificationStack
@@ -121,6 +137,7 @@ export default class Featured extends React.Component {
          <Card type="location" item={locations}/>
          <Card type="contact" item={contacts}/>
          <Card type="content" item="I hope you're having a great day!"/>
+         {downloadCards}
         </div>
       </div>
     );
