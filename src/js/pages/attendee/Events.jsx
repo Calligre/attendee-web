@@ -14,9 +14,6 @@ const moment = require('moment');
 export default class Events extends React.Component {
   constructor(props) {
     super(props);
-    this.getEvents = this.getEvents.bind(this);
-    this.getStreams = this.getStreams.bind(this);
-    this.searchUpdated = this.searchUpdated.bind(this);
 
     this.state = {
       events: [],
@@ -42,19 +39,19 @@ export default class Events extends React.Component {
     EventStore.removeListener('error', this.showError);
   }
 
-  getEvents() {
+  getEvents = () => {
     this.setState({
       events: EventStore.events,
     });
   }
 
-  getStreams() {
+  getStreams = () => {
     this.setState({
       streams: EventStore.streams,
     });
   }
 
-  searchUpdated(term) {
+  searchUpdated = (term) => {
     this.setState({
       searchTerm: term,
     });

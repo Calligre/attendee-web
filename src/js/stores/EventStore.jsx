@@ -71,24 +71,6 @@ class EventStore extends EventEmitter {
     return this.events;
   }
 
-  get(id) {
-    $.ajax({
-      url: `${url}/api/event/${id}`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      cache: false,
-      success(response) {
-        dispatcher.dispatch({ type: 'EVENT_GET', event: response.data });
-      },
-      failure(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
-      },
-    });
-    return this.events;
-  }
-
   subscribeToEvent(id) {
     $.ajax({
       url: `${url}/api/user/${AuthService.getCurrentUserId()}/subscription`,
@@ -148,15 +130,6 @@ class EventStore extends EventEmitter {
           return attributes;
         });
 
-        this.emit('received');
-        break;
-      }
-      case 'EVENT_GET': {
-        this.events.forEach((event) => {
-          if (event.id === action.event.id) {
-            $.extend(event, action.event.attributes);
-          }
-        });
         this.emit('received');
         break;
       }
