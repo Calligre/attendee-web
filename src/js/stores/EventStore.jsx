@@ -13,8 +13,30 @@ class EventStore extends EventEmitter {
   constructor() {
     super()
     this.events = [];
+    this.streams = [];
     this.error = null;
     this.streamMap = {};
+  }
+
+  getStreams(id){
+    $.ajax({
+      url: url + "/api/stream",
+      dataType: "json",
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      cache: false,
+      success: function(response){
+        let streams = response.data.map((d) => {
+          return d.attributes.stream;
+        });
+        dispatcher.dispatch({type: "STREAM_GET", stream: streams});
+      },
+      failure: function(error){
+        dispatcher.dispatch({type: "EVENTS_ERROR", error: error.error});
+      }
+    });
+    return this.events;
   }
 
   getAll() {
@@ -137,6 +159,11 @@ class EventStore extends EventEmitter {
           }
         });
         this.emit("received");
+        break;
+      }
+      case "STREAM_GET": {
+        this.streams = action.stream;
+        this.emit("stream");
         break;
       }
       case "EVENT_SUBSCRIBE":

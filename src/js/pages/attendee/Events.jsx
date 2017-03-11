@@ -14,16 +14,26 @@ var moment = require('moment');
 export default class Events extends React.Component {
 	constructor(props) {
 		super(props);
-		this.getEvents = this.getEvents.bind(this);
+    this.getEvents = this.getEvents.bind(this);
+		this.getStreams = this.getStreams.bind(this);
     this.searchUpdated = this.searchUpdated.bind(this);
-    this.timeUpdated = this.filterUpdated.bind(this, 'startDate');
 
-		this.state = { events: [], searchTerm: '', filterTerms: this.props.location.query};
-		EventStore.getAll()
+		this.state = {
+      events: [],
+      streams: [],
+      searchTerm: '',
+      filterTerms: {
+        startDate: moment.now(),
+        stream: [],
+      }
+    };
+		EventStore.getAll();
+    EventStore.getStreams();
 	}
 
   componentWillMount() {
     EventStore.on("received", this.getEvents);
+    EventStore.on("stream", this.getStreams);
     EventStore.on("error", this.showError);
   }
 
@@ -36,7 +46,13 @@ export default class Events extends React.Component {
 		this.setState({
 			events: EventStore.events
     });
-	}
+  }
+
+  getStreams() {
+    this.setState({
+      streams: EventStore.streams,
+    });
+  }
 
   searchUpdated (term) {
     this.setState({
@@ -44,9 +60,17 @@ export default class Events extends React.Component {
     })
   }
 
-  filterUpdated(key, dateString, data) {
+  filterTimeUpdated = (dateString, data) => {
     var filter = this.state.filterTerms;
-    filter[key] = data.dateMoment;
+    filter['startDate'] = data.dateMoment;
+    this.setState({
+      filterTerms: filter
+    });
+  }
+
+  filterStreamUpdated = (data) => {
+    var filter = this.state.filterTerms;
+    filter['stream'] = (data.length === 0) ? [] : data.split(',');
     this.setState({
       filterTerms: filter
     });
@@ -57,19 +81,19 @@ export default class Events extends React.Component {
   }
 
   render() {
-    const { events, searchTerm, filterTerms } = this.state;
+    const { events, searchTerm, filterTerms, streams } = this.state;
 
-
+    // filtering
     var self = this;
     var filteredEvents = events.filter(createFilter(searchTerm, ['name']));
     filteredEvents = filteredEvents.filter((event) => {
-      if(typeof filterTerms['stream'] != 'undefined' && event['stream'] != filterTerms['stream']) return false;
-      if(typeof filterTerms['startDate'] != 'undefined' && moment.unix(event.starttime).format("MM-DD h:mm a") < filterTerms['startDate']) return false;
+      if(filterTerms['stream'].length > 0 && !filterTerms['stream'].includes(event['stream'])) return false;
+      if(moment.unix(event.starttime).isAfter(filterTerms['startDate'])) return false;
 
       return true;
     });
 
-
+    // sorting
     const sortedEvents = filteredEvents.sort((a, b) => {
       if(a.starttime == b.starttime){
         if(a.endtime == b.endtime) {
@@ -79,6 +103,16 @@ export default class Events extends React.Component {
       }
       return a.starttime < b.starttime ? -1 : 1;
     });
+
+    // options
+    const streamOptions = (!streams) ? []
+      : streams.map(function(stream) {
+        return {
+          value: stream,
+          label: stream,
+        };
+      }) ;
+
 
     const EventComponents = sortedEvents.map((event) => {
         return <Event key={event.id} {...event}/>;
@@ -91,7 +125,8 @@ export default class Events extends React.Component {
       <div>
         <h1>Events</h1>
         <SearchInput className="Select-control search-input" onChange={this.searchUpdated} placeholder="Search for events"/>
-        <DateField forceValidDate defaultValue={date} dateFormat={format} onChange={this.timeUpdated} >
+        <Select multi simpleValue className="searchBar" value={this.state.filterTerms["stream"]} placeholder="Filter by Stream:" options={streamOptions} onChange={this.filterStreamUpdated} />
+        <DateField forceValidDate defaultValue={date} dateFormat={format} onChange={this.filterTimeUpdated} >
           <TransitionView>
             <Calendar style={{padding: 10}}/>
           </TransitionView>
