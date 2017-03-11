@@ -66,6 +66,7 @@ export default class Events extends React.Component {
           <div className="nameContainer" style={streamStyle}>
             <div class="header">
               <div class="dates">
+                <h4 class="date">{moment.unix(starttime).format("MMM Do")}</h4>
                 <h4 class="date">{moment.unix(starttime).format("h:mm a")}</h4>
                 <h4 class="date">{moment.unix(endtime).format("h:mm a")}</h4>
               </div>

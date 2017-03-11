@@ -25,6 +25,7 @@ export default class Event extends React.Component {
         <IndexLink to={{ pathname: 'events/' + this.props.id }}>
           <div id={"event-" + id} className="event">
             <div className="time">
+              <p className="date">{moment.unix(starttime).format("MMM Do")}</p>
               <p className="start">{moment.unix(starttime).format("hh:mma")}</p>
               <p className="end">{moment.unix(endtime).format("hh:mma")}</p>
             </div>
