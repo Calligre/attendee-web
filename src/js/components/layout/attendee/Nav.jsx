@@ -1,6 +1,8 @@
 import React from "react";
 import { IndexLink, Link } from "react-router";
 
+import PreferenceStore from 'stores/PreferenceStore';
+
 import AuthService from "util/AuthService";
 import BrandStore from 'stores/BrandStore';
 
@@ -9,17 +11,38 @@ export default class Nav extends React.Component {
     super()
     this.state = {
       collapsed: true,
+      newsfeed: PreferenceStore.getDefaults().newsfeed,
     };
+
+    PreferenceStore.loadAll();
+  }
+
+  componentWillMount() {
+    PreferenceStore.on("loaded", this.loadPreferences);
+    PreferenceStore.on("error", this.showError);
+  }
+
+  componentWillUnmount() {
+    PreferenceStore.removeListener("loaded", this.loadPreferences);
+    PreferenceStore.removeListener("error", this.showError);
+  }
+
+  loadPreferences = () => {
+    this.setState({ newsfeed: PreferenceStore.preferences.newsfeed });
+  }
+
+  showError = () => {
+    console.error(PreferenceStore.error);
   }
 
   toggleCollapse() {
     const collapsed = !this.state.collapsed;
-    this.setState({collapsed});
+    this.setState({collapsed: collapsed});
   }
 
   render() {
     const { location } = this.props;
-    const { collapsed } = this.state;
+    const { collapsed, newsfeed } = this.state;
     const featuredClass = location.pathname === "/" ? "active" : "";
     const newsFeedClass = location.pathname.match(/^\/newsfeed/) ? "active" : "";
     const peopleClass = location.pathname.match(/^\/people/) ? "active" : "";
@@ -43,9 +66,11 @@ export default class Nav extends React.Component {
               <li class={featuredClass}>
                 <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Home</IndexLink>
               </li>
-              <li class={newsFeedClass}>
-                <Link to="newsfeed" onClick={this.toggleCollapse.bind(this)}>News Feed</Link>
-              </li>
+              { newsfeed &&
+                <li class={newsFeedClass}>
+                  <Link to="newsfeed" onClick={this.toggleCollapse.bind(this)}>News Feed</Link>
+                </li>
+              }
               <li class={peopleClass}>
                 <Link to="people" onClick={this.toggleCollapse.bind(this)}>People</Link>
               </li>
