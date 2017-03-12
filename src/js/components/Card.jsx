@@ -32,7 +32,9 @@ export default class Card extends React.Component {
 
     return (
       <div className="card">
-        <Clear className="dismiss-card" size={20} color={'tomato'} onClick={this.handleDismiss}/>
+        <div className="dismiss-card">
+          <Clear size={20} color={'white'} onClick={this.handleDismiss}/>
+        </div>
         {renderedContent}
       </div>
     );

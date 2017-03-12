@@ -66,7 +66,7 @@ export default class NewsFeedPost extends React.Component {
     if (media_link && media_link !== '') {
       imageText = (
         <span className="show-image link clickable no-selection" onClick={this.showImage}>
-          Show Image
+          <img src={this.state.media_link}/>
         </span>
       );
     }
@@ -77,6 +77,7 @@ export default class NewsFeedPost extends React.Component {
           <img src={poster_icon} className="user-photo no-selection" />
         </div>
         <div className="post-text inline">
+          {imageText}
           <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
           <div className="soc-bar">
@@ -88,7 +89,6 @@ export default class NewsFeedPost extends React.Component {
             />
             <span className="like-count no-selection">{like_count}</span>
             <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28} />
-            {imageText}
           </div>
         </div>
       </div>

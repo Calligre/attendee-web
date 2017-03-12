@@ -89,7 +89,7 @@ export default class Events extends React.Component {
 
     return (
       <div>
-        <h1>Events</h1>
+        <h1 className="primaryText">Events</h1>
         <SearchInput className="Select-control search-input" onChange={this.searchUpdated} placeholder="Search for events"/>
         <DateField forceValidDate defaultValue={date} dateFormat={format} onChange={this.timeUpdated} >
           <TransitionView>
