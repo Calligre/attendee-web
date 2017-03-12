@@ -1,13 +1,13 @@
-import React from "react";
-import { IndexLink, Link } from "react-router";
+import React from 'react';
+import { IndexLink, Link } from 'react-router';
 
 import PreferenceStore from 'stores/PreferenceStore';
 
-import AuthService from "util/AuthService";
+import AuthService from 'util/AuthService';
 
 export default class Nav extends React.Component {
   constructor() {
-    super()
+    super();
     this.state = {
       collapsed: true,
       newsfeed: PreferenceStore.getDefaults().newsfeed,
@@ -17,13 +17,13 @@ export default class Nav extends React.Component {
   }
 
   componentWillMount() {
-    PreferenceStore.on("loaded", this.loadPreferences);
-    PreferenceStore.on("error", this.showError);
+    PreferenceStore.on('loaded', this.loadPreferences);
+    PreferenceStore.on('error', this.showError);
   }
 
   componentWillUnmount() {
-    PreferenceStore.removeListener("loaded", this.loadPreferences);
-    PreferenceStore.removeListener("error", this.showError);
+    PreferenceStore.removeListener('loaded', this.loadPreferences);
+    PreferenceStore.removeListener('error', this.showError);
   }
 
   loadPreferences = () => {
@@ -34,54 +34,54 @@ export default class Nav extends React.Component {
     console.error(PreferenceStore.error);
   }
 
-  toggleCollapse() {
+  toggleCollapse = () => {
     const collapsed = !this.state.collapsed;
-    this.setState({collapsed: collapsed});
+    this.setState({ collapsed });
   }
 
   render() {
     const { location } = this.props;
     const { collapsed, newsfeed } = this.state;
-    const featuredClass = location.pathname === "/" ? "active" : "";
-    const newsFeedClass = location.pathname.match(/^\/newsfeed/) ? "active" : "";
-    const peopleClass = location.pathname.match(/^\/people/) ? "active" : "";
-    const eventsClass = location.pathname.match(/^\/events/) ? "active" : "";
-    const profileClass = location.pathname.match(/^\/profile/) ? "active" : "";
-    const infoClass = location.pathname.match(/^\/info/) ? "active" : "";
-    const navClass = collapsed ? "collapse" : "";
+    const featuredClass = location.pathname === '/' ? 'active' : '';
+    const newsFeedClass = location.pathname.match(/^\/newsfeed/) ? 'active' : '';
+    const peopleClass = location.pathname.match(/^\/people/) ? 'active' : '';
+    const eventsClass = location.pathname.match(/^\/events/) ? 'active' : '';
+    const profileClass = location.pathname.match(/^\/profile/) ? 'active' : '';
+    const infoClass = location.pathname.match(/^\/info/) ? 'active' : '';
+    const navClass = collapsed ? 'collapse' : '';
 
     return (
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" onClick={this.toggleCollapse.bind(this)} >
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
+      <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div className="container">
+          <div className="navbar-header">
+            <button type="button" className="navbar-toggle" onClick={this.toggleCollapse} >
+              <span className="sr-only">Toggle navigation</span>
+              <span className="icon-bar" />
+              <span className="icon-bar" />
+              <span className="icon-bar" />
             </button>
           </div>
-          <div class={"navbar-collapse " + navClass} id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <li class={featuredClass}>
-                <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Home</IndexLink>
+          <div className={`navbar-collapse ${navClass}`} id="bs-example-navbar-collapse-1">
+            <ul className="nav navbar-nav">
+              <li className={featuredClass}>
+                <IndexLink to="/" onClick={this.toggleCollapse}>Home</IndexLink>
               </li>
               { newsfeed &&
-                <li class={newsFeedClass}>
-                  <Link to="newsfeed" onClick={this.toggleCollapse.bind(this)}>News Feed</Link>
+                <li className={newsFeedClass}>
+                  <Link to="newsfeed" onClick={this.toggleCollapse}>News Feed</Link>
                 </li>
               }
-              <li class={peopleClass}>
-                <Link to="people" onClick={this.toggleCollapse.bind(this)}>People</Link>
+              <li className={peopleClass}>
+                <Link to="people" onClick={this.toggleCollapse}>People</Link>
               </li>
-              <li class={eventsClass}>
-                <Link to="events" onClick={this.toggleCollapse.bind(this)}>Events</Link>
+              <li className={eventsClass}>
+                <Link to="events" onClick={this.toggleCollapse}>Events</Link>
               </li>
-              <li class={profileClass}>
-                <Link to="profile" onClick={this.toggleCollapse.bind(this)}>My Profile</Link>
+              <li className={profileClass}>
+                <Link to="profile" onClick={this.toggleCollapse}>My Profile</Link>
               </li>
-              <li class={infoClass}>
-                <Link to="info" onClick={this.toggleCollapse.bind(this)}>Conference Info</Link>
+              <li className={infoClass}>
+                <Link to="info" onClick={this.toggleCollapse}>Conference Info</Link>
               </li>
               <li>
                 <Link to="login" onClick={AuthService.logout}>Logout</Link>
