@@ -86,7 +86,6 @@ var DownloadCard = React.createClass({
     return (
       <div className="downloadCard cardContent">
         <h2 className="primaryText">{this.props.data.name}</h2>
-        <p>{this.props.data.description}</p>
         <a href={this.props.data.link} download>
           <button className="secondaryBackground">Download</button>
         </a>

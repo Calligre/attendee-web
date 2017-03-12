@@ -109,20 +109,19 @@ export default class Featured extends React.Component {
       }
     ];
 
-    const downloads = [
-      {
-        "name": "Map",
-        "description": "Map of the UWaterloo Campus",
-        "link": "https://uwaterloo.ca/map/pdf/map_bw.pdf",
-      },
-      {
-        "name": "Conference Package",
-        "link": "https://uwaterloo.ca/map/pdf/map_bw.pdf",
-      },
-    ];
+    const content = [ "Hope you're having a great day!", "You too!"];
 
-    const downloadCards = downloads.map((download) =>
-      <Card type="download" item={download}/>
+    const map = {
+      "name" : "Map",
+      "link" : "https://uwaterloo.ca/map/pdf/map_bw.pdf",
+    };
+    const confPackage = {
+      "name" : "Conference Package",
+      "link" : "https://uwaterloo.ca/map/pdf/map_bw.pdf",
+    };
+
+    const contentCards = content.map((content) =>
+      <Card type="content" item={content}/>
     );
 
     return (
@@ -140,8 +139,9 @@ export default class Featured extends React.Component {
         <div>
          <Card type="location" item={locations}/>
          <Card type="contact" item={contacts}/>
-         <Card type="content" item="I hope you're having a great day!"/>
-         {downloadCards}
+         <Card type="download" item={map}/>
+         <Card type="download" item={confPackage}/>
+         {contentCards}
         </div>
       </div>
     );
