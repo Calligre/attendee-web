@@ -38,24 +38,16 @@ export default class NewsFeed extends React.Component {
     NewsFeedStore.on('retweet', this.getRetweetText);
     NewsFeedStore.on('post', this.setPostText);
 
-    PreferenceStore.on("loaded", this.loadPreferences);
-    PreferenceStore.on("error", this.showPreferenceError);
+    PreferenceStore.on('loaded', this.loadPreferences);
+    PreferenceStore.on('error', this.showPreferenceError);
   }
 
   componentWillUnmount() {
     NewsFeedStore.removeListener('retweet', this.getRetweetText);
     NewsFeedStore.removeListener('post', this.setPostText);
 
-    PreferenceStore.removeListener("loaded", this.loadPreferences);
-    PreferenceStore.removeListener("error", this.showPreferenceError);
-  }
-
-  loadPreferences = () => {
-    this.setState({ preferences: PreferenceStore.preferences });
-  }
-
-  showPreferenceError = () => {
-    console.error(PreferenceStore.error);
+    PreferenceStore.removeListener('loaded', this.loadPreferences);
+    PreferenceStore.removeListener('error', this.showPreferenceError);
   }
 
   onPhotoDrop(files) {
@@ -83,6 +75,14 @@ export default class NewsFeed extends React.Component {
     });
   }
 
+  loadPreferences = () => {
+    this.setState({ preferences: PreferenceStore.preferences });
+  }
+
+  showPreferenceError = () => {
+    console.error(PreferenceStore.error);
+  }
+
   changeText(event) {
     this.setState({
       text: event.target.value,
@@ -95,7 +95,7 @@ export default class NewsFeed extends React.Component {
         fbPost: !this.state.fbPost,
       });
     } else {
-      console.log('TODO: Integrate Facebook window');
+      console.error('TODO: Integrate Facebook window');
       // TODO: Open add Facebook window and change state on success
     }
   }
@@ -106,7 +106,7 @@ export default class NewsFeed extends React.Component {
         twPost: !this.state.twPost,
       });
     } else {
-      console.log('TODO: Integrate Twitter window');
+      console.error('TODO: Integrate Twitter window');
       // TODO: Open add Twitter window and change state on success
     }
   }
@@ -150,7 +150,7 @@ export default class NewsFeed extends React.Component {
           <div className="preview-box inline">
             <MdHighlightRemove className="photo-delete" onClick={deletePhoto} size={24} />
             <div className="img-container">
-              <span className="helper inline" /><img className="border inline" src={preview} />
+              <span className="helper inline" /><img className="border inline" alt="post" src={preview} />
             </div>
           </div>
         );
@@ -181,7 +181,7 @@ export default class NewsFeed extends React.Component {
                   value={text}
                 />
                 <div className="soc-submit inline">
-                { preferences.facebook &&
+                  { preferences.facebook &&
                     <div className="inline">
                       <button
                         type="button"

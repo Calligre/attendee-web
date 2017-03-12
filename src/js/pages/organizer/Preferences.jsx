@@ -31,8 +31,8 @@ export default class Preferences extends React.Component {
   }
 
   handleChange = (event) => {
-    var key = event.target.name;
-    var value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
+    const key = event.target.name;
+    const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
     PreferenceStore.update(key, value);
     this.setState({ [key]: value });
   }
@@ -53,16 +53,16 @@ export default class Preferences extends React.Component {
         tab = <TabSocialMedia {...this.state} handleChange={this.handleChange} />;
         break;
       case 'cards':
-        tab = <TabCards {...this.state} handleChange={this.handleChange}/>;
+        tab = <TabCards {...this.state} handleChange={this.handleChange} />;
         break;
       case 'surveys':
-        tab = <TabSurveys {...this.state} handleChange={this.handleChange}/>;
+        tab = <TabSurveys {...this.state} handleChange={this.handleChange} />;
         break;
       case 'other':
-        tab = <TabOther {...this.state} handleChange={this.handleChange}/>;
+        tab = <TabOther {...this.state} handleChange={this.handleChange} />;
         break;
       default:
-        null;
+        tab = <div />;
         break;
     }
 
@@ -95,8 +95,9 @@ class TabPages extends React.Component {
     return (
       <div>
         <div>
-          <label>Newsfeed
-            <input type="checkbox"
+          <label htmlFor="newsfeed">Newsfeed
+            <input
+              type="checkbox"
               name="newsfeed"
               onChange={this.props.handleChange}
               checked={this.state.newsfeed}
@@ -107,6 +108,10 @@ class TabPages extends React.Component {
     );
   }
 }
+
+TabPages.propTypes = {
+  handleChange: React.PropTypes.func,
+};
 
 class TabSocialMedia extends React.Component {
   constructor(props) {
@@ -122,8 +127,9 @@ class TabSocialMedia extends React.Component {
     return (
       <div>
         <div>
-          <label>Faceboox
-            <input type="checkbox"
+          <label htmlFor="facebook">Faceboox
+            <input
+              type="checkbox"
               name="facebook"
               onChange={this.props.handleChange}
               checked={this.state.facebook}
@@ -131,8 +137,9 @@ class TabSocialMedia extends React.Component {
           </label>
         </div>
         <div>
-          <label>Twitter
-            <input type="checkbox"
+          <label htmlFor="twitter">Twitter
+            <input
+              type="checkbox"
               name="twitter"
               onChange={this.props.handleChange}
               checked={this.state.twitter}
@@ -140,8 +147,9 @@ class TabSocialMedia extends React.Component {
           </label>
         </div>
         <div>
-          <label>Reposts
-            <input type="checkbox"
+          <label htmlFor="reposts">Reposts
+            <input
+              type="checkbox"
               name="reposts"
               onChange={this.props.handleChange}
               checked={this.state.reposts}
@@ -152,7 +160,12 @@ class TabSocialMedia extends React.Component {
       </div>
     );
   }
+}
+
+TabSocialMedia.propTypes = {
+  handleChange: React.PropTypes.func,
 };
+
 
 class TabCards extends React.Component {
   constructor(props) {
@@ -168,8 +181,9 @@ class TabCards extends React.Component {
     return (
       <div>
         <div>
-          <label>Upcoming Events Card
-            <input type="checkbox"
+          <label htmlFor="events">Upcoming Events Card
+            <input
+              type="checkbox"
               name="events"
               onChange={this.props.handleChange}
               checked={this.state.events}
@@ -177,8 +191,9 @@ class TabCards extends React.Component {
           </label>
         </div>
         <div>
-          <label>Content Card
-            <input type="checkbox"
+          <label htmlFor="content">Content Card
+            <input
+              type="checkbox"
               name="content"
               onChange={this.props.handleChange}
               checked={this.state.content}
@@ -186,8 +201,9 @@ class TabCards extends React.Component {
           </label>
         </div>
         <div>
-          <label>Contact Card
-            <input type="checkbox"
+          <label htmlFor="contact">Contact Card
+            <input
+              type="checkbox"
               name="contact"
               onChange={this.props.handleChange}
               checked={this.state.contact}
@@ -195,8 +211,9 @@ class TabCards extends React.Component {
           </label>
         </div>
         <div>
-          <label>Conference Location Card
-            <input type="checkbox"
+          <label htmlFor="location">Conference Location Card
+            <input
+              type="checkbox"
               name="location"
               onChange={this.props.handleChange}
               checked={this.state.location}
@@ -204,8 +221,9 @@ class TabCards extends React.Component {
           </label>
         </div>
         <div>
-          <label>Map Card
-            <input type="checkbox"
+          <label htmlFor="map">Map Card
+            <input
+              type="checkbox"
               name="map"
               onChange={this.props.handleChange}
               checked={this.state.map}
@@ -213,8 +231,9 @@ class TabCards extends React.Component {
           </label>
         </div>
         <div>
-          <label>Package Card
-            <input type="checkbox"
+          <label htmlFor="package">Package Card
+            <input
+              type="checkbox"
               name="package"
               onChange={this.props.handleChange}
               checked={this.state.package}
@@ -224,16 +243,21 @@ class TabCards extends React.Component {
       </div>
     );
   }
+}
+
+TabCards.propTypes = {
+  handleChange: React.PropTypes.func,
 };
 
-const TabSurveys = React.createClass({
+
+class TabSurveys extends React.Component {
   render() {
     return (<div>Surveys</div>);
   }
-});
+}
 
-const TabOther = React.createClass({
+class TabOther extends React.Component {
   render() {
     return (<div>Other</div>);
   }
-});
+}

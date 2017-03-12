@@ -58,11 +58,11 @@ class PreferenceStore extends EventEmitter {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
       type: 'PATCH',
-      contentType: "application/json",
+      contentType: 'application/json',
       data: JSON.stringify({ [key]: value }),
       cache: false,
-      success(response) {
-        dispatcher.dispatch({ type: 'PREFERENCES_UPDATE', key: key, value: value });
+      success() {
+        dispatcher.dispatch({ type: 'PREFERENCES_UPDATE', key, value });
       },
       failure(error) {
         dispatcher.dispatch({ type: 'PREFERENCES_ERROR', error: error.error });
@@ -90,8 +90,6 @@ class PreferenceStore extends EventEmitter {
         break;
       }
       default: {
-        this.error = 'Unknown action';
-        console.log(`What kind of action is ${action.type}?`);
         break;
       }
     }

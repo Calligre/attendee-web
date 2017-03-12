@@ -75,7 +75,7 @@ export default class NewsFeedPost extends React.Component {
     return (
       <div className="newsfeed-post">
         <div className="user-photo-container inline">
-          <img src={poster_icon} className="user-photo no-selection" />
+          <img alt="poster" src={poster_icon} className="user-photo no-selection" />
         </div>
         <div className="post-text inline">
           {imageText}
