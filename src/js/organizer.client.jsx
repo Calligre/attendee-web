@@ -11,6 +11,7 @@ import Results from 'pages/organizer/Results';
 import Login from 'pages/Login';
 
 import AppHistory from 'util/AppHistory';
+import AuthService from 'util/AuthService';
 
 require('!style!css!sass!../sass/main.scss');
 
