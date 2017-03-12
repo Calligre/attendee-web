@@ -11,15 +11,25 @@ const url = 'https://dev.calligre.com';
 class PreferenceStore extends EventEmitter {
   constructor() {
     super();
-    this.preferences = {
-      newsfeed: false,
-      cards: false,
-      info: false,
-      facebook: false,
-      twitter: false,
-      reposts: false,
-    };
+    this.preferences = this.getDefaults();
     this.error = null;
+  }
+
+  getDefaults() {
+    return {
+      newsfeed: true,
+      cards: true,
+      info: true,
+      facebook: true,
+      twitter: true,
+      reposts: true,
+      events: true,
+      content: true,
+      contact: true,
+      location: true,
+      map: true,
+      package: true,
+    };
   }
 
   loadAll() {

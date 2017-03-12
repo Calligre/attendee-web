@@ -6,15 +6,8 @@ import PreferenceStore from 'stores/PreferenceStore.jsx';
 export default class Preferences extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      activeTab: 'pages',
-      newsfeed: false,
-      cards: false,
-      info: false,
-      facebook: false,
-      twitter: false,
-      reposts: false,
-    };
+    this.state = PreferenceStore.getDefaults();
+    this.state.activeTab = 'pages';
 
     PreferenceStore.loadAll();
   }
@@ -59,11 +52,14 @@ export default class Preferences extends React.Component {
       case 'social':
         tab = <TabSocialMedia {...this.state} handleChange={this.handleChange} />;
         break;
+      case 'cards':
+        tab = <TabCards {...this.state} handleChange={this.handleChange}/>;
+        break;
       case 'surveys':
-        tab = <TabSurveys/>;
+        tab = <TabSurveys {...this.state} handleChange={this.handleChange}/>;
         break;
       case 'other':
-        tab = <TabOther/>;
+        tab = <TabOther {...this.state} handleChange={this.handleChange}/>;
         break;
       default:
         null;
@@ -75,6 +71,7 @@ export default class Preferences extends React.Component {
         <div className="sidebar">
           <div id="pages" onClick={this.handleTabSwitch}>Pages</div>
           <div id="social" onClick={this.handleTabSwitch}>Social Media</div>
+          <div id="cards" onClick={this.handleTabSwitch}>Cards</div>
           <div id="surveys" onClick={this.handleTabSwitch}>Surveys</div>
           <div id="other" onClick={this.handleTabSwitch}>Other</div>
         </div>
@@ -157,14 +154,86 @@ class TabSocialMedia extends React.Component {
   }
 };
 
+class TabCards extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = props;
+  }
+
+  componentWillReceiveProps(props) {
+    this.state = props;
+  }
+
+  render() {
+    return (
+      <div>
+        <div>
+          <label>Upcoming Events Card
+            <input type="checkbox"
+              name="events"
+              onChange={this.props.handleChange}
+              checked={this.state.events}
+            />
+          </label>
+        </div>
+        <div>
+          <label>Content Card
+            <input type="checkbox"
+              name="content"
+              onChange={this.props.handleChange}
+              checked={this.state.content}
+            />
+          </label>
+        </div>
+        <div>
+          <label>Contact Card
+            <input type="checkbox"
+              name="contact"
+              onChange={this.props.handleChange}
+              checked={this.state.contact}
+            />
+          </label>
+        </div>
+        <div>
+          <label>Conference Location Card
+            <input type="checkbox"
+              name="location"
+              onChange={this.props.handleChange}
+              checked={this.state.location}
+            />
+          </label>
+        </div>
+        <div>
+          <label>Map Card
+            <input type="checkbox"
+              name="map"
+              onChange={this.props.handleChange}
+              checked={this.state.map}
+            />
+          </label>
+        </div>
+        <div>
+          <label>Package Card
+            <input type="checkbox"
+              name="package"
+              onChange={this.props.handleChange}
+              checked={this.state.package}
+            />
+          </label>
+        </div>
+      </div>
+    );
+  }
+};
+
 const TabSurveys = React.createClass({
   render() {
-    <div>Surveys</div>
+    return (<div>Surveys</div>);
   }
 });
 
 const TabOther = React.createClass({
   render() {
-    <div>Other</div>
+    return (<div>Other</div>);
   }
 });
