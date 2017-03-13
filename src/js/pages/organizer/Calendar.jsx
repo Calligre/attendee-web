@@ -7,11 +7,6 @@ export default class Calendar extends React.Component {
 
   constructor() {
     super();
-    this.getEvents = this.getEvents.bind(this);
-    this.updateEvent = this.updateEvent.bind(this);
-    this.generateEvent = this.generateEvent.bind(this);
-    this.addEvent = this.addEvent.bind(this);
-    this.deleteEvents = this.deleteEvents.bind(this);
     this.state = {
       events: [],
     };
@@ -21,13 +16,19 @@ export default class Calendar extends React.Component {
 
   componentWillMount() {
     EventStore.on("received", this.getEvents);
+    EventStore.on("error", this.showError);
   }
 
   componentWillUnmount() {
     EventStore.removeListener("received", this.getEvents);
+    EventStore.removeListener("error", this.showError);
   }
 
-  generateEvent(row) {
+  showError = () => {
+    console.log(EventStore.error)
+  }
+
+  generateEvent = (row) => {
     var updatedEvent = {
       id: -1,
       name: "",
@@ -47,21 +48,21 @@ export default class Calendar extends React.Component {
   }
 
 
-  updateEvent(row, cellName, cellValue) {
+  updateEvent = (row, cellName, cellValue) => {
     EventStore.updateEvent(this.generateEvent(row));
   }
 
-  addEvent(row) {
+  addEvent = (row) => {
     EventStore.addEvent(this.generateEvent(row));
   }
 
-  deleteEvents(rowKeys) {
+  deleteEvents = (rowKeys) => {
     for (const key in rowKeys) {
       EventStore.deleteEvent(rowKeys[key])
     }
   }
 
-  getEvents() {
+  getEvents = () => {
     this.setState({
       events: EventStore.events.map((event) => {
         event.starttime = moment.unix(event.starttime).format("YYYY-MM-DDTHH:mm");
@@ -94,10 +95,10 @@ export default class Calendar extends React.Component {
         <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
           Event Title
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='stream' dataSort filter={ { type: 'TextFilter', delay: 1000 } }>
+        <TableHeaderColumn dataField='stream' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
           Stream
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='location' datasort filter={ { type: 'TextFilter', delay: 1000 } }>
+        <TableHeaderColumn dataField='location' datasort filter={ { type: 'TextFilter', delay: 100 } }>
           Location
         </TableHeaderColumn>
         <TableHeaderColumn dataField='starttime' datasort dataFormat={ dateFormatter } editable={ { type: 'datetime' } }>
