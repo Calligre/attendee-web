@@ -18,8 +18,6 @@ class PreferenceStore extends EventEmitter {
   getDefaults() {
     return {
       newsfeed: true,
-      cards: true,
-      info: true,
       facebook: true,
       twitter: true,
       reposts: true,
@@ -29,6 +27,7 @@ class PreferenceStore extends EventEmitter {
       location: true,
       map: true,
       package: true,
+      survey: true,
     };
   }
 
