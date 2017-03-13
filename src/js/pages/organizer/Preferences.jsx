@@ -251,12 +251,48 @@ TabCards.propTypes = {
 
 
 class TabSurveys extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = props;
+  }
+
+  componentWillReceiveProps(props) {
+    this.state = props;
+  }
+
   render() {
-    return (<div>Surveys</div>);
+    return (
+      <div>
+        <div>
+          <label htmlFor="survey">Surveys
+            <input
+              type="checkbox"
+              name="survey"
+              onChange={this.props.handleChange}
+              checked={this.state.survey}
+            />
+          </label>
+        </div>
+      </div>
+    );
   }
 }
 
+TabSurveys.propTypes = {
+  handleChange: React.PropTypes.func,
+};
+
+
 class TabOther extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = props;
+  }
+
+  componentWillReceiveProps(props) {
+    this.state = props;
+  }
+
   render() {
     return (<div>Other</div>);
   }
