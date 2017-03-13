@@ -69,6 +69,27 @@ class EventStore extends EventEmitter {
     return this.events;
   }
 
+  updateEvent(event){
+    $.ajax({
+      url: "https://dev.calligre.com/api/event/" + event.id,
+      data : JSON.stringify(event),
+      type : 'PATCH',
+      contentType : 'application/json',
+      processData: false,
+      dataType: 'json',
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      success: function(response){
+        console.log(response);
+      },
+      error: function(error){
+        console.log(error);
+      }
+    });
+    return this.events;
+  };
+
   subscribeToEvent(id){
     $.ajax({
       url: url + "/api/user/" + AuthService.getCurrentUserId() + "/subscription",
