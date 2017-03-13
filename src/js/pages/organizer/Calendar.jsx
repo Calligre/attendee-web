@@ -5,11 +5,13 @@ var moment = require('moment');
 
 export default class Calendar extends React.Component {
 
-
   constructor() {
     super();
     this.getEvents = this.getEvents.bind(this);
-    this.updateEvents = this.updateEvents.bind(this);
+    this.updateEvent = this.updateEvent.bind(this);
+    this.generateEvent = this.generateEvent.bind(this);
+    this.addEvent = this.addEvent.bind(this);
+    this.deleteEvents = this.deleteEvents.bind(this);
     this.state = {
       events: [],
     };
@@ -25,7 +27,7 @@ export default class Calendar extends React.Component {
     EventStore.removeListener("received", this.getEvents);
   }
 
-  updateEvents(row, cellName, cellValue) {
+  generateEvent(row) {
     var updatedEvent = {
       id: -1,
       name: "",
@@ -41,7 +43,22 @@ export default class Calendar extends React.Component {
         updatedEvent[prop] = row[prop];
       }
     }
-    EventStore.updateEvent(updatedEvent);
+    return updatedEvent;
+  }
+
+
+  updateEvent(row, cellName, cellValue) {
+    EventStore.updateEvent(this.generateEvent(row));
+  }
+
+  addEvent(row) {
+    EventStore.addEvent(this.generateEvent(row));
+  }
+
+  deleteEvents(rowKeys) {
+    for (const key in rowKeys) {
+      EventStore.deleteEvent(rowKeys[key])
+    }
   }
 
   getEvents() {
@@ -60,7 +77,11 @@ export default class Calendar extends React.Component {
     };
     const cellEditProp = {
       mode: 'click',
-      afterSaveCell: this.updateEvents,
+      afterSaveCell: this.updateEvent,
+    };
+    const options = {
+      afterInsertRow: this.addEvent,
+      afterDeleteRow: this.deleteEvents,
     };
 
     const dateFormatter = function enumFormatter(cell, row) {
@@ -68,8 +89,8 @@ export default class Calendar extends React.Component {
     }
 
     return (
-	  <BootstrapTable data={this.state.events} striped hover deleteRow selectRow={selectRowProp} cellEdit={cellEditProp}>
-        <TableHeaderColumn dataField='id' isKey>Event ID</TableHeaderColumn>
+	  <BootstrapTable data={this.state.events} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditProp} options={options}>
+        <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Event ID</TableHeaderColumn>
         <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
           Event Title
         </TableHeaderColumn>
@@ -85,6 +106,7 @@ export default class Calendar extends React.Component {
         <TableHeaderColumn dataField='endtime' datasort dataFormat={ dateFormatter } editable={ { type: 'datetime' } }>
           End time
         </TableHeaderColumn>
+        <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>
       </BootstrapTable>
     );
   }
