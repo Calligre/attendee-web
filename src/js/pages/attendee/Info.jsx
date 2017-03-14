@@ -1,60 +1,61 @@
-import React from "react";
+import AuthService from 'util/AuthService';
+import BrandStore from 'stores/BrandStore';
+import React from 'react';
 
-var moment = require('moment');
-var $ = require('jquery');
+const moment = require('moment');
+const $ = require('jquery');
 
 export default class Info extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      logo: "/splash",
-      confName: "Loading...",
-      location: "Loading...",
-      startDate: moment().unix(),
-      endDate: moment().unix(),
-      other: "Loading...",
-      twitter: "Loading...",
-      facebook: "Loading...",
+      name: '',
+      organization: '',
+      starttime: '',
+      endtime: '',
+      location: '',
+      other: '',
+      color_primary: '#000000',
+      color_secondary: '#000000',
+      logo: '',
+      logo_square: '',
+      icon: '',
+      facebook: '',
+      twitter: '',
     };
+
+    BrandStore.on('receivedBranding', this.setBranding);
+    BrandStore.getBranding();
   }
 
-  componentDidMount() {
-    this.serverRequest = $.get(`${this.props.route.apiBaseURL}/info`, (result) => {
-      this.setState({
-        logo: result.data.attributes.logo,
-        confName: result.data.attributes.name,
-        location: result.data.attributes.location,
-        starttime: result.data.attributes.starttime,
-        endtime: result.data.attributes.endtime,
-        other: result.data.attributes.other,
-        twitter: result.data.attributes.twitter,
-        facebook: result.data.attributes.facebook,
-      });
-    });
+  setBranding = () => {
+    let branding = BrandStore.branding;
+    branding['starttime'] = moment.unix(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
+    branding['endtime'] = moment.unix(branding['endtime']).format('YYYY-MM-DD[T]HH:mm');
+    this.setState(branding);
   }
-
-  componentWillUnmount() {
-    this.serverRequest.abort();
-  }
-
 
   render() {
-    const {logo, confName, location, starttime, endtime, other, twitter, facebook} = this.state;
+    const { name, organization, starttime, endtime, location, other, color_primary,
+      color_secondary, logo, logo_square, icon, facebook, twitter } = this.state;
     return (
       <div id="conference-info">
-        <img class="logo" src={logo} />
-        <h3 class="other">{other}</h3>
-        <div class="info-container">
-          <h1>You're at: {confName}</h1>
-          <h2> The location is: {location}</h2>
-          <h2> It begins: {moment.unix(starttime).format("ddd MMMM Do YYYY hh:mm")}</h2>
-          <h2> and ends: {moment.unix(endtime).format("ddd MMMM Do YYYY hh:mm")}</h2>
-          <a href={twitter}> <img src="https://abs.twimg.com/favicons/favicon.ico" /></a>
-          <a href={facebook}> <img src="https://www.facebook.com/rsrc.php/yl/r/H3nktOa7ZMg.ico" /></a>
-        </div>
+        <img className="logo" alt="Logo" src={logo} />
+        <h1 className="primaryText">You're at: {name}</h1>
+        <h2 className="secondaryText"> It begins: {starttime} </h2>
+        <h2 className="secondaryText"> and ends: {endtime} </h2>
+        <h2 className="secondaryText"> It's happeneing at {location} </h2>
+        <h3> {other} </h3>
+        <h3> Brought to you by: {organization} </h3>
+        <div> <input type="color" value={color_primary} disabled/>
+              <input type="color" value={color_secondary} disabled/> </div>
+
+        <div> <img src={logo_square} alt="Square Logo" height="100 "/>
+              <img src={icon} alt="Icon" height="100 "/> </div>
+        <div> <a href={facebook}> <img src="https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png" alt="Facebook" height="50" /> </a> 
+              <a href={twitter}> <img src="https://upload.wikimedia.org/wikipedia/en/archive/9/9f/20161107041729!Twitter_bird_logo_2012.svg" alt="Twitter" height="50" /> </a> </div>
       </div>
     );
   }
 }
-

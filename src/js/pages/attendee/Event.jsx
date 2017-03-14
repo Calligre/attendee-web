@@ -77,7 +77,7 @@ export default class Event extends React.Component {
         </div>
         <div className="info">
           <div id="avoidSubscribeButton" />
-          <h2 className="location">{location}</h2>
+          <h2 className="secondaryText location">{location}</h2>
           <div className="description">{description}</div>
         </div>
       </div>

@@ -71,7 +71,69 @@ class EventStore extends EventEmitter {
     return this.events;
   }
 
-  subscribeToEvent(id) {
+  updateEvent(event){
+    $.ajax({
+      url: "https://dev.calligre.com/api/event/" + event.id,
+      data : JSON.stringify(event),
+      type : 'PATCH',
+      contentType : 'application/json',
+      processData: false,
+      dataType: 'json',
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      success: function(response){
+        console.log(response);
+      },
+      error: function(error){
+        console.error(error);
+      }
+    });
+    return this.events;
+  };
+
+  addEvent(event){
+    $.ajax({
+      url: "https://dev.calligre.com/api/event",
+      data : JSON.stringify(event),
+      type : 'POST',
+      contentType : 'application/json',
+      processData: false,
+      dataType: 'json',
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      success: function(response){
+        console.log(response);
+      },
+      error: function(error){
+        console.error(error);
+      }
+    });
+    return this.events;
+  };
+
+  deleteEvent(id){
+    $.ajax({
+      url: "https://dev.calligre.com/api/event/" + id,
+      type : 'DELETE',
+      contentType : 'application/json',
+      processData: false,
+      dataType: 'json',
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      success: function(response){
+        console.log(response);
+      },
+      error: function(error){
+        console.error(error);
+      }
+    });
+    return this.events;
+  };
+
+  subscribeToEvent(id){
     $.ajax({
       url: `${url}/api/user/${AuthService.getCurrentUserId()}/subscription`,
       type: 'POST',

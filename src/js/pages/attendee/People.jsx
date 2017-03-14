@@ -121,11 +121,11 @@ export default class People extends React.Component {
 
     return (
       <div>
-        <h1>People</h1>
+        <h1 className="primaryText">People</h1>
         <SearchInput className="searchBar Select-control search-input" onChange={this.searchUpdated} placeholder="Search for someone"/>
         <Select multi simpleValue className="searchBar" value={this.state.filterTerms} placeholder="Filter by organization:" options={organizations} onChange={this.filterUpdated} />
         <div className="sortContainer searchBar">
-          <button className="directionButton" onClick={this.sortDirectionUpdated}>
+          <button className="secondaryBackground directionButton" onClick={this.sortDirectionUpdated}>
             {buttonIcon}
           </button>
           <Select className="sortComponent" simpleValue clearable={false} value={this.state.sortKey} options={this.state.sortOptions} onChange={this.sortKeyUpdated} />

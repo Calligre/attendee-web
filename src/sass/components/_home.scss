@@ -1,6 +1,6 @@
 .notification-list {
   position: relative;
-  
+
   .notification-bar {
     position: relative !important;
     bottom: auto !important;
@@ -9,5 +9,42 @@
     margin: 5px 0px !important;
     font-size: 12px !important;
     background-color: $error !important;
+
+    .notification-bar-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .notification-bar-action {
+        color: black !important;
+        font-size: 1rem !important;
+        position: absolute;
+        right: 5px;
+        font-weight: bold !important;
+      }
+    }
+  }
+}
+
+.logo {
+  max-width: 100%;
+}
+
+.card {
+  display: inline-block;
+  position: relative;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 10px;
+  width: 100%;
+  margin: 20px 0px;
+  text-align: center;
+  padding: 20px 30px;
+
+  .eventPageEvent {
+    margin-left: 50px;
+  }
+
+  .contentCard {
+    padding: 15px 0px;
   }
 }
