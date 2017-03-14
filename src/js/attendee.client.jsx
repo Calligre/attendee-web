@@ -63,7 +63,6 @@ BrandStore.getBranding();
         <Route path="events" component={Events} onEnter={requireAuth}></Route>
         <Route path="events/:eventId" component={EventPage} onEnter={requireAuth}></Route>
         <Route path="profile" component={Profile} onEnter={requireAuth}></Route>
-        <Route path="info" apiBaseURL="https://dev.calligre.com/api" component={Info} onEnter={requireAuth}></Route>
         <Route path="login" component={Login}></Route>
         <Route path="access_token=:token" component={Login} />
       </Route>

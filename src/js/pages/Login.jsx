@@ -17,7 +17,7 @@ export default class Login extends React.Component {
     return (
       <div id="loginContainer">
         <div className="logo">
-          <div className="c primaryBackground"></div>
+          <div className="logoC primaryBackground"></div>
           <div className="rest">alligre</div>
         </div>
         <button className="secondaryBackground" onClick={AuthService.login}>Login or Sign Up</button>
