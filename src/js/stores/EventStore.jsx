@@ -215,10 +215,6 @@ class EventStore extends EventEmitter {
         this.emit('error');
         break;
       }
-      default: {
-        console.error(`How did you even get here, what the hell are you dispacting ${action.type}`);
-        break;
-      }
     }
   }
 
