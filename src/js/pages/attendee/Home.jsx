@@ -14,17 +14,24 @@ var moment = require('moment');
 export default class Featured extends React.Component {
   constructor(props) {
     super(props);
-    this.getEvents = this.getEvents.bind(this);
-    this.getNotifications = this.getNotifications.bind(this);
     this.state = {
       notifications: [],
       events: [],
       apiBaseURL: props.route.apiBaseURL,
       logo: '',
+      cards: [],
+      locations: [],
+      contacts: [],
     };
 
     BrandStore.on('receivedBranding', this.setBranding);
+    BrandStore.on('receivedCards', this.setCards);
+    BrandStore.on('receivedLocations', this.setLocations);
+    BrandStore.on('receivedContacts', this.setContacts);
     BrandStore.getBranding();
+    BrandStore.getLocations();
+    BrandStore.getContacts();
+    BrandStore.getCards();
   };
 
   componentWillMount() {
@@ -43,22 +50,22 @@ export default class Featured extends React.Component {
     EventStore.removeListener("error", this.showEventStoreError);
   };
 
-  getNotifications() {
+  getNotifications = () => {
     let unexpired = NotificationStore.getUnexpired();
     this.setState({notifications: unexpired});
   };
 
-  showNotificationStoreError() {
+  showNotificationStoreError = () => {
     console.log(NotificationStore.error);
   };
 
-  getEvents() {
+  getEvents = () => {
     this.setState({
       events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment(event.starttime)))
     });
   };
 
-  showEventStoreError(){
+  showEventStoreError = () => {
     console.log(EventStore.error)
   }
   
@@ -66,14 +73,29 @@ export default class Featured extends React.Component {
     let branding = BrandStore.branding;
     branding['starttime'] = moment.unix(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
     branding['endtime'] = moment.unix(branding['endtime']).format('YYYY-MM-DD[T]HH:mm');
-    this.setState(branding);
+    this.setState({
+      branding: branding,
+      logo: branding.logo,
+    });
+  }
+  
+  setCards = () => {
+    this.setState({cards: BrandStore.cards});
+  }
+  
+  setContacts = () => {
+    this.setState({contacts: BrandStore.contacts});
+  }
+
+  setLocations = () => {
+    this.setState({locations: BrandStore.locations});
   }
 
   render() {
     if (localStorage.getItem('redirect_after_login')) {
       return (<div></div>)
     }
-    const { messages, events, notifications, logo} = this.state;
+    const { messages, events, notifications, logo, branding, locations, cards, contacts} = this.state;
 
     var eventCount = 0;
     const EventComponents = events.map((event) => {
@@ -83,46 +105,38 @@ export default class Featured extends React.Component {
       }
     });
 
-    const locations = [
-      {
-        "name": "Conference",
-        "address": "Davis Center (DC)",
-      },
-      {
-        "name": "Hotel",
-        "address": "Waterloo Inn - 999 King St.",
-      },
-    ];
+    let mapCard = null;
+    let confPackageCard = null;
+    if (branding) {
+      const map = {
+        "name" : "Map",
+        "link" : branding.map,
+      };
+      const confPackage = {
+        "name" : "Conference Package",
+        "link" : branding.package,
+      };
 
-    const contacts = [ 
-      {
-        "name": "Clarisse Schneider",
-        "phone": "519-729-1893",
-      },
-      {
-        "name": "Kieran Broekhoven",
-        "phone": "519-572-1785",
-      },
-      {
-        "name": "Police",
-        "phone": "911",
-      }
-    ];
+      mapCard = <Card type="download" item={map}/>;
+      confPackageCard = <Card type="download" item={confPackage}/>;
+    }
 
-    const content = [ "Hope you're having a great day!", "You too!"];
+    let contentCards = null;
+    if (cards !== undefined && cards.length > 0) {
+      contentCards = cards.map((content) =>
+        <Card type="content" item={content}/>
+      );
+    }
 
-    const map = {
-      "name" : "Map",
-      "link" : "https://uwaterloo.ca/map/pdf/map_bw.pdf",
-    };
-    const confPackage = {
-      "name" : "Conference Package",
-      "link" : "https://uwaterloo.ca/map/pdf/map_bw.pdf",
-    };
+    let locationsCard = null;
+    if (locations !== undefined && locations.length > 0) {
+      locationsCard = <Card type="location" item={locations}/>;
+    }
 
-    const contentCards = content.map((content) =>
-      <Card type="content" item={content}/>
-    );
+    let contactsCard = null;
+    if (contacts !== undefined && contacts.length > 0) {
+      contactsCard = <Card type="contact" item={contacts}/>;
+    }
 
     return (
       <div>
@@ -131,17 +145,21 @@ export default class Featured extends React.Component {
           onDismiss={() => {}}
         />
         <img className="logo" alt="Logo" src={logo} />
-        <h2 className="secondaryText">Your Upcoming Events</h2>
+        {EventComponents.length > 0 &&
+          <h2 className="secondaryText">Your Upcoming Events</h2>
+        }
         <div>
           {EventComponents}
         </div>
-        <h2 className="secondaryText">Conference Information</h2>
+        {locationsCard != null && contactsCard != null && mapCard != null && confPackageCard != null && contentCards != null &&
+          <h2 className="secondaryText">Conference Information</h2>
+        }
         <div>
-         <Card type="location" item={locations}/>
-         <Card type="contact" item={contacts}/>
-         <Card type="download" item={map}/>
-         <Card type="download" item={confPackage}/>
-         {contentCards}
+          {locationsCard}
+          {contactsCard}
+          {mapCard}
+          {confPackageCard}
+          {contentCards}
         </div>
       </div>
     );

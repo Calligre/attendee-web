@@ -47,7 +47,7 @@ var ContactCard = React.createClass({
   render: function() {
     var contactNodes = this.props.data.map(function(contact) {
       return (
-        <div className="contact">
+        <div className="contact" key={contact.id}>
           <h3>{contact.name}</h3>
           <p>{contact.phone}</p>
         </div>
@@ -66,7 +66,7 @@ var LocationCard = React.createClass({
   render: function() {
     var locationNodes = this.props.data.map(function(confLocation) {
       return (
-        <div className="location">
+        <div className="location" key={confLocation.id}>
           <h3>{confLocation.name}</h3>
           <p>{confLocation.address}</p>
         </div>
