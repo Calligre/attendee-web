@@ -84,7 +84,7 @@ class EventStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.log(error);
+        console.error(error);
       }
     });
     return this.events;
@@ -105,7 +105,7 @@ class EventStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.log(error);
+        console.error(error);
       }
     });
     return this.events;
@@ -125,7 +125,7 @@ class EventStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.log(error);
+        console.error(error);
       }
     });
     return this.events;
