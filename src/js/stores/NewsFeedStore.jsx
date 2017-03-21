@@ -264,7 +264,7 @@ class NewsFeedStore extends EventEmitter {
   }
 }
 
-const newsFeedStore = new NewsFeedStore();
+const newsFeedStore = new NewsFeedStore;
 dispatcher.register(newsFeedStore.handleActions.bind(newsFeedStore));
 
 export default newsFeedStore;

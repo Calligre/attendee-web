@@ -224,7 +224,7 @@ class EventStore extends EventEmitter {
 
 }
 
-const eventStore = new EventStore();
+const eventStore = new EventStore;
 dispatcher.register(eventStore.handleActions.bind(eventStore));
 
 export default eventStore;
