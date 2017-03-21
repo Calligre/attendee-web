@@ -58,14 +58,15 @@ export default class NewsFeedPost extends React.Component {
       text,
       repost,
     } = this.state;
+    console.log(poster_icon);
 
     const heartColor = {
       color: current_user_likes ? 'red' : 'inherit',
     };
 
-    let imageText = null;
+    let image = null;
     if (media_link && media_link !== '') {
-      imageText = (
+      image = (
         <span className="show-image link clickable no-selection" onClick={this.showImage}>
           <img src={this.state.media_link}/>
         </span>
@@ -78,9 +79,9 @@ export default class NewsFeedPost extends React.Component {
           <img alt="poster" src={poster_icon} className="user-photo no-selection" />
         </div>
         <div className="post-text inline">
-          {imageText}
           <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
+          {image}
           <div className="soc-bar">
             <FaHeart
               className="heart-icon clickable"
@@ -92,7 +93,6 @@ export default class NewsFeedPost extends React.Component {
             { repost &&
               <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28} />
             }
-            {imageText}
           </div>
         </div>
       </div>

@@ -110,6 +110,7 @@ class NewsFeedStore extends EventEmitter {
       contentType: 'application/json',
       cache: false,
       success(response) {
+        console.log(response);
         dispatcher.dispatch({ type: 'CREATE_POST_SUCCESS', post: response.id });
       },
       error(error) {
