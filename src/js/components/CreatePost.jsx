@@ -205,7 +205,7 @@ export default class NewsFeed extends React.Component {
                   }
                   <button
                     type="button"
-                    className="submit-form btn btn-primary"
+                    className="submit-form btn btn-primary secondaryBackground"
                     onClick={this.createPost}
                   >
                     Submit Post

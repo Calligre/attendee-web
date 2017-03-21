@@ -42,10 +42,10 @@ export default class Info extends React.Component {
     return (
       <div id="conference-info">
         <img className="logo" alt="Logo" src={logo} />
-        <h1>You're at: {name}</h1>
-        <h2> It begins: {starttime} </h2>
-        <h2> and ends: {endtime} </h2>
-        <h2> It's happeneing at {location} </h2>
+        <h1 className="primaryText">You're at: {name}</h1>
+        <h2 className="secondaryText"> It begins: {starttime} </h2>
+        <h2 className="secondaryText"> and ends: {endtime} </h2>
+        <h2 className="secondaryText"> It's happeneing at {location} </h2>
         <h3> {other} </h3>
         <h3> Brought to you by: {organization} </h3>
         <div> <input type="color" value={color_primary} disabled/>

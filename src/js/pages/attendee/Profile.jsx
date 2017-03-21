@@ -115,7 +115,7 @@ export default class Profile extends React.Component {
 
   render() {
     if (this.state.profile.private || !AuthService.getProfile().identities) {
-      return (<div><h2>Loading</h2></div>)
+      return (<div><h2 className="primaryText">Loading</h2></div>)
     }
 
     const {id, first_name, last_name, organization, points, description} = this.state.profile;
@@ -133,10 +133,10 @@ export default class Profile extends React.Component {
       <div className={"profile " + myProfileClass}>
         <Dropzone className='dropzone' onDrop={this.onDrop} multiple={false} disableClick={!myProfile}>
           <img src={this.state.preview}/>
-          <button className={"cancel " + displayCancel}  onClick={this.cancelDrop}>{buttonIcon}</button>
+          <button className={"secondaryBackground cancel " + displayCancel}  onClick={this.cancelDrop}>{buttonIcon}</button>
           <p className="label">Upload new photo</p>
         </Dropzone>
-        <h2>{first_name} {last_name}</h2>
+        <h2 className="primaryText">{first_name} {last_name}</h2>
         <h4>Points: {points}</h4>
         {this.renderLinkedAccountsList(myProfile)}
         <div className="editableContainer profileItem">
@@ -147,7 +147,7 @@ export default class Profile extends React.Component {
           <p contentEditable={myProfile} className="description editable">{description}</p>
           <div className="editIcon">{editIcon}</div>
         </div>
-        <button className="submitChanges" onClick={this.submitChanges}>Save changes</button>
+        <button className="secondaryBackground submitChanges" onClick={this.submitChanges}>Save changes</button>
       </div>
     );
   }

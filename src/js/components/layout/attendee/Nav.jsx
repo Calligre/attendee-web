@@ -80,9 +80,6 @@ export default class Nav extends React.Component {
               <li className={profileClass}>
                 <Link to="profile" onClick={this.toggleCollapse}>My Profile</Link>
               </li>
-              <li className={infoClass}>
-                <Link to="info" onClick={this.toggleCollapse}>Conference Info</Link>
-              </li>
               <li>
                 <Link to="login" onClick={AuthService.logout}>Logout</Link>
               </li>

@@ -67,7 +67,7 @@ export default class NewsFeedPost extends React.Component {
     if (media_link && media_link !== '') {
       imageText = (
         <span className="show-image link clickable no-selection" onClick={this.showImage}>
-          Show Image
+          <img src={this.state.media_link}/>
         </span>
       );
     }
@@ -78,6 +78,7 @@ export default class NewsFeedPost extends React.Component {
           <img alt="poster" src={poster_icon} className="user-photo no-selection" />
         </div>
         <div className="post-text inline">
+          {imageText}
           <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
           <div className="soc-bar">

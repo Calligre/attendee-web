@@ -5,6 +5,11 @@
         "jsx-a11y",
         "import"
     ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "sourceType": "module",
+        "allowImportExportEverywhere": false
+    },
     "settings": {
         "import/parser": "babel-eslint",
         "import/resolver": {
@@ -28,6 +33,12 @@
         "import/no-unresolved": 0,
         "import/no-extraneous-dependencies": 0,
         "import/extensions": 0,
+        "no-console": [
+            "error", {
+                "allow": ["warn", "error"]
+            }
+        ],
+        "class-methods-use-this": 0,
         "jsx-a11y/no-static-element-interactions": 0,
         "react/jsx-boolean-value": 0,
         "react/no-multi-comp": 0

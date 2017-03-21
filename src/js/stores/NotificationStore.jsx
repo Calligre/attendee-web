@@ -37,12 +37,22 @@ class NotificationStore extends EventEmitter {
     return self.notifications;
   }
 
-  getUnexpired() {
+  getValid() {
     var self = this;
     const currTime = moment().unix();
+
+    // Check Expiry time
     self.notifications = self.notifications.filter((notification) => {
       return notification.expirytime > currTime;
     });
+
+    // Check if Notifications have already been seen
+    const viewedNotifications = JSON.parse(localStorage.getItem("viewedNotifications"));
+    if (viewedNotifications) {
+      self.notifications = self.notifications.filter((notification) => {
+        return !(viewedNotifications.includes(notification.id));
+      });
+    }
 
     self.notifications = self.notifications.map((notification) => {
       return {
@@ -66,6 +76,15 @@ class NotificationStore extends EventEmitter {
     self.notifications = self.notifications.filter((notification) => {
       return notification.id != notificationParam.id;
     });
+
+    // Set this notification as viewed so it doesn't appear again
+    let viewedNotifications = JSON.parse(localStorage.getItem("viewedNotifications"));
+    if (viewedNotifications == null) {
+      viewedNotifications = [];
+    }
+    viewedNotifications.push(notificationParam.id);
+    localStorage.setItem("viewedNotifications", JSON.stringify(viewedNotifications));
+
     dispatcher.dispatch({type: "NOTIFICATIONS_GET"});
     return self.notifications;
   }
