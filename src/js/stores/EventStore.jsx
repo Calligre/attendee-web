@@ -215,9 +215,6 @@ class EventStore extends EventEmitter {
         this.emit('error');
         break;
       }
-      default: {
-        break;
-      }
     }
   }
 
