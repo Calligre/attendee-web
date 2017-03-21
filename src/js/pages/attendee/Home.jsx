@@ -7,6 +7,7 @@ import EventStore from "stores/EventStore";
 import NotificationStore from "stores/NotificationStore";
 import BrandStore from 'stores/BrandStore';
 import Card from "components/Card";
+import PreferenceStore from 'stores/PreferenceStore';
 
 import { NotificationStack } from 'react-notification';
 var moment = require('moment');
@@ -22,6 +23,7 @@ export default class Featured extends React.Component {
       cards: [],
       locations: [],
       contacts: [],
+      preferences: PreferenceStore.getDefaults(),
     };
 
     BrandStore.on('receivedBranding', this.setBranding);
@@ -32,18 +34,24 @@ export default class Featured extends React.Component {
     BrandStore.getLocations();
     BrandStore.getContacts();
     BrandStore.getCards();
+
+    PreferenceStore.loadAll();
   };
 
   componentWillMount() {
+    PreferenceStore.on('loaded', this.loadPreferences);
     NotificationStore.on("received", this.getNotifications);
     NotificationStore.on("error", this.showNotificationStoreError);
     EventStore.on("received", this.getEvents);
+    PreferenceStore.on('error', this.showPreferenceError);
     EventStore.on("error", this.showEventStoreError);
     NotificationStore.getAll();
     EventStore.getAll();
   };
 
   componentWillUnmount() {
+    PreferenceStore.removeListener('loaded', this.loadPreferences);
+    PreferenceStore.removeListener('error', this.showPreferenceError);
     NotificationStore.removeListener("received", this.getNotifications);
     NotificationStore.removeListener("error", this.showNotificationStoreError);
     EventStore.removeListener("received", this.getEvents);
@@ -68,7 +76,15 @@ export default class Featured extends React.Component {
   showEventStoreError = () => {
     console.log(EventStore.error)
   }
-  
+
+  loadPreferences = () => {
+    this.setState({ preferences: PreferenceStore.preferences });
+  }
+
+  showPreferenceError = () => {
+    console.error(PreferenceStore.error);
+  }
+
   setBranding = () => {
     let branding = BrandStore.branding;
     branding['starttime'] = moment.unix(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
@@ -78,11 +94,11 @@ export default class Featured extends React.Component {
       logo: branding.logo,
     });
   }
-  
+
   setCards = () => {
     this.setState({cards: BrandStore.cards});
   }
-  
+
   setContacts = () => {
     this.setState({contacts: BrandStore.contacts});
   }
@@ -95,7 +111,7 @@ export default class Featured extends React.Component {
     if (localStorage.getItem('redirect_after_login')) {
       return (<div></div>)
     }
-    const { messages, events, notifications, logo, branding, locations, cards, contacts} = this.state;
+    const { messages, events, notifications, logo, branding, locations, cards, contacts, preferences} = this.state;
 
     var eventCount = 0;
     const EventComponents = events.map((event) => {
@@ -117,24 +133,28 @@ export default class Featured extends React.Component {
         "link" : branding.package,
       };
 
-      mapCard = <Card type="download" item={map}/>;
-      confPackageCard = <Card type="download" item={confPackage}/>;
+      if (preferences.map) {
+        mapCard = <Card type="download" item={map}/>;
+      }
+      if (preferences.package) {
+        confPackageCard = <Card type="download" item={confPackage}/>;
+      }
     }
 
     let contentCards = null;
-    if (cards !== undefined && cards.length > 0) {
+    if (cards !== undefined && cards.length > 0 && preferences.content) {
       contentCards = cards.map((content) =>
         <Card type="content" item={content}/>
       );
     }
 
     let locationsCard = null;
-    if (locations !== undefined && locations.length > 0) {
+    if (locations !== undefined && locations.length > 0 && preferences.location) {
       locationsCard = <Card type="location" item={locations}/>;
     }
 
     let contactsCard = null;
-    if (contacts !== undefined && contacts.length > 0) {
+    if (contacts !== undefined && contacts.length > 0 && preferences.contact) {
       contactsCard = <Card type="contact" item={contacts}/>;
     }
 

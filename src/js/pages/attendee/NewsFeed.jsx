@@ -3,6 +3,7 @@ import NewsFeedPost from 'components/NewsFeedPost';
 import CreatePost from 'components/CreatePost';
 import NewsFeedStore from 'stores/NewsFeedStore';
 import MdClose from 'react-icons/lib/md/close';
+import PreferenceStore from 'stores/PreferenceStore';
 
 
 export default class NewsFeed extends React.Component {
@@ -25,7 +26,9 @@ export default class NewsFeed extends React.Component {
       // TODO: HOW CAN I GET THESE? (If user is integrated into social media channels)
       twIntegration: true,
       fbIntegration: true,
+      preferences: PreferenceStore.getDefaults(),
     };
+    PreferenceStore.loadAll();
   }
 
   componentWillMount() {
@@ -33,6 +36,8 @@ export default class NewsFeed extends React.Component {
     NewsFeedStore.on('revert', this.revertNewsFeedPosts);
     NewsFeedStore.on('error', this.showError);
     // Grab data here. Emitted events aren't picked up until here
+    PreferenceStore.on('loaded', this.loadPreferences);
+    PreferenceStore.on('error', this.showPreferenceError);
     NewsFeedStore.getOnLoad();
   }
 
@@ -40,6 +45,9 @@ export default class NewsFeed extends React.Component {
     NewsFeedStore.removeListener('updated', this.getNewsFeedPosts);
     NewsFeedStore.removeListener('revert', this.revertNewsFeedPosts);
     NewsFeedStore.removeListener('error', this.showError);
+
+    PreferenceStore.removeListener('loaded', this.loadPreferences);
+    PreferenceStore.removeListener('error', this.showPreferenceError);
   }
 
   // Grab the News Feed Posts that the user has retrieved from the store
@@ -76,17 +84,27 @@ export default class NewsFeed extends React.Component {
     alert(NewsFeedStore.error);
   }
 
+  loadPreferences = () => {
+    this.setState({ preferences: PreferenceStore.preferences });
+  }
+
+  showPreferenceError = () => {
+    alert(PreferenceStore.error);
+  }
+
   render() {
     const {
       contentFeed,
       fbIntegration,
       imageOverlay,
       twIntegration,
+      preferences,
     } = this.state;
 
     const NewsFeedPosts = contentFeed.items.map(post =>
       <NewsFeedPost
         key={post.timestamp}
+        repost={preferences.reposts}
         {...post}
         rt={this.setText}
         imgOverlay={this.setImageOverlay}
@@ -108,7 +126,7 @@ export default class NewsFeed extends React.Component {
               onClick={closeImageOverlay}
             />
             <div className="img-container">
-              <span className="helper inline" /><img className="inline" src={imageOverlay} />
+              <span className="helper inline" /><img alt="full" className="inline" src={imageOverlay} />
             </div>
           </div>
         );
