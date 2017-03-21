@@ -1,9 +1,11 @@
 import { EventEmitter } from "events";
 import AuthService from "util/AuthService";
+import UrlService from 'util/UrlService';
 
 import dispatcher from "dispatcher";
 
 var $ = require("jquery");
+const url = UrlService.getUrl();
 
 class PeopleStore extends EventEmitter {
   constructor() {
@@ -14,7 +16,7 @@ class PeopleStore extends EventEmitter {
 
   create(data) {
     $.ajax({
-      url: "https://dev.calligre.com/api/user",
+      url: `${url}/user`,
       dataType: "json",
       contentType: "application/json",
       data: JSON.stringify(data),
@@ -36,7 +38,7 @@ class PeopleStore extends EventEmitter {
 
   getAll() {
     $.ajax({
-      url: "https://dev.calligre.com/api/user",
+      url: `${url}/user`,
       dataType: "json",
       headers: {
         "Authorization": "Bearer " + AuthService.getToken()
@@ -58,7 +60,7 @@ class PeopleStore extends EventEmitter {
     fileReader.readAsDataURL(photo);
     fileReader.onloadend = function (e) {
       $.ajax({
-        url: "https://dev.calligre.com/api/user/" + id + "/photo",
+        url: `${url}/user/${id}/photo`,
         contentType : 'application/json',
         type: 'put',
         data: JSON.stringify({data: this.result}),
@@ -82,7 +84,7 @@ class PeopleStore extends EventEmitter {
 
   updatePerson(person) {
     $.ajax({
-      url: "https://dev.calligre.com/api/user/" + person.id,
+      url: `${url}/user/${person.id}`,
       data : JSON.stringify(person),
       type : 'PATCH',
       contentType : 'application/json',

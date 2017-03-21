@@ -5,7 +5,6 @@ import * as config from 'auth0.config.js';
 import PeopleStore from 'stores/PeopleStore'
 
 var $ = require("jquery");
-var url = "https://dev.calligre.com"
 
 class AuthService extends EventEmitter {
   constructor(clientId, domain) {
@@ -56,7 +55,7 @@ class AuthService extends EventEmitter {
     const profile = this.getProfile();
     const id = profile.identities[0].user_id
     $.ajax({
-      url: "https://dev.calligre.com/api/user/" + id,
+      url: `${this.getApiUrl()}/id`,
       dataType: "json",
       headers: {
         "Authorization": "Bearer " + this.getToken()

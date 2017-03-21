@@ -1,11 +1,12 @@
 import { EventEmitter } from 'events';
 import AuthService from 'util/AuthService';
+import UrlService from 'util/UrlService';
 
 import dispatcher from 'dispatcher';
 
 const $ = require('jquery');
 
-const url = 'https://dev.calligre.com';
+const url = UrlService.getUrl();
 
 
 class PreferenceStore extends EventEmitter {
@@ -33,7 +34,7 @@ class PreferenceStore extends EventEmitter {
 
   loadAll() {
     $.ajax({
-      url: `${url}/api/preference`,
+      url: `${url}/preference`,
       dataType: 'json',
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
@@ -51,7 +52,7 @@ class PreferenceStore extends EventEmitter {
 
   update(key, value) {
     $.ajax({
-      url: `${url}/api/preference`,
+      url: `${url}/preference`,
       dataType: 'json',
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
