@@ -19,11 +19,10 @@ export default class Nav extends React.Component {
   render() {
     const { location } = this.props;
     const { collapsed } = this.state;
-    const featuredClass = location.pathname === "/" ? "active" : "";
-    const newsFeedClass = location.pathname.match(/^\/calendar/) ? "active" : "";
-    const peopleClass = location.pathname.match(/^\/cards/) ? "active" : "";
-    const eventsClass = location.pathname.match(/^\/preferences/) ? "active" : "";
-    const profileClass = location.pathname.match(/^\/results/) ? "active" : "";
+    const brandingClass = location.pathname === "/" ? "active" : "";
+    const calendarClass = location.pathname.match(/^\/calendar/) ? "active" : "";
+    const preferencesClass = location.pathname.match(/^\/preferences/) ? "active" : "";
+    const surveyClass = location.pathname.match(/^\/results/) ? "active" : "";
     const navClass = collapsed ? "collapse" : "";
 
     return (
@@ -39,20 +38,17 @@ export default class Nav extends React.Component {
           </div>
           <div class={"navbar-collapse " + navClass} id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-              <li class={featuredClass}>
+              <li class={brandingClass}>
                 <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Branding</IndexLink>
               </li>
-              <li class={newsFeedClass}>
+              <li class={calendarClass}>
                 <Link to="calendar" onClick={this.toggleCollapse.bind(this)}>Calendar</Link>
               </li>
-              <li class={peopleClass}>
-                <Link to="cards" onClick={this.toggleCollapse.bind(this)}>Cards</Link>
-              </li>
-              <li class={eventsClass}>
+              <li class={preferencesClass}>
                 <Link to="preferences" onClick={this.toggleCollapse.bind(this)}>Preferences</Link>
               </li>
-              <li class={profileClass}>
-                <Link to="results" onClick={this.toggleCollapse.bind(this)}>Results</Link>
+              <li class={surveyClass}>
+                <Link to="results" onClick={this.toggleCollapse.bind(this)}>Surveys</Link>
               </li>
               <li>
                 <Link to="login" onClick={AuthService.logout}>Logout</Link>
