@@ -3,7 +3,6 @@ import { IndexLink, Link } from 'react-router';
 
 import PreferenceStore from 'stores/PreferenceStore';
 
-import BrandStore from 'stores/BrandStore';
 import AuthService from 'util/AuthService';
 
 export default class Nav extends React.Component {

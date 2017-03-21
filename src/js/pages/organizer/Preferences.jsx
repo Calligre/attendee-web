@@ -27,7 +27,7 @@ export default class Preferences extends React.Component {
   }
 
   showError = () => {
-    console.log(PreferenceStore.error);
+    console.error(PreferenceStore.error);
   }
 
   handleChange = (event) => {
