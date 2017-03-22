@@ -3,7 +3,7 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import BrandStore from "stores/BrandStore";
 
 export default class Cards extends React.Component {
- 
+
   constructor() {
     super();
     this.state = {
@@ -18,24 +18,48 @@ export default class Cards extends React.Component {
 
   componentWillMount() {
     BrandStore.on("receivedCards", this.getCards);
+    BrandStore.on("addCards", this.getCards);
+    BrandStore.on("updateCards", this.getCards);
+    BrandStore.on("deleteCards", this.getCards);
     BrandStore.on("receivedContacts", this.getContacts);
+    BrandStore.on("addContacts", this.getContacts);
+    BrandStore.on("updateContacts", this.getContacts);
+    BrandStore.on("deleteContacts", this.getContacts);
     BrandStore.on("receivedLocations", this.getLocations);
+    BrandStore.on("addLocations", this.getLocations);
+    BrandStore.on("updateLocations", this.getLocations);
+    BrandStore.on("deleteLocations", this.getLocations);
     BrandStore.on("receivedSponsors", this.getSponsors);
+    BrandStore.on("addSponsors", this.getSponsors);
+    BrandStore.on("updateSponsors", this.getSponsors);
+    BrandStore.on("deleteSponsors", this.getSponsors);
     BrandStore.on("error", this.showError);
   }
 
   componentWillUnmount() {
     BrandStore.removeListener("receivedCards", this.getCards);
+    BrandStore.removeListener("addCards", this.getCards);
+    BrandStore.removeListener("updateCards", this.getCards);
+    BrandStore.removeListener("deleteCards", this.getCards);
     BrandStore.removeListener("receivedContacts", this.getContacts);
+    BrandStore.removeListener("addContacts", this.getContacts);
+    BrandStore.removeListener("updateContacts", this.getContacts);
+    BrandStore.removeListener("deleteContacts", this.getContacts);
     BrandStore.removeListener("receivedLocations", this.getLocations);
+    BrandStore.removeListener("addLocations", this.getLocations);
+    BrandStore.removeListener("updateLocations", this.getLocations);
+    BrandStore.removeListener("deleteLocations", this.getLocations);
     BrandStore.removeListener("receivedSponsors", this.getSponsors);
+    BrandStore.removeListener("addSponsors", this.getSponsors);
+    BrandStore.removeListener("updateSponsors", this.getSponsors);
+    BrandStore.removeListener("deleteSponsors", this.getSponsors);
     BrandStore.removeListener("error", this.showError);
   }
 
   showError = () => {
     console.log(BrandStore.error)
   }
- 
+
   generateCard = (row) => {
     var updatedCard = {
       id: -1,
@@ -115,10 +139,10 @@ export default class Cards extends React.Component {
 
   deleteContacts = (rowKeys) => {
     for (const key in rowKeys) {
-      BrandStore.deleteContact(rowKeys[key])
+      this.cards = BrandStore.deleteContact(rowKeys[key])
     }
   }
- 
+
   getContacts = () => {
     this.setState({
       contacts: BrandStore.contacts,

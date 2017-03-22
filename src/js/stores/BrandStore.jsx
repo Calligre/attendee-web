@@ -75,12 +75,14 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
+        dispatcher.dispatch({ type: 'CARD_UPDATE', card });
         console.log(response);
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
+
     return this.cards;
   };
 
@@ -96,12 +98,13 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'CARD_ADD', card, id: response.data.id });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
+
     return this.cards;
   };
 
@@ -116,12 +119,13 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'CARD_DELETE', id });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
+
     return this.cards;
   };
 
@@ -157,7 +161,7 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'CONTACT_UPDATE', contacts });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -178,7 +182,7 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'CONTACT_ADD', contact, id: response.data.id });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -198,7 +202,7 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'CONTACT_DELETE', id });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -238,7 +242,7 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'LOCATION_UPDATE', location });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -259,7 +263,7 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'LOCATION_ADD', location, id: response.data.id });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -279,7 +283,7 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'LOCATION_DELETE', id });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -319,7 +323,7 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'SPONSOR_UPDATE', sponsor });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -340,7 +344,7 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'SPONSOR_ADD', sponsor, id: response.data.id });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -360,7 +364,7 @@ class BrandStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'SPONSOR_DELETE', id });
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -403,11 +407,51 @@ class BrandStore extends EventEmitter {
         this.emit('receivedLocations');
         break;
       }
+      case 'LOCATION_UPDATE': {
+        var entry = this.locations.find(c => c.id === action.location.id);
+        Object.assign(entry, action.location);
+        this.emit('updateLocations');
+        break;
+      }
+      case 'LOCATION_ADD': {
+        action.location.id = action.id;
+        this.locations.push(action.location)
+        this.emit('addLocations');
+        break;
+      }
+      case 'LOCATION_DELETE': {
+        let index = this.locations.findIndex(c => c.id === action.id);
+        if (index > -1) {
+          this.locations.splice(index, 1);
+        }
+        this.emit('deleteLocations');
+        break;
+      }
       case 'CONTACT_GET': {
         this.contacts = action.contacts.map((contact) => {
           return contact.attributes;
         });
         this.emit('receivedContacts');
+        break;
+      }
+      case 'CONTACT_UPDATE': {
+        var entry = this.contacts.find(c => c.id === action.contact.id);
+        Object.assign(entry, action.contact);
+        this.emit('updateContacts');
+        break;
+      }
+      case 'CONTACT_ADD': {
+        action.contact.id = action.id;
+        this.contacts.push(action.contact)
+        this.emit('addContacts');
+        break;
+      }
+      case 'CONTACT_DELETE': {
+        let index = this.contacts.findIndex(c => c.id === action.id);
+        if (index > -1) {
+          this.contacts.splice(index, 1);
+        }
+        this.emit('deleteContacts');
         break;
       }
       case 'CARD_GET': {
@@ -417,11 +461,51 @@ class BrandStore extends EventEmitter {
         this.emit('receivedCards');
         break;
       }
+      case 'CARD_UPDATE': {
+        var entry = this.cards.find(c => c.id === action.card.id);
+        Object.assign(entry, action.card);
+        this.emit('updateCards');
+        break;
+      }
+      case 'CARD_ADD': {
+        action.card.id = action.id;
+        this.cards.push(action.card)
+        this.emit('addCards');
+        break;
+      }
+      case 'CARD_DELETE': {
+        let index = this.cards.findIndex(c => c.id === action.id);
+        if (index > -1) {
+          this.cards.splice(index, 1);
+        }
+        this.emit('deleteCards');
+        break;
+      }
       case 'SPONSOR_GET': {
         this.sponsors = action.sponsors.map((sponsor) => {
           return sponsor.attributes;
         });
         this.emit('receivedSponsors');
+        break;
+      }
+      case 'SPONSOR_UPDATE': {
+        var entry = this.sponsors.find(c => c.id === action.sponsor.id);
+        Object.assign(entry, action.sponsor);
+        this.emit('updateSponsors');
+        break;
+      }
+      case 'SPONSOR_ADD': {
+        action.sponsor.id = action.id;
+        this.sponsors.push(action.sponsor)
+        this.emit('addSponsors');
+        break;
+      }
+      case 'SPONSOR_DELETE': {
+        let index = this.sponsors.findIndex(c => c.id === action.id);
+        if (index > -1) {
+          this.sponsors.splice(index, 1);
+        }
+        this.emit('deleteSponsors');
         break;
       }
       case 'BRANDING_SAVED': {
