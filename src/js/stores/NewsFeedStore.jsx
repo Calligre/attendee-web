@@ -175,6 +175,25 @@ class NewsFeedStore extends EventEmitter {
     });
   }
 
+  deletePost(pid) {
+    const postId = pid;
+    $.ajax({
+      type: 'DELETE',
+      url: `${url}/api/social/${postId}`,
+      headers: {
+        Authorization: `Bearer ${AuthService.getToken()}`,
+      },
+      contentType: 'application/json',
+      cache: false,
+      success() {
+        dispatcher.dispatch({ type: 'POST_DELETE', postId });
+      },
+      error(error) {
+        dispatcher.dispatch({ type: 'POST_DELETE_ERROR', error });
+      },
+    });
+  }
+
   postToNewsFeed(data) {
     $.ajax({
       type: 'POST',
@@ -267,7 +286,8 @@ class NewsFeedStore extends EventEmitter {
       }
       case 'FLAGGED_GET': {
         this.dataFetched = true;
-        Array.prototype.push.apply(this.contentFeed.items, action.response.data.posts[0]);
+        // console.log(action);
+        Array.prototype.push.apply(this.flaggedPosts.items, action.response.data.posts[0]);
         this.contentFeed.nextOffset = action.response.data.nextOffset;
         this.contentFeed.count = action.response.data.count;
         this.emit('updated');
@@ -341,6 +361,13 @@ class NewsFeedStore extends EventEmitter {
         }
         break;
       }
+       case 'POST_DELETE': {
+        this.contentFeed.items = this.contentFeed.items.filter(function(item) {
+          return action.postId !== item.id;
+        });
+        this.emit('updated');
+        break;
+      }
       case 'RETWEET': {
         this.emit('retweet');
         break;
@@ -377,6 +404,11 @@ class NewsFeedStore extends EventEmitter {
       case 'POST_UNFLAG_ERROR': {
         this.emit('revert');
         this.error = 'Error unflagging post';
+        this.emit('error');
+        break;
+      }
+      case 'POST_DELETE_ERROR': {
+        this.error = 'Error deleting post';
         this.emit('error');
         break;
       }

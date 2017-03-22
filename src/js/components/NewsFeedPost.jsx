@@ -1,16 +1,22 @@
 import React from 'react';
+import AuthService from 'util/AuthService';
 import NewsFeedStore from 'stores/NewsFeedStore';
 import FaFlag from 'react-icons/lib/fa/flag';
 import FaHeart from 'react-icons/lib/fa/heart';
 import FaRetweet from 'react-icons/lib/fa/retweet';
+import FaTrashO from 'react-icons/lib/fa/trash-o';
+
 
 export default class NewsFeedPost extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = this.props;
+    this.state = Object.assign({}, props);
+    this.state.userId = AuthService.getProfile().user_id;
+
     this.changeFlag = this.changeFlag.bind(this);
     this.changeLike = this.changeLike.bind(this);
+    this.deletePost = this.deletePost.bind(this);
     this.retweet = this.retweet.bind(this);
     this.showImage = this.showImage.bind(this);
   }
@@ -59,6 +65,10 @@ export default class NewsFeedPost extends React.Component {
     }
   }
 
+  deletePost() {
+    NewsFeedStore.deletePost(this.state.id);
+  }
+
   retweet() {
     const retweetText = `"${this.state.text}" (${this.state.poster_name})`;
     NewsFeedStore.setRetweet(retweetText);
@@ -75,10 +85,14 @@ export default class NewsFeedPost extends React.Component {
       like_count,
       media_link,
       poster_icon,
+      poster_id,
       poster_name,
-      text,
       repost,
+      text,
+      userId,
     } = this.state;
+
+    const owner = poster_id === userId ? true : false;
 
     const heartColor = {
       color: current_user_likes ? 'red' : 'inherit',
@@ -87,6 +101,27 @@ export default class NewsFeedPost extends React.Component {
     const flagColor = {
       color: current_user_flagged ? 'darkred' : 'inherit',
     };
+
+    let actions = null;
+    if (owner) {
+      actions = (
+        <FaTrashO
+          className="clickable right-icons no-selection"
+          onClick={this.deletePost}
+          size={20}
+        />
+      );
+    } else {
+      actions = (
+        <FaFlag
+          className="clickable right-icons no-selection"
+          onClick={this.changeFlag}
+          style={flagColor}
+          size={20}
+        />
+      );
+    }
+
 
     let image = null;
     if (media_link && media_link !== '') {
@@ -104,12 +139,7 @@ export default class NewsFeedPost extends React.Component {
         </div>
         <div className="post-text inline">
           <div className="right-options">
-            <FaFlag
-              className="clickable flag no-selection"
-              onClick={this.changeFlag}
-              style={flagColor}
-              size={20}
-            />
+            {actions}
           </div>
           <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
