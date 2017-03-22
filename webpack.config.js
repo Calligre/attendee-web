@@ -1,12 +1,12 @@
-var debug = process.env.NODE_ENV !== "production";
+var debug = process.env.NODE_ENV === "debug" || !process.env.NODE_ENV;
+var prod = process.env.NODE_ENV === "prod";
 var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-
 module.exports = {
   context: path.resolve(__dirname, "src"),
-  devtool: debug ? "inline-sourcemap" : null,
+  devtool: prod ? null : "inline-sourcemap",
   entry: {
     attendee: "attendee.client",
     organizer: "organizer.client",
@@ -40,6 +40,11 @@ module.exports = {
     new ExtractTextPlugin('dist/styles/main.css', { allChunks: true }),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production'),
+      },
+    }),
+    new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: !prod }),
   ],
 };
