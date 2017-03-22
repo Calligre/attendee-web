@@ -1,0 +1,55 @@
+#brandingForm {
+  float: left;
+  width: 50%;
+  padding: 30px;
+  
+  .field {
+    width: 100%;
+    text-align: right;
+    margin: 10px 0;
+
+    .label {
+      color: black;
+    }
+
+    input, textarea {
+      width: 55%;
+      font-size: 12pt;
+    }
+  }
+}
+
+#preview {
+  float: right;
+  width: 50%;
+  padding: 30px;
+
+  #previewNav {
+    padding: 20px 0;
+  }
+
+  #logo {
+    width: 100%;
+    max-height: 125px;
+  }
+
+  #altLogoPreviews {
+    margin: 50px 0;
+
+    img {
+      width: 100px;
+    }
+  }
+
+  #eventPreview {
+    background-size: cover;
+    background-image: url('http://kingofwallpapers.com/grey-background/grey-background-005.jpg');
+    background-position: center;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: white;
+    font-size: 20pt;
+    font-weight: bold;
+    height: 200px;
+    padding: 130px 0 0 0;
+  }
+}

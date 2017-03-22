@@ -15,6 +15,9 @@ export default class Card extends React.Component {
     const { item } = this.props;
     const { type } = this.state;
 
+    let buttonStyle = this.props.buttonStyle || {};
+    let headerStyle = this.props.headerStyle || {};
+
     switch (type) {
       case 'event':
         renderedContent = <Event key={item.id} {...item} />;
@@ -23,13 +26,18 @@ export default class Card extends React.Component {
         renderedContent = <div className="contentCard cardContent">{item}</div>;
         break;
       case 'contact':
-        renderedContent = <ContactCard data={item} />;
+        renderedContent = <ContactCard data={item} headerStyle={headerStyle}/>;
         break;
       case 'location':
-        renderedContent = <LocationCard data={item} />;
+        renderedContent = <LocationCard data={item} headerStyle={headerStyle} buttonStyle={buttonStyle}/>;
         break;
       case 'download':
-        renderedContent = <DownloadCard data={item} />;
+        renderedContent = <DownloadCard data={item} headerStyle={headerStyle} buttonStyle={buttonStyle}/>;
+        break;
+      case 'social':
+        let facebook = this.props.facebook || null;
+        let twitter = this.props.twitter || null;
+        renderedContent = <SocialCard facebook={facebook} twitter={twitter} headerStyle={headerStyle}/>;
         break;
       default:
         return null;
@@ -55,7 +63,7 @@ var ContactCard = React.createClass({
     });
     return (
       <div className="contactCard cardContent">
-        <h2 className="primaryText">Important Contacts</h2>
+        <h2 className="primaryText" style={this.props.headerStyle}>Important Contacts</h2>
         {contactNodes}
       </div>
     );
@@ -74,7 +82,7 @@ var LocationCard = React.createClass({
     });
     return (
       <div className="locationCard cardContent">
-        <h2 className="primaryText">Locations</h2>
+        <h2 className="primaryText" style={this.props.headerStyle}>Locations</h2>
         {locationNodes}
       </div>
     );
@@ -85,10 +93,30 @@ var DownloadCard = React.createClass({
   render: function() {
     return (
       <div className="downloadCard cardContent">
-        <h2 className="primaryText">{this.props.data.name}</h2>
+        <h2 className="primaryText" style={this.props.headerStyle}>{this.props.data.name}</h2>
         <a href={this.props.data.link} download>
-          <button className="secondaryBackground">Download</button>
+          <button className="secondaryBackground" style={this.props.buttonStyle}>Download</button>
         </a>
+      </div>
+    );
+  }
+});
+
+var SocialCard = React.createClass({
+  render: function() {
+    let facebookLink = null;
+    let twitterLink = null;
+    if (this.props.facebook) {
+      facebookLink = <a href={this.props.facebook} className="socialLink"><img src="https://cdn4.iconfinder.com/data/icons/social-media-2110/64/Facebook-01-128.png"/> </a>;
+    }
+    if (this.props.twitter) {
+      twitterLink = <a href={this.props.twitter} className="socialLink"><img src="https://cdn4.iconfinder.com/data/icons/social-media-2110/64/Twitter-01-128.png"/> </a>;
+    }
+    return (
+      <div className="socialCard cardContent">
+        <h2 className="primaryText" style={this.props.headerStyle}>Connect With Us</h2>
+        {facebookLink}
+        {twitterLink}
       </div>
     );
   }
