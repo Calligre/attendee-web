@@ -5,6 +5,7 @@ import MdHighlightRemove from 'react-icons/lib/md/highlight-remove';
 import MdPhotoCamera from 'react-icons/lib/md/photo-camera';
 import TiSocialFacebook from 'react-icons/lib/ti/social-facebook';
 import TiSocialTwitter from 'react-icons/lib/ti/social-twitter';
+import PreferenceStore from 'stores/PreferenceStore';
 
 export default class NewsFeed extends React.Component {
 
@@ -28,17 +29,25 @@ export default class NewsFeed extends React.Component {
       // TODO: HOW CAN I GET THESE? (If user is integrated into social media channels)
       twIntegration: true,
       fbIntegration: true,
+      preferences: PreferenceStore.getDefaults(),
     };
+    PreferenceStore.loadAll();
   }
 
   componentWillMount() {
     NewsFeedStore.on('retweet', this.getRetweetText);
     NewsFeedStore.on('post', this.setPostText);
+
+    PreferenceStore.on('loaded', this.loadPreferences);
+    PreferenceStore.on('error', this.showPreferenceError);
   }
 
   componentWillUnmount() {
     NewsFeedStore.removeListener('retweet', this.getRetweetText);
     NewsFeedStore.removeListener('post', this.setPostText);
+
+    PreferenceStore.removeListener('loaded', this.loadPreferences);
+    PreferenceStore.removeListener('error', this.showPreferenceError);
   }
 
   onPhotoDrop(files) {
@@ -66,6 +75,14 @@ export default class NewsFeed extends React.Component {
     });
   }
 
+  loadPreferences = () => {
+    this.setState({ preferences: PreferenceStore.preferences });
+  }
+
+  showPreferenceError = () => {
+    console.error(PreferenceStore.error);
+  }
+
   changeText(event) {
     this.setState({
       text: event.target.value,
@@ -78,7 +95,7 @@ export default class NewsFeed extends React.Component {
         fbPost: !this.state.fbPost,
       });
     } else {
-      console.log('TODO: Integrate Facebook window');
+      console.error('TODO: Integrate Facebook window');
       // TODO: Open add Facebook window and change state on success
     }
   }
@@ -89,7 +106,7 @@ export default class NewsFeed extends React.Component {
         twPost: !this.state.twPost,
       });
     } else {
-      console.log('TODO: Integrate Twitter window');
+      console.error('TODO: Integrate Twitter window');
       // TODO: Open add Twitter window and change state on success
     }
   }
@@ -119,6 +136,7 @@ export default class NewsFeed extends React.Component {
       text,
       twIntegration,
       twPost,
+      preferences,
     } = this.state;
 
     const placeholder = 'Post to news feed...';
@@ -132,7 +150,7 @@ export default class NewsFeed extends React.Component {
           <div className="preview-box inline">
             <MdHighlightRemove className="photo-delete" onClick={deletePhoto} size={24} />
             <div className="img-container">
-              <span className="helper inline" /><img className="border inline" src={preview} />
+              <span className="helper inline" /><img className="border inline" alt="post" src={preview} />
             </div>
           </div>
         );
@@ -163,24 +181,28 @@ export default class NewsFeed extends React.Component {
                   value={text}
                 />
                 <div className="soc-submit inline">
-                  <div className="inline">
-                    <button
-                      type="button"
-                      className={`btn soc ${facebookStatus}`}
-                      onClick={this.fbToggle}
-                    >
-                      <TiSocialFacebook size={34} />
-                    </button>
-                  </div>
-                  <div className="inline">
-                    <button
-                      type="button"
-                      className={`btn soc ${twitterStatus}`}
-                      onClick={this.twToggle}
-                    >
-                      <TiSocialTwitter size={34} />
-                    </button>
-                  </div>
+                  { preferences.facebook &&
+                    <div className="inline">
+                      <button
+                        type="button"
+                        className={`btn soc ${facebookStatus}`}
+                        onClick={this.fbToggle}
+                      >
+                        <TiSocialFacebook size={34} />
+                      </button>
+                    </div>
+                  }
+                  { preferences.twitter &&
+                    <div className="inline">
+                      <button
+                        type="button"
+                        className={`btn soc ${twitterStatus}`}
+                        onClick={this.twToggle}
+                      >
+                        <TiSocialTwitter size={34} />
+                      </button>
+                    </div>
+                  }
                   <button
                     type="button"
                     className="submit-form btn btn-primary secondaryBackground"

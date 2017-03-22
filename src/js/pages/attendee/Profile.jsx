@@ -1,9 +1,9 @@
-import React, { PropTypes } from "react";
+import React, { PropTypes } from 'react';
 import $ from 'jquery';
 
 import LinkedAccountsList from 'components/LinkedAccountsList';
-import PeopleStore from "stores/PeopleStore";
-import AuthService from "util/AuthService"
+import PeopleStore from 'stores/PeopleStore';
+import AuthService from 'util/AuthService';
 import Dropzone from 'react-dropzone';
 import Clear from 'react-icons/lib/md/clear';
 import Edit from 'react-icons/lib/md/mode-edit';
@@ -12,7 +12,7 @@ export default class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: {id: 0},
+      profile: { id: 0 },
       preview: '',
       uploadInProgress: false,
       newPhoto: null,
@@ -23,42 +23,40 @@ export default class Profile extends React.Component {
     this.cancelDrop = this.cancelDrop.bind(this);
     PeopleStore.getAll();
     AuthService.on('profile_updated', (newProfile) => {
-      this.getProfile()
-    })
+      this.getProfile();
+    });
   }
 
   componentWillMount() {
-    PeopleStore.on("received", this.getProfile);
-    PeopleStore.on("error", this.showError);
+    PeopleStore.on('received', this.getProfile);
+    PeopleStore.on('error', this.showError);
   }
 
   componentWillUnmount() {
-    PeopleStore.removeListener("received", this.getProfile);
-    PeopleStore.removeListener("error", this.showError);
+    PeopleStore.removeListener('received', this.getProfile);
+    PeopleStore.removeListener('error', this.showError);
   }
 
   getProfile() {
     if (!AuthService.getProfile().identities) {
-      return
+      return;
     }
-    var id = AuthService.getCurrentUserId();
-    if (this.props.params.hasOwnProperty("id")) {
+    let id = AuthService.getCurrentUserId();
+    if (this.props.params.hasOwnProperty('id')) {
       id = this.props.params.id;
     }
-    var profiles = PeopleStore.people.filter((profile) => {
-      return profile.id == id;
-    })
+    const profiles = PeopleStore.people.filter(profile => profile.id === id);
 
     this.setState({
       profile: profiles[0],
       preview: profiles[0].photo,
     });
 
-    $(".editableContainer").each(function(){
-      var container = $(this);
-      container.keyup(function(e) {
-        var field = $(this);
-        if (field.text().length == 0) {
+    $('.editableContainer').each(function () {
+      const container = $(this);
+      container.keyup(function (e) {
+        const field = $(this);
+        if (field.text().length === 0) {
           field.css('border-color', 'red');
           $('.submitChanges').prop('disabled', true);
         } else {
@@ -69,7 +67,7 @@ export default class Profile extends React.Component {
     });
   }
 
-  showError(){
+  showError() {
     console.log(PeopleStore.error);
   }
 
@@ -77,22 +75,22 @@ export default class Profile extends React.Component {
     this.setState({
       preview: files[0].preview,
       newPhoto: files[0],
-      uploadInProgress: true
-    })
+      uploadInProgress: true,
+    });
   }
-  
+
   cancelDrop(e) {
     e.stopPropagation();
     this.setState({
       preview: this.state.profile.photo,
       newPhoto: null,
-      uploadInProgress: false
+      uploadInProgress: false,
     });
   }
 
   submitChanges() {
-    var form = $('.profile');
-    var profile = {
+    const form = $('.profile');
+    const profile = {
       id: this.state.profile.id,
       description: form.find('.description').text(),
       organization: form.find('.organization').text(),
@@ -107,37 +105,38 @@ export default class Profile extends React.Component {
   renderLinkedAccountsList(myProfile) {
     if (myProfile) {
       return (
-        <LinkedAccountsList profile={AuthService.getProfile()}></LinkedAccountsList>
-      )
+        <LinkedAccountsList profile={AuthService.getProfile()} />
+      );
     }
-    return null
+    return null;
   }
 
   render() {
     if (this.state.profile.private || !AuthService.getProfile().identities) {
-      return (<div><h2 className="primaryText">Loading</h2></div>)
+      return (<div><h2 className="primaryText">Loading</h2></div>);
     }
 
-    const {id, first_name, last_name, organization, points, description} = this.state.profile;
+    const { id, first_name, last_name, organization, points, description, rank } = this.state.profile;
 
     // TODO: determine if this is my profile or not
-    const myProfile = id == AuthService.getCurrentUserId();
+    const myProfile = id === AuthService.getCurrentUserId();
 
-    const displayCancel = myProfile && this.state.uploadInProgress ? "visible" : "hidden";
-    const myProfileClass = myProfile ? "myProfile" : "";
-    
+    const displayCancel = myProfile && this.state.uploadInProgress ? 'visible' : 'hidden';
+    const myProfileClass = myProfile ? 'myProfile' : '';
+
     const buttonIcon = React.createElement(Clear, null);
     const editIcon = React.createElement(Edit, null);
 
     return (
-      <div className={"profile " + myProfileClass}>
-        <Dropzone className='dropzone' onDrop={this.onDrop} multiple={false} disableClick={!myProfile}>
-          <img src={this.state.preview}/>
-          <button className={"secondaryBackground cancel " + displayCancel}  onClick={this.cancelDrop}>{buttonIcon}</button>
+      <div className={`profile ${myProfileClass}`}>
+        <Dropzone className="dropzone" onDrop={this.onDrop} multiple={false} disableClick={!myProfile}>
+          <img src={this.state.preview} />
+          <button className={`secondaryBackground cancel ${displayCancel}`} onClick={this.cancelDrop}>{buttonIcon}</button>
           <p className="label">Upload new photo</p>
         </Dropzone>
         <h2 className="primaryText">{first_name} {last_name}</h2>
         <h4>Points: {points}</h4>
+        <h4>Rank: {rank}</h4>
         {this.renderLinkedAccountsList(myProfile)}
         <div className="editableContainer profileItem">
           <h3 contentEditable={myProfile} className="organization editable">{organization}</h3>

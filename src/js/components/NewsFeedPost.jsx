@@ -56,6 +56,7 @@ export default class NewsFeedPost extends React.Component {
       poster_icon,
       poster_name,
       text,
+      repost,
     } = this.state;
 
     const heartColor = {
@@ -74,7 +75,7 @@ export default class NewsFeedPost extends React.Component {
     return (
       <div className="newsfeed-post">
         <div className="user-photo-container inline">
-          <img src={poster_icon} className="user-photo no-selection" />
+          <img alt="poster" src={poster_icon} className="user-photo no-selection" />
         </div>
         <div className="post-text inline">
           {imageText}
@@ -88,7 +89,10 @@ export default class NewsFeedPost extends React.Component {
               size={20}
             />
             <span className="like-count no-selection">{like_count}</span>
-            <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28} />
+            { repost &&
+              <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28} />
+            }
+            {imageText}
           </div>
         </div>
       </div>
