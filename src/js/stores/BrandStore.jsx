@@ -39,11 +39,11 @@ class BrandStore extends EventEmitter {
         dispatcher.dispatch({ type: 'BRANDING_GET', branding: response.data.attributes });
       },
       error(error) {
-        console.log(`${error.status}: ${error.statusText}`);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       },
     });
   }
-  
+
   getCards = () => {
     $.ajax({
       url: `${url}/api/info/card`,
@@ -58,11 +58,11 @@ class BrandStore extends EventEmitter {
         dispatcher.dispatch({ type: 'CARD_GET', cards: response.data });
       },
       error(error) {
-        console.log(`${error.status}: ${error.statusText}`);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       },
     });
   }
- 
+
   updateCard(card){
     $.ajax({
       url: "https://dev.calligre.com/api/info/card/" + card.id,
@@ -78,7 +78,7 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.cards;
@@ -99,7 +99,7 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.cards;
@@ -119,7 +119,7 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.cards;
@@ -140,11 +140,11 @@ class BrandStore extends EventEmitter {
         dispatcher.dispatch({ type: 'CONTACT_GET', contacts: response.data });
       },
       error(error) {
-        console.log(`${error.status}: ${error.statusText}`);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       },
     });
   }
- 
+
   updateContact(contact){
     $.ajax({
       url: "https://dev.calligre.com/api/info/contact/" + contact.id,
@@ -160,12 +160,12 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.events;
   };
- 
+
   addContact(contact){
     $.ajax({
       url: "https://dev.calligre.com/api/info/contact",
@@ -181,7 +181,7 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.contacts;
@@ -201,7 +201,7 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.contacts;
@@ -221,11 +221,11 @@ class BrandStore extends EventEmitter {
         dispatcher.dispatch({ type: 'LOCATION_GET', locations: response.data });
       },
       error(error) {
-        console.log(`${error.status}: ${error.statusText}`);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       },
     });
   }
-  
+
   updateLocation(location){
     $.ajax({
       url: "https://dev.calligre.com/api/info/location/" + location.id,
@@ -241,12 +241,12 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.events;
   };
-  
+
   addLocation(location){
     $.ajax({
       url: "https://dev.calligre.com/api/info/location",
@@ -262,7 +262,7 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.locations;
@@ -282,7 +282,7 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.locations;
@@ -302,11 +302,11 @@ class BrandStore extends EventEmitter {
         dispatcher.dispatch({ type: 'SPONSOR_GET', sponsors: response.data });
       },
       error(error) {
-        console.log(`${error.status}: ${error.statusText}`);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       },
     });
   }
-  
+
   updateSponsor(sponsor){
     $.ajax({
       url: "https://dev.calligre.com/api/info/sponsor/" + sponsor.id,
@@ -322,12 +322,12 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.events;
   };
-  
+
   addSponsor(sponsor){
     $.ajax({
       url: "https://dev.calligre.com/api/info/sponsor",
@@ -343,7 +343,7 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.sponsors;
@@ -363,7 +363,7 @@ class BrandStore extends EventEmitter {
         console.log(response);
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       }
     });
     return this.sponsors;
@@ -384,7 +384,7 @@ class BrandStore extends EventEmitter {
         dispatcher.dispatch({ type: 'BRANDING_SAVED' });
       },
       error(error) {
-        console.log(`${error.status}: ${error.statusText}`);
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       },
     });
   }
@@ -428,8 +428,9 @@ class BrandStore extends EventEmitter {
         this.emit('savedBranding');
         break;
       }
-      case 'ERROR': {
+      case 'BRAND_ERROR': {
         this.error = action.error;
+        console.log(`${action.error.status}: ${action.error.statusText}`);
         this.emit('error');
         break;
       }
