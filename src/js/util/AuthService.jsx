@@ -54,7 +54,7 @@ class AuthService extends EventEmitter {
 
   _createUser() {
     const profile = this.getProfile();
-    const id = profile.user_id;
+    const id = this.getCurrentUserId();
     $.ajax({
       url: "https://dev.calligre.com/api/user/" + id,
       dataType: "json",
@@ -65,7 +65,7 @@ class AuthService extends EventEmitter {
       success: function(response){},
       error: function(error){
         const userData = {
-          id: profile.identities[0].user_id,
+          id: this.getCurrentUserId(),
           first_name: profile.given_name || profile.name.split(" ")[0],
           last_name: profile.family_name || profile.name.split(" ")[profile.name.split(" ").length - 1],
           email: profile.email || "test@example.com",
@@ -107,7 +107,7 @@ class AuthService extends EventEmitter {
   }
 
   getCurrentUserId(){
-    return this.getProfile().identities[0].user_id;
+    return this.getProfile().user_id;
   }
 
   setToken(idToken){
@@ -133,7 +133,7 @@ class AuthService extends EventEmitter {
       'Authorization': 'Bearer ' + this.getToken()
     }
 
-    const userId = this.getProfile().user_id
+    const userId = this.getCurrentUserId();
     return fetch(`https://${this.domain}/api/v2/users/${userId}/${url}`, {
       headers,
       ...options
