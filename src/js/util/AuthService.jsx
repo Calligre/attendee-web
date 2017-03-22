@@ -54,7 +54,7 @@ class AuthService extends EventEmitter {
 
   _createUser() {
     const profile = this.getProfile();
-    const id = profile.identities[0].user_id
+    const id = profile.user_id;
     $.ajax({
       url: "https://dev.calligre.com/api/user/" + id,
       dataType: "json",
