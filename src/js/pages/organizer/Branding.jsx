@@ -1,11 +1,12 @@
 import AuthService from "util/AuthService";
+import UrlService from 'util/UrlService';
 import BrandStore from "stores/BrandStore";
 import Card from "components/Card";
 import dispatcher from "dispatcher";
 import React from "react";
 
 var moment = require('moment');
-const url = "https://dev.calligre.com";
+const url = UrlService.getUrl();
 const $ = require("jquery");
 
 export default class Branding extends React.Component {

@@ -56,9 +56,10 @@
     "eslint-plugin-react": "6.9.0"
   },
   "scripts": {
-    "organizer-dev": "webpack-dev-server --content-base build/organizer --port 8080",
-    "attendee-dev": "webpack-dev-server --content-base build/attendee --port 8081",
-    "build": "webpack"
+    "organizer-dev": "webpack-dev-server --content-base build/organizer --port 8080 --define process.env.NODE_ENV='\"debug\"'",
+    "attendee-dev": "webpack-dev-server --content-base build/attendee --port 8081 --define process.env.NODE_ENV='\"debug\"'",
+    "build-prod": "webpack --define process.env.NODE_ENV='\"production\"'",
+    "build-stage": "webpack --define process.env.NODE_ENV='\"debug\"'"
   },
   "author": "",
   "license": "ISC"

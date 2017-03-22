@@ -11,8 +11,11 @@ import Login from 'pages/Login';
 
 import AppHistory from 'util/AppHistory';
 import AuthService from 'util/AuthService';
+import UrlService from 'util/UrlService';
 
 require('!style!css!sass!../sass/main.scss');
+
+const apiBaseURL = UrlService.getUrl();
 
 const app = document.getElementById('app');
 const redirectCallback = () => {
@@ -41,7 +44,7 @@ const redirectAfterLogin = () => {
 ReactDOM.render(
   <Router history={AppHistory}>
     <Route path="/" component={Layout}>
-      <IndexRoute apiBaseURL="https://dev.calligre.com/api" component={Branding} onEnter={requireAuth} />
+      <IndexRoute apiBaseURL={UrlService.getUrl()} component={Branding} onEnter={requireAuth} />
       <Route path="calendar" component={Calendar} onEnter={requireAuth} />
       <Route path="preferences" component={Preferences} onEnter={requireAuth} />
       <Route path="surveys" component={Surveys} onEnter={requireAuth} />

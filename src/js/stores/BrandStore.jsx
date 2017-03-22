@@ -1,10 +1,12 @@
 import { EventEmitter } from 'events';
 import AuthService from 'util/AuthService';
+import UrlService from 'util/UrlService';
+
 import dispatcher from 'dispatcher';
 
 const $ = require('jquery');
 
-const url = 'https://dev.calligre.com';
+const url = UrlService.getUrl();
 
 class BrandStore extends EventEmitter {
   constructor() {
@@ -19,7 +21,7 @@ class BrandStore extends EventEmitter {
 
   getBranding() {
     $.ajax({
-      url: `${url}/api/info`,
+      url: `${url}/info`,
       dataType: 'json',
       type: 'GET',
       headers: {
@@ -35,10 +37,10 @@ class BrandStore extends EventEmitter {
       },
     });
   }
-  
+
   getCards() {
     $.ajax({
-      url: `${url}/api/info/card`,
+      url: `${url}/info/card`,
       dataType: 'json',
       type: 'GET',
       headers: {
@@ -57,7 +59,7 @@ class BrandStore extends EventEmitter {
 
   getContacts() {
     $.ajax({
-      url: `${url}/api/info/contact`,
+      url: `${url}/info/contact`,
       dataType: 'json',
       type: 'GET',
       headers: {
@@ -76,7 +78,7 @@ class BrandStore extends EventEmitter {
 
   getLocations() {
     $.ajax({
-      url: `${url}/api/info/location`,
+      url: `${url}/info/location`,
       dataType: 'json',
       type: 'GET',
       headers: {
@@ -95,7 +97,7 @@ class BrandStore extends EventEmitter {
 
   saveBranding(data) {
     $.ajax({
-      url: `${url}/api/info`,
+      url: `${url}/info`,
       dataType: 'json',
       contentType: 'application/json',
       data: JSON.stringify(data),

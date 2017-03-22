@@ -1,11 +1,12 @@
 import { EventEmitter } from 'events';
 import AuthService from 'util/AuthService';
+import UrlService from 'util/UrlService';
 
 import dispatcher from 'dispatcher';
 
 const $ = require('jquery');
 
-const url = 'https://dev.calligre.com';
+const url = UrlService.getUrl();
 
 
 class SurveyStore extends EventEmitter {
@@ -17,7 +18,7 @@ class SurveyStore extends EventEmitter {
 
   getAll() {
     $.ajax({
-      url: `${url}/api/survey`,
+      url: `${url}/survey`,
       dataType: 'json',
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
@@ -35,7 +36,7 @@ class SurveyStore extends EventEmitter {
 
   create(survey) {
     $.ajax({
-      url: `${url}/api/survey`,
+      url: `${url}/survey`,
       dataType: 'json',
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
@@ -56,7 +57,7 @@ class SurveyStore extends EventEmitter {
 
   update(survey) {
     $.ajax({
-      url: `${url}/api/survey/${survey.id}`,
+      url: `${url}/survey/${survey.id}`,
       dataType: 'json',
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
@@ -77,7 +78,7 @@ class SurveyStore extends EventEmitter {
 
   delete(id) {
     $.ajax({
-      url: `${url}/api/survey/${id}`,
+      url: `${url}/survey/${id}`,
       dataType: 'json',
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,

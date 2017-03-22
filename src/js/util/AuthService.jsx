@@ -3,9 +3,12 @@ import { isTokenExpired } from './jwtHelper'
 import Auth0Lock from 'auth0-lock'
 import * as config from 'auth0.config.js';
 import PeopleStore from 'stores/PeopleStore'
+import UrlService from 'util/UrlService';
 
 var $ = require("jquery");
-var url = "https://dev.calligre.com"
+
+const url = UrlService.getUrl();
+
 
 class AuthService extends EventEmitter {
   constructor(clientId, domain) {
@@ -56,7 +59,7 @@ class AuthService extends EventEmitter {
     const profile = this.getProfile();
     const id = profile.identities[0].user_id
     $.ajax({
-      url: "https://dev.calligre.com/api/user/" + id,
+      url: `${url}/user/${id}`,
       dataType: "json",
       headers: {
         "Authorization": "Bearer " + this.getToken()

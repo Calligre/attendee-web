@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import AuthService from 'util/AuthService';
+import UrlService from 'util/UrlService';
 
 import dispatcher from 'dispatcher';
 
@@ -7,7 +8,7 @@ const $ = require('jquery');
 const randomColor = require('randomcolor');
 
 const streamMap = {};
-const url = 'https://dev.calligre.com';
+const url = UrlService.getUrl();
 
 
 class EventStore extends EventEmitter {
@@ -21,7 +22,7 @@ class EventStore extends EventEmitter {
 
   getStreams() {
     $.ajax({
-      url: `${url}/api/stream`,
+      url: `${url}/stream`,
       dataType: 'json',
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
@@ -40,7 +41,7 @@ class EventStore extends EventEmitter {
 
   getAll() {
     $.ajax({
-      url: `${url}/api/event`,
+      url: `${url}/event`,
       dataType: 'json',
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
@@ -49,7 +50,7 @@ class EventStore extends EventEmitter {
       success(response) {
         const events = response.data;
         $.ajax({
-          url: `${url}/api/user/${AuthService.getCurrentUserId()}/subscription`,
+          url: `${url}/user/${AuthService.getCurrentUserId()}/subscription`,
           dataType: 'json',
           headers: {
             Authorization: `Bearer ${AuthService.getToken()}`,
@@ -73,7 +74,7 @@ class EventStore extends EventEmitter {
 
   updateEvent(event){
     $.ajax({
-      url: "https://dev.calligre.com/api/event/" + event.id,
+      url: `${url}/event/${event.id}`,
       data : JSON.stringify(event),
       type : 'PATCH',
       contentType : 'application/json',
@@ -94,7 +95,7 @@ class EventStore extends EventEmitter {
 
   addEvent(event){
     $.ajax({
-      url: "https://dev.calligre.com/api/event",
+      url: `${url}/event`,
       data : JSON.stringify(event),
       type : 'POST',
       contentType : 'application/json',
@@ -115,7 +116,7 @@ class EventStore extends EventEmitter {
 
   deleteEvent(id){
     $.ajax({
-      url: "https://dev.calligre.com/api/event/" + id,
+      url: `${url}/event/${id}`,
       type : 'DELETE',
       contentType : 'application/json',
       processData: false,
@@ -135,7 +136,7 @@ class EventStore extends EventEmitter {
 
   subscribeToEvent(id){
     $.ajax({
-      url: `${url}/api/user/${AuthService.getCurrentUserId()}/subscription`,
+      url: `${url}/user/${AuthService.getCurrentUserId()}/subscription`,
       type: 'POST',
       data: JSON.stringify({ event_id: id }),
       contentType: 'application/json',
@@ -156,7 +157,7 @@ class EventStore extends EventEmitter {
 
   unsubscribeToEvent(id) {
     $.ajax({
-      url: `${url}/api/user/${AuthService.getCurrentUserId()}/subscription/${id}`,
+      url: `${url}/user/${AuthService.getCurrentUserId()}/subscription/${id}`,
       type: 'DELETE',
       dataType: 'json',
       headers: {
