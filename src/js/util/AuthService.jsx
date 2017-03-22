@@ -59,7 +59,7 @@ class AuthService extends EventEmitter {
     const profile = this.getProfile();
     const id = profile.identities[0].user_id
     $.ajax({
-      url: `${url}/id`,
+      url: `${url}/user/${id}`,
       dataType: "json",
       headers: {
         "Authorization": "Bearer " + this.getToken()
