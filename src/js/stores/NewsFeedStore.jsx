@@ -286,7 +286,7 @@ class NewsFeedStore extends EventEmitter {
       }
       case 'FLAGGED_GET': {
         this.dataFetched = true;
-        // console.log(action);
+        console.log(action);
         Array.prototype.push.apply(this.flaggedPosts.items, action.response.data.posts[0]);
         this.contentFeed.nextOffset = action.response.data.nextOffset;
         this.contentFeed.count = action.response.data.count;

@@ -9,6 +9,8 @@ import Cards from 'pages/organizer/Cards';
 import Preferences from 'pages/organizer/Preferences';
 import Surveys from 'pages/organizer/Surveys';
 import Notifications from 'pages/organizer/Notifications';
+import Moderation from 'pages/organizer/Moderation';
+>>>>>>> Base Organizer moderation page
 import Login from 'pages/Login';
 
 import AppHistory from 'util/AppHistory';
@@ -52,6 +54,7 @@ ReactDOM.render(
       <Route path="preferences" component={Preferences} onEnter={requireAuth} />
       <Route path="surveys" component={Surveys} onEnter={requireAuth} />
       <Route path="notifications" component={Notifications} onEnter={requireAuth} />
+      <Route path="moderation" component={Moderation} onEnter={requireAuth} />
       <Route path="login" component={Login} />
       <Route path="access_token=:token" component={Login} />
     </Route>
