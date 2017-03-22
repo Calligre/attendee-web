@@ -18,11 +18,8 @@
     "css-loader": "0.23.1",
     "extract-text-webpack-plugin": "1.0.1",
     "flux": "2.1.1",
-    "history": "1.17.0",
-    "immutable": "^3.8.1",
     "jquery": "3.1.1",
     "jwt-decode": "2.1.0",
-    "lodash": "4.17.4",
     "moment": "2.17.1",
     "node-sass": "3.13.1",
     "randomcolor": "0.4.4",
@@ -38,13 +35,9 @@
     "react-search-input": "0.10.4",
     "react-select": "1.0.0-rc.3",
     "react-social-icons": "2.5.1",
-    "remarkable": "1.7.1",
     "sass-loader": "4.1.1",
     "style-loader": "0.13.1",
-    "toastr": "^2.1.2",
-    "util": "^0.10.3",
-    "webpack": "1.14.0",
-    "webpack-dev-server": "1.16.3"
+    "webpack": "1.14.0"
   },
   "devDependencies": {
     "babel-eslint": "7.1.0",
@@ -53,7 +46,8 @@
     "eslint-config-airbnb": "13.0.0",
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-jsx-a11y": "2.2.3",
-    "eslint-plugin-react": "6.9.0"
+    "eslint-plugin-react": "6.9.0",
+    "webpack-dev-server": "1.16.3"
   },
   "scripts": {
     "organizer-dev": "NODE_ENV=debug webpack-dev-server --content-base build/organizer --port 8080",
