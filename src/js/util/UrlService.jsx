@@ -1,6 +1,6 @@
 class UrlService {
   constructor() {
-    this.url = (process.env.NODE_ENV === 'develop') ? 'https://dev.calligre.com/api' : location.origin + '/api';
+    this.url = (process.env.NODE_ENV === 'debug') ? 'https://dev.calligre.com/api' : location.origin + '/api';
   }
 
   getUrl() {

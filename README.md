@@ -12,8 +12,12 @@ It will deploy to localhost:8080
 ```npm run attendee-dev```
 It will deploy to localhost:8081
 
-### Run prod server:
-```node_modules/forever/bin/forever start . prod```
+### Build prod code:
+```npm run build-prod```
+
+### Build staging code:
+```npm run build-stage```
+
 
 #### [localhost:8080](http://localhost:8080)
 #### [localhost:8081](http://localhost:8081)
