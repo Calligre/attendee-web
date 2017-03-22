@@ -1,6 +1,5 @@
 import React from "react";
 var $ = require('jquery');
-var _ = require('lodash');
 
 import BroadcastMessage from "components/BroadcastMessage";
 import EventStore from "stores/EventStore";
