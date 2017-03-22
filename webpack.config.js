@@ -38,6 +38,7 @@ module.exports = {
   },
   plugins: debug ? [] : [
     new ExtractTextPlugin('dist/styles/main.css', { allChunks: true }),
+    new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
@@ -45,6 +46,21 @@ module.exports = {
         NODE_ENV: JSON.stringify('production'),
       },
     }),
-    new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: !prod }),
+    new webpack.optimize.UglifyJsPlugin({
+      comments: false,
+      compress: {
+        booleans: true,
+        conditionals: true,
+        dead_code: true,
+        drop_console: true,
+        drop_debugger: true,
+        evaluate: true,
+        sequences: true,
+        unused: true,
+        warnings: false,
+      },
+      mangle: false,
+      sourcemap: !prod,
+    }),
   ],
 };
