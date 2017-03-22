@@ -50,6 +50,7 @@ BrandStore.on('receivedBranding', () => {
   myStyle.insertRule(".primaryBackground { background-color: " + branding.color_primary + " !important }", 0);
   myStyle.insertRule(".secondaryText { color: " + branding.color_secondary + " !important }", 0);
   myStyle.insertRule(".secondaryBackground { background-color: " + branding.color_secondary + " !important }", 0);
+  myStyle.insertRule(".nameContainer { background-image: url('" + branding.background_logo + "')!important }", 0);
 });
 BrandStore.getBranding();
 

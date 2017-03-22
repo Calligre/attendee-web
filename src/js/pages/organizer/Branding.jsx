@@ -22,6 +22,7 @@ export default class Branding extends React.Component {
       color_secondary: '#000000',
       logo: '',
       logo_square: '',
+      background_logo: '',
       icon: '',
       facebook: '',
       twitter: '',
@@ -55,6 +56,7 @@ export default class Branding extends React.Component {
       color_secondary: this.state.color_secondary,
       logo: this.state.logo,
       logo_square: this.state.logo_square,
+      background_logo: this.state.background_logo,
       icon: this.state.icon,
       facebook: this.state.facebook,
       twitter: this.state.twitter,
@@ -85,6 +87,7 @@ export default class Branding extends React.Component {
                 <div> Secondary Color: <input type="color" value={this.state.color_secondary} name="color_secondary" onChange={this.handleChange} /> </div>
                 <div> Logo: <input type="url" value={this.state.logo} name="logo" placeholder="http://www.company.com/logo.png" onChange={this.handleChange} /> </div>
                 <div> Square Logo: <input type="url" value={this.state.logo_square} placeholder="http://www.company.com/square_logo.png" name="logo_square" onChange={this.handleChange} /> </div>
+                <div> Background logo: <input type="url" value={this.state.background_logo} placeholder="http://www.company.com/background_logo.png" name="background_logo" onChange={this.handleChange} /> </div>
                 <div> Icon: <input type="url" value={this.state.icon} name="icon" placeholder="http://www.company.com/icon.png" onChange={this.handleChange} /> </div>
                 <div> Facebook: <input type="url" value={this.state.facebook} name="facebook" placeholder="http://www.facebook.com/calligre" onChange={this.handleChange} /> </div>
                 <div> Twitter: <input type="url" value={this.state.twitter} name="twitter" placeholder="http://www.twitter.com/calligre" onChange={this.handleChange} /> </div>
