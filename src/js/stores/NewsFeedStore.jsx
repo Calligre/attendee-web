@@ -14,6 +14,11 @@ class NewsFeedStore extends EventEmitter {
       items: [],
       nextOffset: null,
     };
+    // Used in Organizer to moderate flagged posts
+    this.flaggedPosts = {
+      items: [],
+      nextOffset: null,
+    };
     this.error = null;
     this.dataFetched = false;
     this.retweetText = '';
@@ -51,6 +56,33 @@ class NewsFeedStore extends EventEmitter {
     } else {
       dispatcher.dispatch({ type: 'NEWSFEED_FROM_STORE' });
     }
+  }
+
+  getFlagged() {
+    // Don't cache, always want new data
+    const params = {};
+    if (this.flaggedPosts.nextOffset) {
+      params.offset = this.contentFeed.nextOffset;
+    }
+    // TODO: Should there be a way to specify limit?
+    // params.limit = 10;
+
+    $.ajax({
+      headers: {
+        Authorization: `Bearer ${AuthService.getToken()}`,
+      },
+      type: 'GET',
+      url: `${url}/api/social/flags`,
+      data: params,
+      dataType: 'json',
+      cache: false,
+      success(response) {
+        dispatcher.dispatch({ type: 'FLAGGED_GET', response });
+      },
+      error(error) {
+        dispatcher.dispatch({ type: 'FLAGGED_GET_ERROR', error });
+      },
+    });
   }
 
   likePost(pid) {
@@ -98,6 +130,51 @@ class NewsFeedStore extends EventEmitter {
     });
   }
 
+  flagPost(pid) {
+    const postId = pid;
+
+    $.ajax({
+      type: 'POST',
+      url: `${url}/api/social/${postId}/flag`,
+      headers: {
+        Authorization: `Bearer ${AuthService.getToken()}`,
+      },
+      contentType: 'application/json',
+      cache: false,
+      statusCode: {
+        500() {
+          alert('Unable to perform this action, please try again later');
+        },
+      },
+      success() {
+        dispatcher.dispatch({ type: 'POST_FLAG', postId });
+      },
+      error(error) {
+        dispatcher.dispatch({ type: 'POST_FLAG_ERROR', error });
+      },
+    });
+  }
+
+  unflagPost(pid) {
+    const postId = pid;
+
+    $.ajax({
+      type: 'DELETE',
+      url: `${url}/api/social/${postId}/flag`,
+      headers: {
+        Authorization: `Bearer ${AuthService.getToken()}`,
+      },
+      contentType: 'application/json',
+      cache: false,
+      success() {
+        dispatcher.dispatch({ type: 'POST_UNLIKE', postId });
+      },
+      error(error) {
+        dispatcher.dispatch({ type: 'POST_UNFLAG_ERROR', error });
+      },
+    });
+  }
+
   postToNewsFeed(data) {
     $.ajax({
       type: 'POST',
@@ -110,8 +187,7 @@ class NewsFeedStore extends EventEmitter {
       contentType: 'application/json',
       cache: false,
       success(response) {
-        console.log(response);
-        dispatcher.dispatch({ type: 'CREATE_POST_SUCCESS', post: response.id });
+        dispatcher.dispatch({ type: 'CREATE_POST_SUCCESS', post: response.data });
       },
       error(error) {
         dispatcher.dispatch({ type: 'CREATE_POST_ERROR', error });
@@ -189,13 +265,32 @@ class NewsFeedStore extends EventEmitter {
         this.emit('updated');
         break;
       }
+      case 'FLAGGED_GET': {
+        this.dataFetched = true;
+        Array.prototype.push.apply(this.contentFeed.items, action.response.data.posts[0]);
+        this.contentFeed.nextOffset = action.response.data.nextOffset;
+        this.contentFeed.count = action.response.data.count;
+        this.emit('updated');
+        break;
+      }
       case 'NEWSFEED_FROM_STORE': {
         // Data is already in the store
         this.emit('updated');
         break;
       }
       case 'CREATE_POST_SUCCESS': {
+        let newPost = action.post;
+        newPost.current_user_likes = false;
+        newPost.like_count = 0;
+        newPost.timestamp = newPost.id;
+        this.contentFeed.items.unshift(newPost);
         this.emit('post');
+        if (newPost.media_link) {
+          // Photos take time to load
+          setTimeout(function(){newsFeedStore.emit('updated')}, 1800);
+        } else {
+          this.emit('updated');
+        }
         break;
       }
       case 'POST_LIKE': {
@@ -224,12 +319,41 @@ class NewsFeedStore extends EventEmitter {
         }
         break;
       }
+      case 'POST_FLAG': {
+        const arrayLength = this.contentFeed.items.length;
+        for (let i = 0; i < arrayLength; i += 1) {
+          if (this.contentFeed.items[i].id === action.postId) {
+            this.contentFeed.items[i].current_user_flagged = true;
+            // Assume that store and UI are in sync if action was correct
+            // this.emit('updated');
+          }
+        }
+        break;
+      }
+      case 'POST_UNFLAG': {
+        const arrayLength = this.contentFeed.items.length;
+        for (let i = 0; i < arrayLength; i += 1) {
+          if (this.contentFeed.items[i].id === action.postId) {
+            this.contentFeed.items[i].current_user_flagged = false;
+            // Assume that store and UI are in sync if action was correct
+            // this.emit('updated');
+          }
+        }
+        break;
+      }
       case 'RETWEET': {
         this.emit('retweet');
         break;
       }
       case 'NEWSFEED_GET_ERROR': {
         this.dataFetched = false;
+        this.error = 'Error retrieving posts';
+        this.emit('error');
+        break;
+      }
+      case 'FLAGGED_GET_ERROR': {
+        this.error = 'Error getting flagged posts';
+        this.emit('error');
         break;
       }
       case 'POST_LIKE_ERROR': {
@@ -241,6 +365,18 @@ class NewsFeedStore extends EventEmitter {
       case 'POST_UNLIKE_ERROR': {
         this.emit('revert');
         this.error = 'Error unliking post';
+        this.emit('error');
+        break;
+      }
+      case 'POST_FLAG_ERROR': {
+        this.emit('revert');
+        this.error = 'Error flagging post';
+        this.emit('error');
+        break;
+      }
+      case 'POST_UNFLAG_ERROR': {
+        this.emit('revert');
+        this.error = 'Error unflagging post';
         this.emit('error');
         break;
       }

@@ -1,5 +1,6 @@
 import React from 'react';
 import NewsFeedStore from 'stores/NewsFeedStore';
+import FaFlag from 'react-icons/lib/fa/flag';
 import FaHeart from 'react-icons/lib/fa/heart';
 import FaRetweet from 'react-icons/lib/fa/retweet';
 
@@ -8,6 +9,7 @@ export default class NewsFeedPost extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.props;
+    this.changeFlag = this.changeFlag.bind(this);
     this.changeLike = this.changeLike.bind(this);
     this.retweet = this.retweet.bind(this);
     this.showImage = this.showImage.bind(this);
@@ -20,8 +22,26 @@ export default class NewsFeedPost extends React.Component {
         like_count: nextProps.like_count,
       });
     }
+    if (this.state.current_user_flagged !== nextProps.current_user_flagged) {
+      this.setState({
+        current_user_flagged: nextProps.current_user_likes,
+      });
+    }
   }
 
+  changeFlag() {
+    if (this.state.current_user_flagged) {
+      NewsFeedStore.unflagPost(this.state.id);
+      this.setState({
+        current_user_flagged: false,
+      });
+    } else {
+      NewsFeedStore.flagPost(this.state.id);
+      this.setState({
+        current_user_flagged: true,
+      });
+    }
+  }
 
   changeLike() {
     if (this.state.current_user_likes) {
@@ -50,6 +70,7 @@ export default class NewsFeedPost extends React.Component {
 
   render() {
     const {
+      current_user_flagged,
       current_user_likes,
       like_count,
       media_link,
@@ -58,10 +79,13 @@ export default class NewsFeedPost extends React.Component {
       text,
       repost,
     } = this.state;
-    console.log(poster_icon);
 
     const heartColor = {
       color: current_user_likes ? 'red' : 'inherit',
+    };
+
+    const flagColor = {
+      color: current_user_flagged ? 'darkred' : 'inherit',
     };
 
     let image = null;
@@ -79,6 +103,14 @@ export default class NewsFeedPost extends React.Component {
           <img alt="poster" src={poster_icon} className="user-photo no-selection" />
         </div>
         <div className="post-text inline">
+          <div className="right-options">
+            <FaFlag
+              className="clickable flag no-selection"
+              onClick={this.changeFlag}
+              style={flagColor}
+              size={20}
+            />
+          </div>
           <p className="username">{poster_name}</p>
           <p className="text">{text}</p>
           {image}
