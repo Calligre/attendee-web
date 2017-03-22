@@ -58,7 +58,7 @@
   "scripts": {
     "organizer-dev": "webpack-dev-server --content-base build/organizer --port 8080 --define process.env.NODE_ENV='\"debug\"'",
     "attendee-dev": "webpack-dev-server --content-base build/attendee --port 8081 --define process.env.NODE_ENV='\"debug\"'",
-    "build-prod": "webpack --define process.env.NODE_ENV='\"production\"'"
+    "build-prod": "webpack --define process.env.NODE_ENV='\"production\"'",
     "build-stage": "webpack --define process.env.NODE_ENV='\"debug\"'"
   },
   "author": "",
