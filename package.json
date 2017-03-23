@@ -4,7 +4,6 @@
   "description": "",
   "main": "webpack.config.js",
   "dependencies": {
-    "auth0-lock": "10.11.0",
     "babel-core": "6.22.1",
     "babel-loader": "6.2.10",
     "babel-plugin-add-module-exports": "0.1.4",
@@ -18,16 +17,11 @@
     "css-loader": "0.23.1",
     "extract-text-webpack-plugin": "1.0.1",
     "flux": "2.1.1",
-    "jquery": "3.1.1",
     "jwt-decode": "2.1.0",
     "moment": "2.17.1",
     "node-sass": "3.13.1",
     "randomcolor": "0.4.4",
-    "react": "15.4.2",
-    "react-bootstrap": "^0.30.6",
-    "react-bootstrap-table": "3.1.1",
     "react-date-picker": "5.3.28",
-    "react-dom": "15.4.2",
     "react-dropzone": "3.10.0",
     "react-icons": "2.2.3",
     "react-notification": "6.6.0",
@@ -50,10 +44,9 @@
     "webpack-dev-server": "1.16.3"
   },
   "scripts": {
-    "organizer-dev": "NODE_ENV=debug webpack-dev-server --content-base build/organizer --port 8080",
-    "attendee-dev": "NODE_ENV=debug webpack-dev-server --content-base build/attendee --port 8081",
-    "build-prod": "NODE_ENV=prod webpack",
-    "build-stage": "NODE_ENV=staging webpack"
+    "organizer-dev": "webpack-dev-server --content-base build/organizer --port 8080",
+    "attendee-dev": "webpack-dev-server --content-base build/attendee --port 8081",
+    "build": "NODE_ENV=production webpack"
   },
   "author": "",
   "license": "ISC"
