@@ -42,6 +42,7 @@ export default class Nav extends React.Component {
   loadedConferences = () => {
     this.setState({ conferences: ConferenceStore.conferences });
   }
+
   showError = () => {
     console.error(PreferenceStore.error);
     console.error(ConferenceStore.error);
@@ -71,14 +72,14 @@ export default class Nav extends React.Component {
     const navClass = collapsed ? 'collapse' : '';
 
     const customStyle = {
-      content : {
-        top                   : '50%',
-        left                  : '50%',
-        right                 : 'auto',
-        bottom                : 'auto',
-        marginRight           : '-50%',
-        transform             : 'translate(-50%, -50%)'
-      }
+      content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+      },
     };
 
     return (
@@ -134,12 +135,15 @@ export default class Nav extends React.Component {
   }
 }
 
-var Conference = React.createClass({
-  render: function() {
+const Conference = React.createClass({
+  render() {
     return (
       <div className="conferenceElement">
-        <a href={"https://"+this.props.url} > {this.props.url} </a>
+        <a href={`https://${this.props.url}`} >
+          <img src={this.props.logo} alt={this.props.name} height="100" />
+          {this.props.name}
+        </a>
       </div>
     );
-  }
+  },
 });
