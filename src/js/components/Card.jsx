@@ -39,6 +39,9 @@ export default class Card extends React.Component {
         let twitter = this.props.twitter || null;
         renderedContent = <SocialCard facebook={facebook} twitter={twitter} headerStyle={headerStyle}/>;
         break;
+      case 'survey':
+        renderedContent = <SurveyCard data={item} headerStyle={headerStyle} buttonStyle={buttonStyle}/>;
+        break;
       default:
         return null;
     }
@@ -117,6 +120,20 @@ var SocialCard = React.createClass({
         <h2 className="primaryText" style={this.props.headerStyle}>Connect With Us</h2>
         {facebookLink}
         {twitterLink}
+      </div>
+    );
+  }
+});
+
+var SurveyCard = React.createClass({
+  render: function() {
+    return (
+      <div className="surveyCard cardContent">
+        <h2 className="primaryText" style={this.props.headerStyle}>{this.props.data.name}</h2>
+        <p>{this.props.data.description}</p>
+        <a href={this.props.data.link} target="_blank">
+          <button className="secondaryBackground" style={this.props.buttonStyle}>Take Survey</button>
+        </a>
       </div>
     );
   }

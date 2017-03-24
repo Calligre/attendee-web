@@ -7,6 +7,7 @@ import NotificationStore from "stores/NotificationStore";
 import BrandStore from 'stores/BrandStore';
 import Card from "components/Card";
 import PreferenceStore from 'stores/PreferenceStore';
+import SurveyStore from 'stores/SurveyStore';
 
 import { NotificationStack } from 'react-notification';
 var moment = require('moment');
@@ -22,8 +23,23 @@ export default class Featured extends React.Component {
       cards: [],
       locations: [],
       contacts: [],
+      surveys: [],
       preferences: PreferenceStore.getDefaults(),
     };
+  };
+
+  componentWillMount() {
+    NotificationStore.on("received", this.getNotifications);
+    NotificationStore.on("error", this.showNotificationStoreError);
+    NotificationStore.getAll();
+
+    EventStore.on("received", this.getEvents);
+    EventStore.on("error", this.showEventStoreError);
+    EventStore.getAll();
+
+    PreferenceStore.on('loaded', this.loadPreferences);
+    PreferenceStore.on('error', this.showPreferenceError);
+    PreferenceStore.loadAll();
 
     BrandStore.on('receivedBranding', this.setBranding);
     BrandStore.on('receivedCards', this.setCards);
@@ -34,18 +50,9 @@ export default class Featured extends React.Component {
     BrandStore.getContacts();
     BrandStore.getCards();
 
-    PreferenceStore.loadAll();
-  };
-
-  componentWillMount() {
-    PreferenceStore.on('loaded', this.loadPreferences);
-    NotificationStore.on("received", this.getNotifications);
-    NotificationStore.on("error", this.showNotificationStoreError);
-    EventStore.on("received", this.getEvents);
-    PreferenceStore.on('error', this.showPreferenceError);
-    EventStore.on("error", this.showEventStoreError);
-    NotificationStore.getAll();
-    EventStore.getAll();
+    SurveyStore.on('loaded', this.getSurveys);
+    SurveyStore.on('error', this.showSurveyStoreError);
+    SurveyStore.getAll();
   };
 
   componentWillUnmount() {
@@ -55,6 +62,12 @@ export default class Featured extends React.Component {
     NotificationStore.removeListener("error", this.showNotificationStoreError);
     EventStore.removeListener("received", this.getEvents);
     EventStore.removeListener("error", this.showEventStoreError);
+    BrandStore.removeListener('receivedBranding', this.setBranding);
+    BrandStore.removeListener('receivedCards', this.setCards);
+    BrandStore.removeListener('receivedLocations', this.setLocations);
+    BrandStore.removeListener('receivedContacts', this.setContacts);
+    SurveyStore.removeListener('loaded', this.getSurveys);
+    SurveyStore.removeListener('error', this.showSurveyStoreError);
   };
 
   getNotifications = () => {
@@ -106,11 +119,19 @@ export default class Featured extends React.Component {
     this.setState({locations: BrandStore.locations});
   }
 
+  getSurveys = () => {
+    this.setState({surveys: SurveyStore.surveys});
+  };
+
+  showSurveyStoreError = () => {
+    console.log(SurveyStore.error)
+  }
+
   render() {
     if (localStorage.getItem('redirect_after_login')) {
       return (<div></div>)
     }
-    const { messages, events, notifications, logo, branding, locations, cards, contacts, preferences} = this.state;
+    const { messages, events, notifications, logo, branding, locations, cards, contacts, surveys, preferences} = this.state;
 
     var eventCount = 0;
     const EventComponents = events.map((event) => {
@@ -157,6 +178,13 @@ export default class Featured extends React.Component {
       contactsCard = <Card type="contact" item={contacts}/>;
     }
 
+    let surveyCards = null;
+    if (surveys !== undefined && surveys.length > 0 && preferences.survey) {
+      surveyCards = surveys.map((survey) =>
+          <Card type="survey" item={survey}/>
+      );
+    }
+
     return (
       <div>
         <NotificationStack
@@ -179,6 +207,7 @@ export default class Featured extends React.Component {
           {mapCard}
           {confPackageCard}
           {contentCards}
+          {surveyCards}
         </div>
       </div>
     );

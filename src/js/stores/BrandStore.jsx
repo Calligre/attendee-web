@@ -458,7 +458,7 @@ class BrandStore extends EventEmitter {
       }
       case 'CARD_GET': {
         this.cards = action.cards.map((card) => {
-          return card.attributes;
+          return card.attributes.data;
         });
         this.emit('receivedCards');
         break;
