@@ -24,6 +24,7 @@ export default class Featured extends React.Component {
       locations: [],
       contacts: [],
       surveys: [],
+      sponsors: [],
       preferences: PreferenceStore.getDefaults(),
     };
   };
@@ -45,10 +46,12 @@ export default class Featured extends React.Component {
     BrandStore.on('receivedCards', this.setCards);
     BrandStore.on('receivedLocations', this.setLocations);
     BrandStore.on('receivedContacts', this.setContacts);
+    BrandStore.on('receivedSponsors', this.setSponsors);
     BrandStore.getBranding();
     BrandStore.getLocations();
     BrandStore.getContacts();
     BrandStore.getCards();
+    BrandStore.getSponsors();
 
     SurveyStore.on('loaded', this.getSurveys);
     SurveyStore.on('error', this.showSurveyStoreError);
@@ -81,7 +84,7 @@ export default class Featured extends React.Component {
 
   getEvents = () => {
     this.setState({
-      events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment(event.starttime)))
+      events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment.unix(event.starttime)))
     });
   };
 
@@ -127,15 +130,37 @@ export default class Featured extends React.Component {
     console.log(SurveyStore.error)
   }
 
+  setSponsors = () => {
+    let sponsors = Array.from(BrandStore.sponsors);
+    sponsors.sort((a, b) => {
+      return a.rank > b.rank;
+    });
+
+    let right = 0;
+    let sponsorsSplit = [];
+    while (sponsors.length > 0) {
+      if (sponsors[0].rank != sponsors[right].rank) {
+        sponsorsSplit.push(sponsors.splice(0, right));
+        right = 0;
+      } else if (right == sponsors.length - 1) {
+        sponsorsSplit.push(sponsors);
+        break;
+      } else {
+        right++;
+      }
+    }
+    this.setState({sponsors: sponsorsSplit});
+  }
+
   render() {
     if (localStorage.getItem('redirect_after_login')) {
       return (<div></div>)
     }
-    const { messages, events, notifications, logo, branding, locations, cards, contacts, surveys, preferences} = this.state;
+    const { messages, events, notifications, logo, branding, locations, cards, contacts, surveys, sponsors, preferences} = this.state;
 
     var eventCount = 0;
     const EventComponents = events.map((event) => {
-      if (moment().diff(moment(event.starttime), "hours") < 2 || eventCount < 3) {
+      if (moment().diff(moment.unix(event.starttime), "hours") < 2 || eventCount < 3) {
         eventCount++;
         return <Card type="event" key={"event-" + event.id} item={event}/>;
       }
@@ -184,6 +209,13 @@ export default class Featured extends React.Component {
           <Card type="survey" item={survey}/>
       );
     }
+    
+    let sponsorCards = null;
+    if (sponsors !== undefined && sponsors.length > 0) {
+      sponsorCards = sponsors.map((sublist) =>
+        <Card type="sponsor" item={sublist}/>
+      );
+    }
 
     return (
       <div>
@@ -208,6 +240,7 @@ export default class Featured extends React.Component {
           {confPackageCard}
           {contentCards}
           {surveyCards}
+          {sponsorCards}
         </div>
       </div>
     );

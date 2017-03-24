@@ -296,7 +296,7 @@ class BrandStore extends EventEmitter {
 
   getSponsors = () => {
     $.ajax({
-      url: `${url}/api/info/sponsor`,
+      url: `${url}/info/sponsor`,
       dataType: 'json',
       type: 'GET',
       headers: {

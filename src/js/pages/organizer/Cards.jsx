@@ -1,6 +1,7 @@
 import React from "react";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import BrandStore from "stores/BrandStore";
+import PreferenceStore from 'stores/PreferenceStore';
 
 export default class Cards extends React.Component {
 
@@ -11,9 +12,11 @@ export default class Cards extends React.Component {
       locations: [],
       contacts: [],
       sponsors: [],
+      preferences: PreferenceStore.getDefaults(),
     };
 
     BrandStore.getAll();
+    PreferenceStore.loadAll();
   }
 
   componentWillMount() {
@@ -33,6 +36,8 @@ export default class Cards extends React.Component {
     BrandStore.on("addSponsors", this.getSponsors);
     BrandStore.on("updateSponsors", this.getSponsors);
     BrandStore.on("deleteSponsors", this.getSponsors);
+    PreferenceStore.on('loaded', this.loadPreferences);
+    PreferenceStore.on('error', this.showError);
     BrandStore.on("error", this.showError);
   }
 
@@ -53,11 +58,18 @@ export default class Cards extends React.Component {
     BrandStore.removeListener("addSponsors", this.getSponsors);
     BrandStore.removeListener("updateSponsors", this.getSponsors);
     BrandStore.removeListener("deleteSponsors", this.getSponsors);
+    PreferenceStore.removeListener('loaded', this.loadPreferences);
+    PreferenceStore.removeListener('error', this.showError);
     BrandStore.removeListener("error", this.showError);
   }
 
   showError = () => {
-    console.log(BrandStore.error)
+    console.log(BrandStore.error);
+    console.log(PreferenceStore.error);
+  }
+
+  loadPreferences = () => {
+    this.setState({ preferences: PreferenceStore.preferences });
   }
 
   generateCard = (row) => {
@@ -96,17 +108,18 @@ export default class Cards extends React.Component {
   }
 
   generateSponsor = (row) => {
-    var updatedLocation = {
+    var updatedSponsor = {
       id: -1,
+      rank: 0,
       level: "",
       logo: "",
       name: "",
       website: "",
     }
     for (const prop in row) {
-      updatedLocation[prop] = row[prop];
+      updatedSponsor[prop] = row[prop];
     }
-    return updatedLocation;
+    return updatedSponsor;
   }
 
   updateCard = (row, cellName, cellValue) => {
@@ -190,6 +203,8 @@ export default class Cards extends React.Component {
   }
 
   render() {
+    const { preferences } = this.state;
+
     const selectRowProp = {
       mode: 'checkbox'
     };
@@ -229,32 +244,42 @@ export default class Cards extends React.Component {
     return (
       <div>
         <h1 className="primaryText largeTopMargin">Important Locations</h1>
-        <BootstrapTable data={this.state.locations} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropLocations} options={optionsLocations}>
-          <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Location ID</TableHeaderColumn>
-          <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
-            Location
-          </TableHeaderColumn>
-          <TableHeaderColumn dataField='address'>Address</TableHeaderColumn>
-        </BootstrapTable>
-
+        { preferences.location ?
+          <BootstrapTable data={this.state.locations} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropLocations} options={optionsLocations}>
+            <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Location ID</TableHeaderColumn>
+            <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+              Location
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField='address'>Address</TableHeaderColumn>
+          </BootstrapTable>
+        : <div className="disabled-placeholder">Locations card has been disabled, check your preferences</div>
+        }
         <h1 className="primaryText largeTopMargin">Important Contacts</h1>
-        <BootstrapTable data={this.state.contacts} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropContacts} options={optionsContacts}>
-          <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Contact ID</TableHeaderColumn>
-          <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
-            Contact Name
-          </TableHeaderColumn>
-          <TableHeaderColumn dataField='phone'>Phone</TableHeaderColumn>
-        </BootstrapTable>
+        { preferences.contact ?
+          <BootstrapTable data={this.state.contacts} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropContacts} options={optionsContacts}>
+            <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Contact ID</TableHeaderColumn>
+            <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+              Contact Name
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField='phone'>Phone</TableHeaderColumn>
+          </BootstrapTable>
+          : <div className="disabled-placeholder">Contacts card has been disabled, check your preferences</div>
+        }
 
         <h1 className="primaryText largeTopMargin">Text Cards</h1>
-        <BootstrapTable data={this.state.cards} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropCards} options={optionsCards}>
-          <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Card ID</TableHeaderColumn>
-          <TableHeaderColumn dataField='data' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
-            Text
-          </TableHeaderColumn>
-        </BootstrapTable>
+        { preferences.content ?
+          <BootstrapTable data={this.state.cards} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropCards} options={optionsCards}>
+            <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Card ID</TableHeaderColumn>
+            <TableHeaderColumn dataField='data' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+              Text
+            </TableHeaderColumn>
+          </BootstrapTable>
+          : <div className="disabled-placeholder">Content card has been disabled, check your preferences</div>
+        }
 
         <h1 className="primaryText largeTopMargin">Sponsors</h1>
+        <h3>Note: The same rank *must* be used for each level</h3>
+        <h3>For example, all Gold sponsors have rank 0, all Silver sponsors rank 1, and all Bronze rank 2.</h3>
         <BootstrapTable data={this.state.sponsors} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropSponsors} options={optionsSponsors}>
           <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Sponsor ID</TableHeaderColumn>
           <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
@@ -262,6 +287,9 @@ export default class Cards extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn dataField='level' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
             Level
+          </TableHeaderColumn>
+          <TableHeaderColumn dataField='rank' dataSort filter={ { type: 'NumberFilter', delay: 100, numberComparators: [ '=', '>', '<=' ]  } }>
+            Rank
           </TableHeaderColumn>
           <TableHeaderColumn dataField='logo'>Logo</TableHeaderColumn>
           <TableHeaderColumn dataField='website'>Website</TableHeaderColumn>

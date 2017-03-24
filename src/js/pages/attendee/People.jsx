@@ -29,8 +29,8 @@ export default class People extends React.Component {
           label: 'Last name',
         },
         {
-          value: 'points',
-          label: 'Points',
+          value: 'rank',
+          label: 'Rank',
         },
       ],
     };
@@ -88,10 +88,6 @@ export default class People extends React.Component {
     people.sort((a, b) => {
       if (typeof a[sortKey] === 'string') {
         return (a[sortKey].localeCompare(b[sortKey])) * sortDirection;
-      }
-
-      if (sortKey === 'points') {
-        return (b[sortKey] - a[sortKey]) * sortDirection;
       }
 
       return (a[sortKey] - b[sortKey]) * sortDirection;
