@@ -1,8 +1,9 @@
-import { EventEmitter } from 'events';
 import AuthService from 'util/AuthService';
 import dispatcher from 'dispatcher';
+import { EventEmitter } from 'events';
+import UrlService from 'util/UrlService';
 
-const url = 'https://dev.calligre.com';
+const url = UrlService.getUrl();
 const $ = require('jquery');
 
 class ConferenceStore extends EventEmitter {
