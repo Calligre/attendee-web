@@ -65,6 +65,11 @@ export default class Notifications extends React.Component {
     return (<InsertModalBody columns={columns} validateState={validateState} ignoreEditable={ignoreEditable} />);
   }
 
+  trClassFormat = (row) => {
+    const temp = moment().diff(moment(row.expirytime));
+    return temp > 0 ? "tr-expired" : null;  // return class name.
+  }
+
   render() {
     const { notifications } = this.state;
 
@@ -99,9 +104,10 @@ export default class Notifications extends React.Component {
         selectRow={selectRowProp}
         insertRow
         deleteRow
-        striped
         hover
         options={tableOptions}
+        trClassName={ this.trClassFormat }
+        id="notification-table"
       >
         <TableHeaderColumn dataField="message">Message</TableHeaderColumn>
         <TableHeaderColumn dataField="expirytime" customEditor={{ getElement: timeEditor }} dataFormat={this.formatExpiry}>Expiration Time</TableHeaderColumn>
