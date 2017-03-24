@@ -29,9 +29,14 @@ export default class Layout extends React.Component {
 
   render() {
     const { branding } = this.state;
+    
+    if (!branding) {
+      return null;
+    }
 
     const sidebarConfig = {
-      background: branding.color_secondary,
+      background: branding.color_secondary || 'white',
+      width: '200',
       breakPoint: '10000',
     }
 
