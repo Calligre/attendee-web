@@ -68,7 +68,7 @@ export default class Featured extends React.Component {
 
   getEvents = () => {
     this.setState({
-      events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment(event.starttime)))
+      events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment.unix(event.starttime)))
     });
   };
 
@@ -114,7 +114,7 @@ export default class Featured extends React.Component {
 
     var eventCount = 0;
     const EventComponents = events.map((event) => {
-      if (moment().diff(moment(event.starttime), "hours") < 2 || eventCount < 3) {
+      if (moment().diff(moment.unix(event.starttime), "hours") < 2 || eventCount < 3) {
         eventCount++;
         return <Card type="event" key={"event-" + event.id} item={event}/>;
       }
