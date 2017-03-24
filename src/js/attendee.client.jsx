@@ -18,7 +18,6 @@ import Login from "pages/Login";
 import AppHistory from 'util/AppHistory';
 import AuthService from 'util/AuthService';
 import UrlService from 'util/UrlService';
-import BrandStore from 'stores/BrandStore';
 import * as config from 'auth0.config.js';
 
 const app = document.getElementById('app');
@@ -44,16 +43,6 @@ const redirectAfterLogin = () => {
     AuthService.removeListener('profile_updated', redirectCallback)
   }
 };
-BrandStore.on('receivedBranding', () => {
-  let branding = BrandStore.branding;
-  let myStyle = document.styleSheets[6];
-  myStyle.insertRule(".primaryText { color: " + branding.color_primary + " !important }", 0);
-  myStyle.insertRule(".primaryBackground { background-color: " + branding.color_primary + " !important }", 0);
-  myStyle.insertRule(".secondaryText { color: " + branding.color_secondary + " !important }", 0);
-  myStyle.insertRule(".secondaryBackground { background-color: " + branding.color_secondary + " !important }", 0);
-  myStyle.insertRule(".nameContainer { background-image: url('" + branding.background_logo + "')!important }", 0);
-});
-BrandStore.getBranding();
 
 ReactDOM.render(
   <Router history={AppHistory}>
