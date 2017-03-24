@@ -6,6 +6,9 @@ import Footer from 'components/layout/Footer';
 import BrandStore from 'stores/BrandStore';
 import ConferenceStore from 'stores/ConferenceStore';
 import PreferenceStore from 'stores/PreferenceStore';
+
+import Footer from 'components/layout/Footer';
+import BrandStore from 'stores/BrandStore';
 import AuthService from 'util/AuthService';
 
 export default class Layout extends React.Component {
@@ -47,6 +50,7 @@ export default class Layout extends React.Component {
 
   loadConferences = () => {
     this.setState({ conferences: ConferenceStore.conferences });
+    };
   }
 
   setBranding = () => {
@@ -85,9 +89,8 @@ export default class Layout extends React.Component {
     }
 
     const sidebarConfig = {
-      background: branding.color_secondary || 'white',
+      background: branding.color_secondary,
       width: '200',
-      breakPoint: '10000',
     }
 
     const items = [
