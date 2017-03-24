@@ -83,7 +83,7 @@ export default class Notifications extends React.Component {
     const tableOptions = {
       afterInsertRow: this.addNotification,
       afterDeleteRow: this.deleteNotification,
-      handleConfirmDeleteRow: removeAlertOnDelete,
+      handleConfirmDeleteRow: this.removeAlertOnDelete,
       insertModalBody: this.insertModal,
       defaultSortName: 'expirytime',
       defaultSortOrder: 'desc',

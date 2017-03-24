@@ -1,7 +1,7 @@
-import React from "react";
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import EventStore from "stores/EventStore";
-var moment = require('moment');
+import React from 'react';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import EventStore from 'stores/EventStore';
+const moment = require('moment');
 
 export default class Calendar extends React.Component {
 
@@ -15,30 +15,30 @@ export default class Calendar extends React.Component {
   }
 
   componentWillMount() {
-    EventStore.on("received", this.getEvents);
-    EventStore.on("error", this.showError);
+    EventStore.on('received', this.getEvents);
+    EventStore.on('error', this.showError);
   }
 
   componentWillUnmount() {
-    EventStore.removeListener("received", this.getEvents);
-    EventStore.removeListener("error", this.showError);
+    EventStore.removeListener('received', this.getEvents);
+    EventStore.removeListener('error', this.showError);
   }
 
   showError = () => {
-    console.log(EventStore.error)
+    console.log(EventStore.error);
   }
 
   generateEvent = (row) => {
-    var updatedEvent = {
+    const updatedEvent = {
       id: -1,
-      name: "",
-      location: "",
-      stream: "",
-      starttime: "",
-      endttime: "",
-    }
+      name: '',
+      location: '',
+      stream: '',
+      starttime: '',
+      endttime: '',
+    };
     for (const prop in row) {
-      if (prop == "starttime" || prop == "endtime") {
+      if (prop == 'starttime' || prop == 'endtime') {
         updatedEvent[prop] = moment(row[prop]).unix();
       } else {
         updatedEvent[prop] = row[prop];
@@ -58,17 +58,13 @@ export default class Calendar extends React.Component {
 
   deleteEvents = (rowKeys) => {
     for (const key in rowKeys) {
-      EventStore.deleteEvent(rowKeys[key])
+      EventStore.deleteEvent(rowKeys[key]);
     }
   }
 
   getEvents = () => {
     this.setState({
-      events: EventStore.events.map((event) => {
-        event.starttime = moment.unix(event.starttime).format("YYYY-MM-DDTHH:mm");
-        event.endtime = moment.unix(event.endtime).format("YYYY-MM-DDTHH:mm");
-        return event;
-      })
+      events: EventStore.events,
     });
   }
 
@@ -83,7 +79,7 @@ export default class Calendar extends React.Component {
 
   render() {
     const selectRowProp = {
-      mode: 'checkbox'
+      mode: 'checkbox',
     };
     const cellEditProp = {
       mode: 'click',
@@ -93,6 +89,7 @@ export default class Calendar extends React.Component {
       afterInsertRow: this.addEvent,
       afterDeleteRow: this.deleteEvents,
       insertModalBody: this.insertModal,
+      handleConfirmDeleteRow: this.removeAlertOnDelete,
       defaultSortName: 'starttime',
       defaultSortOrder: 'asc',
     };
@@ -101,23 +98,23 @@ export default class Calendar extends React.Component {
 
     return (
       <BootstrapTable data={this.state.events} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditProp} options={options}>
-        <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Event ID</TableHeaderColumn>
-        <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+        <TableHeaderColumn dataField="id" isKey hidden hiddenOnInsert autoValue>Event ID</TableHeaderColumn>
+        <TableHeaderColumn dataField="name" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
           Event Title
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='stream' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+        <TableHeaderColumn dataField="stream" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
           Stream
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='location' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+        <TableHeaderColumn dataField="location" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
           Location
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='starttime' dataSort dataFormat={this.formatDate} customEditor={ { getElement: timeEditor } }>
+        <TableHeaderColumn dataField="starttime" dataSort dataFormat={this.formatDate} customEditor={{ getElement: timeEditor }}>
           Start time
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='endtime' dataSort dataFormat={this.formatDate} customEditor={ { getElement: timeEditor } }>
+        <TableHeaderColumn dataField="endtime" dataSort dataFormat={this.formatDate} customEditor={{ getElement: timeEditor }}>
           End time
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>
+        <TableHeaderColumn dataField="description">Description</TableHeaderColumn>
       </BootstrapTable>
     );
   }
@@ -131,7 +128,7 @@ function removeAlertOnDelete(next) {
 class TimeEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: moment(props.defaultValue).format('YYYY-MM-DDTHH:mm')};
+    this.state = { value: moment(props.defaultValue).format('YYYY-MM-DDTHH:mm') };
   }
   focus() {
     this.refs.inputRef.focus();
