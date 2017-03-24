@@ -59,13 +59,11 @@ class NewsFeedStore extends EventEmitter {
   }
 
   getFlagged() {
-    // Don't cache, always want new data
+
     const params = {};
     if (this.flaggedPosts.nextOffset) {
       params.offset = this.contentFeed.nextOffset;
     }
-    // TODO: Should there be a way to specify limit?
-    // params.limit = 10;
 
     $.ajax({
       headers: {
@@ -83,6 +81,13 @@ class NewsFeedStore extends EventEmitter {
         dispatcher.dispatch({ type: 'FLAGGED_GET_ERROR', error });
       },
     });
+  }
+
+  getFlaggedOnLoad() {
+    // Don't cache, always want new data
+    this.flaggedPosts.items = [];
+    this.flaggedPosts.nextOffset = null;
+    this.getFlagged();
   }
 
   likePost(pid) {
@@ -155,8 +160,11 @@ class NewsFeedStore extends EventEmitter {
     });
   }
 
-  unflagPost(pid) {
+  unflagPost(pid, adminFlag) {
     const postId = pid;
+    const successStatus = adminFlag ? 'ADMIN_POST_UNFLAG' : 'POST_UNFLAG';
+    const failStatus = adminFlag ? 'ADMIN_POST_UNFLAG_ERROR' : 'POST_UNFLAG_ERROR';
+    console.log(adminFlag);
 
     $.ajax({
       type: 'DELETE',
@@ -167,16 +175,20 @@ class NewsFeedStore extends EventEmitter {
       contentType: 'application/json',
       cache: false,
       success() {
-        dispatcher.dispatch({ type: 'POST_UNLIKE', postId });
+        dispatcher.dispatch({ type: successStatus, postId });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'POST_UNFLAG_ERROR', error });
+        dispatcher.dispatch({ type: failStatus, error });
       },
     });
   }
 
-  deletePost(pid) {
+  deletePost(pid, adminFlag) {
     const postId = pid;
+    const successStatus = adminFlag ? 'ADMIN_POST_DELETE' : 'POST_DELETE';
+    const failStatus = adminFlag ? 'ADMIN_POST_DELETE_ERROR' : 'POST_DELETE_ERROR';
+    console.log(adminFlag);
+
     $.ajax({
       type: 'DELETE',
       url: `${url}/api/social/${postId}`,
@@ -186,10 +198,10 @@ class NewsFeedStore extends EventEmitter {
       contentType: 'application/json',
       cache: false,
       success() {
-        dispatcher.dispatch({ type: 'POST_DELETE', postId });
+        dispatcher.dispatch({ type: successStatus, postId });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'POST_DELETE_ERROR', error });
+        dispatcher.dispatch({ type: failStatus, error });
       },
     });
   }
@@ -361,8 +373,23 @@ class NewsFeedStore extends EventEmitter {
         }
         break;
       }
-       case 'POST_DELETE': {
+      case 'ADMIN_POST_UNFLAG': {
+        const arrayLength = this.flaggedPosts.items.length;
+        this.flaggedPosts.items = this.flaggedPosts.items.filter(function(item) {
+          return action.postId !== item.id;
+        });
+        this.emit('updated');
+        break;
+      }
+      case 'POST_DELETE': {
         this.contentFeed.items = this.contentFeed.items.filter(function(item) {
+          return action.postId !== item.id;
+        });
+        this.emit('updated');
+        break;
+      }
+      case 'ADMIN_POST_DELETE': {
+        this.flaggedPosts.items = this.flaggedPosts.items.filter(function(item) {
           return action.postId !== item.id;
         });
         this.emit('updated');
@@ -401,13 +428,15 @@ class NewsFeedStore extends EventEmitter {
         this.emit('error');
         break;
       }
-      case 'POST_UNFLAG_ERROR': {
+      case 'POST_UNFLAG_ERROR':
+      case 'ADMIN_POST_UNFLAG_ERROR': {
         this.emit('revert');
         this.error = 'Error unflagging post';
         this.emit('error');
         break;
       }
-      case 'POST_DELETE_ERROR': {
+      case 'POST_DELETE_ERROR':
+      case 'ADMIN_POST_DELETE_ERROR': {
         this.error = 'Error deleting post';
         this.emit('error');
         break;

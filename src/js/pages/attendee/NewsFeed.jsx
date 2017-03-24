@@ -40,9 +40,6 @@ export default class NewsFeed extends React.Component {
     PreferenceStore.on('error', this.showPreferenceError);
 
     NewsFeedStore.getOnLoad();
-    // TODO: MOVE
-    NewsFeedStore.getFlagged();
-
   }
 
   componentWillUnmount() {

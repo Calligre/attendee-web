@@ -127,14 +127,14 @@ export default class NewsFeedPost extends React.Component {
     if (media_link && media_link !== '') {
       image = (
         <span className="show-image link clickable no-selection" onClick={this.showImage}>
-          <img src={this.state.media_link}/>
+          <img src={media_link}/>
         </span>
       );
     }
 
     return (
       <div className="newsfeed-post">
-        <div className="user-photo-container inline">
+        <div className="profile-photo inline">
           <img alt="poster" src={poster_icon} className="user-photo no-selection" />
         </div>
         <div className="post-text inline">
@@ -146,14 +146,14 @@ export default class NewsFeedPost extends React.Component {
           {image}
           <div className="soc-bar">
             <FaHeart
-              className="heart-icon clickable"
+              className="heart-icon clickable no-selection"
               onClick={this.changeLike}
               style={heartColor}
               size={20}
             />
             <span className="like-count no-selection">{like_count}</span>
             { repost &&
-              <FaRetweet className="retweet-button clickable" onClick={this.retweet} size={28} />
+              <FaRetweet className="social-spacing clickable" onClick={this.retweet} size={28} />
             }
           </div>
         </div>
