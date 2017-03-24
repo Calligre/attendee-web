@@ -54,4 +54,27 @@
       margin: 0 20px;
     }
   }
+ 
+  .sponsorCard {
+    .sponsorContainer {
+      display: inline-block;
+      width: 200px;
+      margin: 20px;
+      vertical-align: top;
+      position: relative;
+      overflow: hidden;
+
+      img {
+        height: 100px;
+        left: -100%;
+        right: -100%;
+        position: absolute;
+        margin: auto;
+      }
+
+      h3 {
+        margin-top: 120px;
+      }
+    }
+  }
 }

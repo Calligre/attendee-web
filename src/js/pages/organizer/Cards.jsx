@@ -108,17 +108,18 @@ export default class Cards extends React.Component {
   }
 
   generateSponsor = (row) => {
-    var updatedLocation = {
+    var updatedSponsor = {
       id: -1,
+      rank: 0,
       level: "",
       logo: "",
       name: "",
       website: "",
     }
     for (const prop in row) {
-      updatedLocation[prop] = row[prop];
+      updatedSponsor[prop] = row[prop];
     }
-    return updatedLocation;
+    return updatedSponsor;
   }
 
   updateCard = (row, cellName, cellValue) => {
@@ -277,6 +278,8 @@ export default class Cards extends React.Component {
         }
 
         <h1 className="primaryText largeTopMargin">Sponsors</h1>
+        <h3>Note: The same rank *must* be used for each level</h3>
+        <h3>For example, all Gold sponsors have rank 0, all Silver sponsors rank 1, and all Bronze rank 2.</h3>
         <BootstrapTable data={this.state.sponsors} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropSponsors} options={optionsSponsors}>
           <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Sponsor ID</TableHeaderColumn>
           <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
@@ -284,6 +287,9 @@ export default class Cards extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn dataField='level' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
             Level
+          </TableHeaderColumn>
+          <TableHeaderColumn dataField='rank' dataSort filter={ { type: 'NumberFilter', delay: 100, numberComparators: [ '=', '>', '<=' ]  } }>
+            Rank
           </TableHeaderColumn>
           <TableHeaderColumn dataField='logo'>Logo</TableHeaderColumn>
           <TableHeaderColumn dataField='website'>Website</TableHeaderColumn>
