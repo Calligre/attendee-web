@@ -1,7 +1,11 @@
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { DateField, TransitionView, Calendar } from 'react-date-picker';
 
 import NotificationStore from 'stores/NotificationStore';
+
+const moment = require('moment');
+
 
 export default class Notifications extends React.Component {
   constructor() {
@@ -14,13 +18,13 @@ export default class Notifications extends React.Component {
   }
 
   componentWillMount() {
-    NotificationStore.on('loaded', this.loadNotifications);
+    NotificationStore.on('received', this.loadNotifications);
     NotificationStore.on('created', this.loadNotifications);
     NotificationStore.on('error', this.showError);
   }
 
   componentWillUnmount() {
-    NotificationStore.removeListener('loaded', this.loadNotifications);
+    NotificationStore.removeListener('received', this.loadNotifications);
     NotificationStore.removeListener('created', this.loadNotifications);
     NotificationStore.removeListener('error', this.showError);
   }
@@ -45,12 +49,17 @@ export default class Notifications extends React.Component {
     row.forEach(id => NotificationStore.delete(id));
   }
 
-  render() {
-    const { notifications, disabled } = this.state;
+  formatExpiry = (cell, row) => {
+    const format = 'MMM Do hh:mm a';
+    return moment(cell).format(format);
+  }
 
-    if (disabled) {
-      return (<div> Notifications have been disabled, please check your preferences. </div>);
-    }
+  insertModal = (columns, validateState, ignoreEditable) => {
+    return (<InsertModalBody columns={ columns } validateState={ validateState } ignoreEditable={ ignoreEditable }/>);
+  }
+
+  render() {
+    const { notifications } = this.state;
 
     const cellEditProp = {
       mode: 'click',
@@ -63,11 +72,16 @@ export default class Notifications extends React.Component {
       afterInsertRow: this.addNotification,
       afterDeleteRow: this.deleteNotification,
       handleConfirmDeleteRow: removeAlertOnDelete,
+      insertModalBody: this.insertModal,
+
     }
 
     const selectRowProp = {
       mode: 'checkbox',
     };
+
+    const timeEditor = (onUpdate, props) => (<TimeEditor onUpdate={ onUpdate } {...props}/>);
+
 
     return (
       <BootstrapTable
@@ -79,9 +93,8 @@ export default class Notifications extends React.Component {
         striped
         hover
         options={tableOptions}>
-        <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
-        <TableHeaderColumn dataField='link' editable={ { validator: requireNotificationLink } }>Notification Link</TableHeaderColumn>
-        <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>
+        <TableHeaderColumn dataField='message'>Message</TableHeaderColumn>
+        <TableHeaderColumn dataField='expirytime'  customEditor={ { getElement: timeEditor } } dataFormat={this.formatExpiry}>Expiration Time</TableHeaderColumn>
         <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField='id'>Id</TableHeaderColumn>
       </BootstrapTable>
     );
@@ -92,13 +105,61 @@ function removeAlertOnDelete(next, dropRowKeys) {
   next();
 }
 
-function requireNotificationLink(value) {
-  const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
-  if (!value) {
-    response.isValid = false;
-    response.notification.type = 'error';
-    response.notification.msg = 'A link to a google notification is required';
-    response.notification.title = 'Requested Value';
+class TimeEditor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { value: moment(props.defaultValue).format("YYYY-MM-DDTHH:mm") };
   }
-  return response;
+  focus() {
+    this.refs.inputRef.focus();
+  }
+  updateData = () => {
+    this.props.onUpdate({ expirytime: moment(this.state.value, "YYYY-MM-DDTHH:mm").valueOf() });
+  }
+  render() {
+    return (
+      <span>
+        <input
+          ref='inputRef'
+          type='datetime-local'
+          value={ this.state.value }
+          onKeyDown={ this.props.onKeyDown }
+          onChange={ (ev) => { this.setState({ value: ev.currentTarget.value }); } } />
+      </span>
+    );
+  }
+}
+
+class InsertModalBody extends React.Component {
+  getFieldValue() {
+    const newRow = {
+      expirytime: moment(this.refs['expirytime'].value, "YYYY-MM-DDTHH:mm").valueOf(),
+      message: this.refs['message'].value,
+      id: moment(),
+    };
+    return newRow;
+  }
+
+  render() {
+    return (
+      <div className='modal-body'>
+        <div>
+         <div className='form-group' key="message">
+            <label>Message</label>
+            <input
+              ref='message'
+              type='text'
+              className="form-control editor edit-text"/>
+        </div>
+         <div className='form-group' key="expirytime">
+            <label>Expiration Time</label>
+            <input
+              ref='expirytime'
+              type='datetime-local'
+              className="form-control editor edit-text"/>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
