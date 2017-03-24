@@ -7,6 +7,7 @@ import Branding from 'pages/organizer/Branding';
 import Calendar from 'pages/organizer/Calendar';
 import Preferences from 'pages/organizer/Preferences';
 import Surveys from 'pages/organizer/Surveys';
+import Notifications from 'pages/organizer/Notifications';
 import Login from 'pages/Login';
 
 import AppHistory from 'util/AppHistory';
@@ -48,6 +49,7 @@ ReactDOM.render(
       <Route path="calendar" component={Calendar} onEnter={requireAuth} />
       <Route path="preferences" component={Preferences} onEnter={requireAuth} />
       <Route path="surveys" component={Surveys} onEnter={requireAuth} />
+      <Route path="notifications" component={Notifications} onEnter={requireAuth} />
       <Route path="login" component={Login} />
       <Route path="access_token=:token" component={Login} />
     </Route>
