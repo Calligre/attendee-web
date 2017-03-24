@@ -84,10 +84,10 @@ class EventStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'EVENT_UPDATE', event });
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
       }
     });
     return this.events;
@@ -105,10 +105,10 @@ class EventStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'EVENT_ADD', event, id: response.data.id });
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
       }
     });
     return this.events;
@@ -125,10 +125,10 @@ class EventStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
+        dispatcher.dispatch({ type: 'EVENT_DELETE', id });
       },
       error: function(error){
-        console.error(error);
+        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
       }
     });
     return this.events;
@@ -196,6 +196,29 @@ class EventStore extends EventEmitter {
         this.emit('received');
         break;
       }
+      case 'EVENT_UPDATE': {
+        var entry = this.events.find(c => c.id === action.event.id);
+        Object.assign(entry, action.event);
+        this.emit('updateEvents');
+        break;
+      }
+      case 'EVENT_ADD': {
+        const event = action.event;
+        event.id = action.id;
+        streamMap[event.stream] = streamMap[event.stream] || randomColor();
+        event.streamColor = streamMap[event.stream];
+        this.events.push(event);
+        this.emit('addEvents');
+        break;
+      }
+      case 'EVENT_DELETE': {
+        let index = this.events.findIndex(c => c.id === action.id);
+        if (index > -1) {
+          this.events.splice(index, 1);
+        }
+        this.emit('deleteEvents');
+        break;
+      }
       case 'STREAM_GET': {
         this.streams = action.stream;
         this.emit('stream');
@@ -214,6 +237,9 @@ class EventStore extends EventEmitter {
       case 'ERROR': {
         this.error = action.error;
         this.emit('error');
+        break;
+      }
+      default: {
         break;
       }
     }
