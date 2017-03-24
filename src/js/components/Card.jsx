@@ -25,6 +25,9 @@ export default class Card extends React.Component {
       case 'content':
         renderedContent = <div className="contentCard cardContent">{item}</div>;
         break;
+      case 'sponsor':
+        renderedContent = <SponsorCard data={item} headerStyle={headerStyle}/>;
+        break;
       case 'contact':
         renderedContent = <ContactCard data={item} headerStyle={headerStyle}/>;
         break;
@@ -121,3 +124,23 @@ var SocialCard = React.createClass({
     );
   }
 });
+
+var SponsorCard = React.createClass({
+  render: function() {
+    let sponsors = this.props.data.map(sponsor =>
+        <div className="sponsorContainer">
+          <a href={sponsor.website}>
+            <img src={sponsor.logo}/>
+          </a>
+          <h3>{sponsor.name}</h3>
+        </div>
+    );
+    return (
+      <div className="sponsorCard cardContent">
+        <h2 className="primaryText" style={this.props.headerStyle}>{this.props.data[0].level} Sponsors</h2>
+        {sponsors}
+      </div>
+    );
+  }
+});
+

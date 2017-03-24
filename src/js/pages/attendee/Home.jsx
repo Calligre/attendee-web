@@ -22,6 +22,7 @@ export default class Featured extends React.Component {
       cards: [],
       locations: [],
       contacts: [],
+      sponsors: [],
       preferences: PreferenceStore.getDefaults(),
     };
 
@@ -29,10 +30,12 @@ export default class Featured extends React.Component {
     BrandStore.on('receivedCards', this.setCards);
     BrandStore.on('receivedLocations', this.setLocations);
     BrandStore.on('receivedContacts', this.setContacts);
+    BrandStore.on('receivedSponsors', this.setSponsors);
     BrandStore.getBranding();
     BrandStore.getLocations();
     BrandStore.getContacts();
     BrandStore.getCards();
+    BrandStore.getSponsors();
 
     PreferenceStore.loadAll();
   };
@@ -106,11 +109,33 @@ export default class Featured extends React.Component {
     this.setState({locations: BrandStore.locations});
   }
 
+  setSponsors = () => {
+    let sponsors = Array.from(BrandStore.sponsors);
+    sponsors.sort((a, b) => {
+      return a.level > b.level;
+    });
+
+    let right = 0;
+    let sponsorsSplit = [];
+    while (sponsors.length > 0) {
+      if (sponsors[0].level != sponsors[right].level) {
+        sponsorsSplit.push(sponsors.splice(0, right));
+        right = 0;
+      } else if (right == sponsors.length - 1) {
+        sponsorsSplit.push(sponsors);
+        break;
+      } else {
+        right++;
+      }
+    }
+    this.setState({sponsors: sponsorsSplit});
+  }
+
   render() {
     if (localStorage.getItem('redirect_after_login')) {
       return (<div></div>)
     }
-    const { messages, events, notifications, logo, branding, locations, cards, contacts, preferences} = this.state;
+    const { messages, events, notifications, logo, branding, locations, cards, contacts, sponsors, preferences} = this.state;
 
     var eventCount = 0;
     const EventComponents = events.map((event) => {
@@ -157,6 +182,13 @@ export default class Featured extends React.Component {
       contactsCard = <Card type="contact" item={contacts}/>;
     }
 
+    let sponsorCards = null;
+    if (sponsors !== undefined && sponsors.length > 0) {
+      sponsorCards = sponsors.map((sublist) =>
+        <Card type="sponsor" item={sublist}/>
+      );
+    }
+
     return (
       <div>
         <NotificationStack
@@ -179,6 +211,7 @@ export default class Featured extends React.Component {
           {mapCard}
           {confPackageCard}
           {contentCards}
+          {sponsorCards}
         </div>
       </div>
     );
