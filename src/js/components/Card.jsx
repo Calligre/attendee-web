@@ -25,6 +25,9 @@ export default class Card extends React.Component {
       case 'content':
         renderedContent = <div className="contentCard cardContent">{item}</div>;
         break;
+      case 'sponsor':
+        renderedContent = <SponsorCard data={item} headerStyle={headerStyle}/>;
+        break;
       case 'contact':
         renderedContent = <ContactCard data={item} headerStyle={headerStyle}/>;
         break;
@@ -38,6 +41,9 @@ export default class Card extends React.Component {
         let facebook = this.props.facebook || null;
         let twitter = this.props.twitter || null;
         renderedContent = <SocialCard facebook={facebook} twitter={twitter} headerStyle={headerStyle}/>;
+        break;
+      case 'survey':
+        renderedContent = <SurveyCard data={item} headerStyle={headerStyle} buttonStyle={buttonStyle}/>;
         break;
       default:
         return null;
@@ -121,3 +127,37 @@ var SocialCard = React.createClass({
     );
   }
 });
+
+var SurveyCard = React.createClass({
+  render: function() {
+    return (
+      <div className="surveyCard cardContent">
+        <h2 className="primaryText" style={this.props.headerStyle}>{this.props.data.name}</h2>
+        <p>{this.props.data.description}</p>
+        <a href={this.props.data.link} target="_blank">
+          <button className="secondaryBackground" style={this.props.buttonStyle}>Take Survey</button>
+        </a>
+      </div>
+    );
+  }
+});
+
+var SponsorCard = React.createClass({
+  render: function() {
+    let sponsors = this.props.data.map(sponsor =>
+        <div className="sponsorContainer">
+          <a href={sponsor.website}>
+            <img src={sponsor.logo}/>
+          </a>
+          <h3>{sponsor.name}</h3>
+        </div>
+    );
+    return (
+      <div className="sponsorCard cardContent">
+        <h2 className="primaryText" style={this.props.headerStyle}>{this.props.data[0].level} Sponsors</h2>
+        {sponsors}
+      </div>
+    );
+  }
+});
+
