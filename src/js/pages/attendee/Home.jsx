@@ -112,13 +112,13 @@ export default class Featured extends React.Component {
   setSponsors = () => {
     let sponsors = Array.from(BrandStore.sponsors);
     sponsors.sort((a, b) => {
-      return a.level > b.level;
+      return a.rank > b.rank;
     });
 
     let right = 0;
     let sponsorsSplit = [];
     while (sponsors.length > 0) {
-      if (sponsors[0].level != sponsors[right].level) {
+      if (sponsors[0].rank != sponsors[right].rank) {
         sponsorsSplit.push(sponsors.splice(0, right));
         right = 0;
       } else if (right == sponsors.length - 1) {
