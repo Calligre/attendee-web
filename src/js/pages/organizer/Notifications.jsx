@@ -1,6 +1,5 @@
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { DateField, TransitionView, Calendar } from 'react-date-picker';
 
 import NotificationStore from 'stores/NotificationStore';
 
@@ -55,13 +54,13 @@ export default class Notifications extends React.Component {
     row.forEach(id => NotificationStore.delete(id));
   }
 
-  formatExpiry = (cell, row) => {
+  formatExpiry = (cell) => {
     const format = 'MMM Do hh:mm a';
     return moment(cell).format(format);
   }
 
   insertModal = (columns, validateState, ignoreEditable) => {
-    return (<InsertModalBody columns={ columns } validateState={ validateState } ignoreEditable={ ignoreEditable }/>);
+    return (<InsertModalBody columns={columns} validateState={validateState} ignoreEditable={ignoreEditable} />);
   }
 
   render() {
@@ -80,13 +79,13 @@ export default class Notifications extends React.Component {
       handleConfirmDeleteRow: removeAlertOnDelete,
       insertModalBody: this.insertModal,
 
-    }
+    };
 
     const selectRowProp = {
       mode: 'checkbox',
     };
 
-    const timeEditor = (onUpdate, props) => (<TimeEditor onUpdate={ onUpdate } {...props}/>);
+    const timeEditor = (onUpdate, props) => (<TimeEditor onUpdate={onUpdate} {...props} />);
 
 
     return (
@@ -98,39 +97,41 @@ export default class Notifications extends React.Component {
         deleteRow
         striped
         hover
-        options={tableOptions}>
-        <TableHeaderColumn dataField='message'>Message</TableHeaderColumn>
-        <TableHeaderColumn dataField='expirytime'  customEditor={ { getElement: timeEditor } } dataFormat={this.formatExpiry}>Expiration Time</TableHeaderColumn>
-        <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField='id'>Id</TableHeaderColumn>
+        options={tableOptions}
+      >
+        <TableHeaderColumn dataField="message">Message</TableHeaderColumn>
+        <TableHeaderColumn dataField="expirytime" customEditor={{ getElement: timeEditor }} dataFormat={this.formatExpiry}>Expiration Time</TableHeaderColumn>
+        <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField="id">Id</TableHeaderColumn>
       </BootstrapTable>
     );
   }
 }
 
-function removeAlertOnDelete(next, dropRowKeys) {
+function removeAlertOnDelete(next) {
   next();
 }
 
 class TimeEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: moment(props.defaultValue).format("YYYY-MM-DDTHH:mm") };
+    this.state = { value: moment(props.defaultValue).format('YYYY-MM-DDTHH:mm') };
   }
   focus() {
     this.refs.inputRef.focus();
   }
   updateData = () => {
-    this.props.onUpdate({ expirytime: moment(this.state.value, "YYYY-MM-DDTHH:mm").valueOf() });
+    this.props.onUpdate({ expirytime: moment(this.state.value, 'YYYY-MM-DDTHH:mm').valueOf() });
   }
   render() {
     return (
       <span>
         <input
-          ref='inputRef'
-          type='datetime-local'
-          value={ this.state.value }
-          onKeyDown={ this.props.onKeyDown }
-          onChange={ (ev) => { this.setState({ value: ev.currentTarget.value }); } } />
+          ref="inputRef"
+          type="datetime-local"
+          value={this.state.value}
+          onKeyDown={this.props.onKeyDown}
+          onChange={(ev) => { this.setState({ value: ev.currentTarget.value }); }}
+        />
       </span>
     );
   }
@@ -139,8 +140,8 @@ class TimeEditor extends React.Component {
 class InsertModalBody extends React.Component {
   getFieldValue() {
     const newRow = {
-      expirytime: moment(this.refs['expirytime'].value, "YYYY-MM-DDTHH:mm").valueOf(),
-      message: this.refs['message'].value,
+      expirytime: moment(this.refs.expirytime.value, 'YYYY-MM-DDTHH:mm').valueOf(),
+      message: this.refs.message.value,
       id: moment(),
     };
     return newRow;
@@ -148,21 +149,23 @@ class InsertModalBody extends React.Component {
 
   render() {
     return (
-      <div className='modal-body'>
+      <div className="modal-body">
         <div>
-         <div className='form-group' key="message">
+         <div className="form-group" key="message">
             <label>Message</label>
             <input
-              ref='message'
-              type='text'
-              className="form-control editor edit-text"/>
+              ref="message"
+              type="text"
+              className="form-control editor edit-text"
+            />
         </div>
-         <div className='form-group' key="expirytime">
+         <div className="form-group" key="expirytime">
             <label>Expiration Time</label>
             <input
-              ref='expirytime'
-              type='datetime-local'
-              className="form-control editor edit-text"/>
+              ref="expirytime"
+              type="datetime-local"
+              className="form-control editor edit-text"
+            />
           </div>
         </div>
       </div>
