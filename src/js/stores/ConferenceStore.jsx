@@ -16,7 +16,7 @@ class ConferenceStore extends EventEmitter {
   getConferences() {
     const self = this;
     $.ajax({
-      url: `${url}/api/conference`,
+      url: `${url}/conference`,
       dataType: 'json',
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
