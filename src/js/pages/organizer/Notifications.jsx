@@ -43,7 +43,9 @@ export default class Notifications extends React.Component {
   }
 
   updateNotification = (row) => {
-    NotificationStore.update(row);
+    const data = row;
+    data.expirytime = moment(row.expirytime, 'YYYY-MM-DDTHH:mm').valueOf();
+    NotificationStore.update(data);
   }
 
   addNotification = (row) => {
@@ -78,6 +80,8 @@ export default class Notifications extends React.Component {
       afterDeleteRow: this.deleteNotification,
       handleConfirmDeleteRow: removeAlertOnDelete,
       insertModalBody: this.insertModal,
+      defaultSortName: 'expirytime',
+      defaultSortOrder: 'desc',
 
     };
 
@@ -118,9 +122,6 @@ class TimeEditor extends React.Component {
   }
   focus() {
     this.refs.inputRef.focus();
-  }
-  updateData = () => {
-    this.props.onUpdate({ expirytime: moment(this.state.value, 'YYYY-MM-DDTHH:mm').valueOf() });
   }
   render() {
     return (
