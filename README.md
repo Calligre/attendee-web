@@ -1,32 +1,39 @@
 # attendee-web
 
-### Setup:
+## Development
 
-```npm install```
+Install dependencies with
 
-### Run the organizer app on local server:
-```npm run organizer-dev```
-It will deploy to localhost:8080
+    npm install
 
-### Run the attendee app on local server:
-```npm run attendee-dev```
-It will deploy to localhost:8081
+Then, to run the organizer app on [localhost:8080](http://localhost:8080):
 
-### Run prod server:
-```node_modules/forever/bin/forever start . prod```
+    npm run organizer-dev
 
-#### [localhost:8080](http://localhost:8080)
-#### [localhost:8081](http://localhost:8081)
+To run the attendee app on [localhost:8081](http://localhost:8081):
 
+    npm run attendee-dev
 
-### Linter
-to run the linter locally: ```node_modules/.bin/eslint```
+## Deployment
 
-to run the linter globally (like in a text editor) you have to install all eslint plugins globally:
- ```npm install -g eslint```
- ```npm install -g eslint-config-airbnb```
- ```npm install -g eslint-plugin-import```
- ```npm install -g eslint-plugin-jsx-a11y```
- ```npm install -g eslint-plugin-react```
+Install dependencies with
 
-then run ```elint```
+    npm install --only=production
+
+Then, to build the production bundle:
+
+    npm run build
+
+## Linter
+
+To run the linter locally, run `node_modules/.bin/eslint`
+
+To run the linter globally (like in a text editor) you have to install all eslint plugins globally:
+
+    npm install -g eslint
+    npm install -g eslint-config-airbnb
+    npm install -g eslint-plugin-import
+    npm install -g eslint-plugin-jsx-a11y
+    npm install -g eslint-plugin-react
+
+then run `eslint`.

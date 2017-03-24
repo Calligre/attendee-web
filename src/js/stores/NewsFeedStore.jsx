@@ -1,9 +1,10 @@
 import { EventEmitter } from 'events';
 import AuthService from 'util/AuthService';
+import UrlService from 'util/UrlService';
 import dispatcher from 'dispatcher';
 import $ from 'jquery';
 
-const url = 'https://dev.calligre.com';
+const url = UrlService.getUrl();
 
 class NewsFeedStore extends EventEmitter {
 
@@ -31,7 +32,7 @@ class NewsFeedStore extends EventEmitter {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
       type: 'GET',
-      url: `${url}/api/social`,
+      url: `${url}/social`,
       data: params,
       dataType: 'json',
       cache: false,
@@ -57,7 +58,7 @@ class NewsFeedStore extends EventEmitter {
 
     $.ajax({
       type: 'POST',
-      url: `${url}/api/social/${postId}/likes`,
+      url: `${url}/social/${postId}/likes`,
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
@@ -82,7 +83,7 @@ class NewsFeedStore extends EventEmitter {
 
     $.ajax({
       type: 'DELETE',
-      url: `${url}/api/social/${postId}/likes`,
+      url: `${url}/social/${postId}/likes`,
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
@@ -100,7 +101,7 @@ class NewsFeedStore extends EventEmitter {
   postToNewsFeed(data) {
     $.ajax({
       type: 'POST',
-      url: `${url}/api/social`,
+      url: `${url}/social`,
       data: JSON.stringify(data),
       dataType: 'json',
       headers: {
@@ -139,7 +140,7 @@ class NewsFeedStore extends EventEmitter {
         type: 'GET',
         data: photoType,
         dataType: 'json',
-        url: `${url}/api/social-image-upload-url`,
+        url: `${url}/social-image-upload-url`,
         contentType: 'application/json',
         cache: false,
         success(response) {

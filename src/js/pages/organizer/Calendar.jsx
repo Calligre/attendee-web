@@ -90,7 +90,7 @@ export default class Calendar extends React.Component {
     }
 
     return (
-	  <BootstrapTable data={this.state.events} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditProp} options={options}>
+      <BootstrapTable data={this.state.events} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditProp} options={options}>
         <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Event ID</TableHeaderColumn>
         <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
           Event Title
@@ -98,13 +98,13 @@ export default class Calendar extends React.Component {
         <TableHeaderColumn dataField='stream' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
           Stream
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='location' datasort filter={ { type: 'TextFilter', delay: 100 } }>
+        <TableHeaderColumn dataField='location' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
           Location
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='starttime' datasort dataFormat={ dateFormatter } editable={ { type: 'datetime' } }>
+        <TableHeaderColumn dataField='starttime' dataSort dataFormat={ dateFormatter } editable={ { type: 'datetime' } }>
           Start time
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='endtime' datasort dataFormat={ dateFormatter } editable={ { type: 'datetime' } }>
+        <TableHeaderColumn dataField='endtime' dataSort dataFormat={ dateFormatter } editable={ { type: 'datetime' } }>
           End time
         </TableHeaderColumn>
         <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>

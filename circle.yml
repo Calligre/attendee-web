@@ -1,0 +1,23 @@
+machine:
+  node:
+    version: 5.7.0
+
+dependencies:
+  pre:
+    - npm install
+  override:
+    - |
+      echo "module.exports={clientId:\"$AUTH0_CLIENT_ID\",clientDomain:\"$AUTH0_CLIENT_DOMAIN\"}" > src/js/auth0.config.js
+    - npm run build
+
+test:
+  override:
+    # - node_modules/.bin/eslint src
+    - stat build/attendee/attendee.client.min.js
+    - stat build/organizer/organizer.client.min.js
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - aws s3 sync build s3://calligre-attendee-web/ --delete

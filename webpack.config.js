@@ -1,15 +1,22 @@
-var debug = process.env.NODE_ENV !== "production";
+var prod = process.env.NODE_ENV === "production";
 var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-
 module.exports = {
   context: path.resolve(__dirname, "src"),
-  devtool: debug ? "inline-sourcemap" : null,
+  devtool: prod ? null : "inline-sourcemap",
   entry: {
     attendee: "attendee.client",
     organizer: "organizer.client",
+  },
+  externals: {
+    'auth0-lock': 'Auth0Lock',
+    'jquery': 'jQuery',
+    'react': 'React',
+    'react-bootstrap': 'ReactBootstrap',
+    'react-bootstrap-table': 'ReactBootstrapTable',
+    'react-dom': 'ReactDOM'
   },
   module: {
     loaders: [
@@ -36,10 +43,27 @@ module.exports = {
     extensions: ['', '.js', '.jsx'],
     root: path.resolve(__dirname, "./src/js")
   },
-  plugins: debug ? [] : [
+  plugins: prod ? [
     new ExtractTextPlugin('dist/styles/main.css', { allChunks: true }),
+    new webpack.optimize.AggressiveMergingPlugin({ minSizeReduce: 1.1 }),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
-  ],
+    new webpack.EnvironmentPlugin(['NODE_ENV']),
+    new webpack.optimize.UglifyJsPlugin({
+      comments: false,
+      compress: {
+        booleans: true,
+        conditionals: true,
+        dead_code: true,
+        drop_console: true,
+        drop_debugger: true,
+        evaluate: true,
+        sequences: true,
+        unused: true,
+        warnings: false,
+      },
+      sourceMap: false,
+    }),
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+  ] : [],
 };

@@ -1,11 +1,12 @@
 import { EventEmitter } from "events";
 import AuthService from "util/AuthService"
+import UrlService from 'util/UrlService';
 
 import dispatcher from "dispatcher";
 
 var $ = require("jquery");
+const url = UrlService.getUrl();
 var moment = require('moment');
-var url = "https://dev.calligre.com";
 
 class NotificationStore extends EventEmitter {
   constructor() {
@@ -17,7 +18,7 @@ class NotificationStore extends EventEmitter {
   getAll() {
     var self = this;
     $.ajax({
-      url: url + "/api/broadcast",
+      url: `${url}/broadcast`,
       dataType: "json",
       headers: {
         "Authorization": "Bearer " + AuthService.getToken()
