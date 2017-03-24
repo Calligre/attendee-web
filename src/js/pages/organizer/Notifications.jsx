@@ -20,12 +20,18 @@ export default class Notifications extends React.Component {
   componentWillMount() {
     NotificationStore.on('received', this.loadNotifications);
     NotificationStore.on('created', this.loadNotifications);
+    NotificationStore.on('addNotification', this.loadNotifications);
+    NotificationStore.on('deleteNotification', this.loadNotifications);
+    NotificationStore.on('updateNotification', this.loadNotifications);
     NotificationStore.on('error', this.showError);
   }
 
   componentWillUnmount() {
     NotificationStore.removeListener('received', this.loadNotifications);
     NotificationStore.removeListener('created', this.loadNotifications);
+    NotificationStore.removeListener('addNotification', this.loadNotifications);
+    NotificationStore.removeListener('deleteNotification', this.loadNotifications);
+    NotificationStore.removeListener('updateNotification', this.loadNotifications);
     NotificationStore.removeListener('error', this.showError);
   }
 
@@ -42,7 +48,7 @@ export default class Notifications extends React.Component {
   }
 
   addNotification = (row) => {
-    NotificationStore.create(row);
+    NotificationStore.add(row);
   }
 
   deleteNotification = (row) => {

@@ -38,6 +38,75 @@ class NotificationStore extends EventEmitter {
     return self.notifications;
   }
 
+  add(notification) {
+    var self = this;
+    $.ajax({
+      url: `${url}/broadcast`,
+      data : JSON.stringify(notification),
+      type : 'POST',
+      contentType : 'application/json',
+      processData: false,
+      dataType: 'json',
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      success: function(response) {
+        dispatcher.dispatch({type: "NOTIFICATIONS_ADD", notifications, id: response.data.id});
+      },
+      error: function(error){
+        dispatcher.dispatch({type: "ERROR", error: error.error});
+      }
+    });
+    return self.notifications;
+  }
+
+
+  update(notification){
+    $.ajax({
+      url: `${url}/broadcast/${notification.id}`,
+      data : JSON.stringify(notification),
+      type : 'PATCH',
+      contentType : 'application/json',
+      processData: false,
+      dataType: 'json',
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      success: function(response){
+        dispatcher.dispatch({ type: 'NOTIFICATION_UPDATE', notification });
+        console.log(response);
+      },
+      error: function(error){
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
+      }
+    });
+
+    return this.cards;
+  };
+
+  delete(id){
+    $.ajax({
+      url: `${url}/broadcast/${id}`,
+      type : 'DELETE',
+      contentType : 'application/json',
+      processData: false,
+      dataType: 'json',
+      headers: {
+        "Authorization": "Bearer " + AuthService.getToken()
+      },
+      success: function(response){
+        dispatcher.dispatch({ type: 'NOTIFICATION_DELETE', id });
+      },
+      error: function(error){
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error });
+      }
+    });
+
+    return this.cards;
+  };
+
+
+
   getValid() {
     var self = this;
     const currTime = moment().unix();
@@ -94,6 +163,26 @@ class NotificationStore extends EventEmitter {
     switch(action.type) {
       case "NOTIFICATIONS_GET": {
         this.emit("received");
+        break;
+      }
+     case 'NOTIFICATION_UPDATE': {
+        var entry = this.notifications.find(c => c.id === action.notification.id);
+        Object.assign(entry, action.notification);
+        this.emit('updateNotifications');
+        break;
+      }
+      case 'NOTIFICATION_ADD': {
+        action.notification.id = action.id;
+        this.notifications.push(action.notification)
+        this.emit('addNotifications');
+        break;
+      }
+      case 'NOTIFICATION_DELETE': {
+        let index = this.notifications.findIndex(c => c.id === action.id);
+        if (index > -1) {
+          this.notifications.splice(index, 1);
+        }
+        this.emit('deleteNotifications');
         break;
       }
       case "ERROR": {
