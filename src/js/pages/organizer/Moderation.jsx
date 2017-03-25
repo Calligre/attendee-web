@@ -44,7 +44,6 @@ export default class Moderation extends React.Component {
   }
 
   loadPreferences = () => {
-    console.log(PreferenceStore.preferences);
     this.setState({ disabled: !PreferenceStore.preferences.newsfeed });
   }
 
@@ -58,7 +57,6 @@ export default class Moderation extends React.Component {
 
   render() {
     const { flaggedPosts, disabled } = this.state;
-    console.log(flaggedPosts);
 
     if (disabled) {
       return (<div> NewsFeed has been disabled, please check your preferences. </div>);

@@ -5,6 +5,7 @@ import FaFlag from 'react-icons/lib/fa/flag';
 import FaHeart from 'react-icons/lib/fa/heart';
 import FaTrashO from 'react-icons/lib/fa/trash-o';
 import NewsFeedStore from 'stores/NewsFeedStore';
+let moment = require('moment')
 
 
 export default class ModeratePost extends React.Component {
@@ -15,22 +16,15 @@ export default class ModeratePost extends React.Component {
 
     this.unflagPost = this.unflagPost.bind(this);
     this.deletePost = this.deletePost.bind(this);
-    // this.showImage = this.showImage.bind(this);
   }
 
   unflagPost() {
-    console.log("Unflagging post");
     NewsFeedStore.unflagPost(this.state.id, true);
   }
 
   deletePost() {
-    console.log("Deleting Post");
     NewsFeedStore.deletePost(this.state.id, true);
   }
-
-  // showImage() {
-  //   this.state.imgOverlay(this.state.media_link);
-  // }
 
   render() {
     const {
@@ -43,6 +37,7 @@ export default class ModeratePost extends React.Component {
       poster_id,
       poster_name,
       text,
+      timestamp,
     } = this.state;
 
     let image = null;
@@ -77,7 +72,10 @@ export default class ModeratePost extends React.Component {
               size={20}
             />
             <span className="like-count no-selection">{like_count}</span>
-            <span className="social-spacing no-selection">Flagged {flag_count} times</span>
+            <span className="social-spacing no-selection">Flagged {flag_count} time(s)</span>
+            <span className="social-spacing no-selection date">
+              {moment(timestamp * 1000).format('MMMM Do, h:mm:ss a')}
+            </span>
           </div>
         </div>
       </div>

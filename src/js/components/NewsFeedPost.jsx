@@ -5,6 +5,7 @@ import FaFlag from 'react-icons/lib/fa/flag';
 import FaHeart from 'react-icons/lib/fa/heart';
 import FaRetweet from 'react-icons/lib/fa/retweet';
 import FaTrashO from 'react-icons/lib/fa/trash-o';
+let moment = require('moment')
 
 
 export default class NewsFeedPost extends React.Component {
@@ -89,6 +90,7 @@ export default class NewsFeedPost extends React.Component {
       poster_name,
       repost,
       text,
+      timestamp,
       userId,
     } = this.state;
 
@@ -155,6 +157,9 @@ export default class NewsFeedPost extends React.Component {
             { repost &&
               <FaRetweet className="social-spacing clickable" onClick={this.retweet} size={28} />
             }
+            <span className="social-spacing no-selection date date-newsfeed">
+              {moment(timestamp * 1000).format('MMMM Do, h:mm a')}
+            </span>
           </div>
         </div>
       </div>
