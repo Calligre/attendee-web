@@ -95,7 +95,7 @@ export default class People extends React.Component {
 
     // Filter based on the multi-select organization field. Match all selected.
     const filteredPeople = people.filter(person => self.state.filterTerms.length === 0 ||
-             (self.state.filterTerms.indexOf(person.organization) >= 0 &&
+             (person.organization.indexOf(self.state.filterTerms) >= 0 &&
              person.organization !== ''));
 
     // Filter based on search input. Match only on all search terms separated by spaces
