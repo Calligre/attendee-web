@@ -101,10 +101,14 @@ export default class Layout extends React.Component {
       <SidebarItem>
         <a className="sidebarLink" onClick={this.showConferenceSwitcher}>Switch Conferences</a>
       </SidebarItem>,
-      <SidebarItem href='/login'>
-        <a className="sidebarLink" onClick={AuthService.logout}>Logout</a>
-      </SidebarItem>,
     ]);
+    if (AuthService.loggedIn()) {
+      items.push(
+        <SidebarItem href='/login'>
+          <a className="sidebarLink" onClick={AuthService.logout}>Logout</a>
+        </SidebarItem>
+      );
+    }
 
     return (
       <div>
