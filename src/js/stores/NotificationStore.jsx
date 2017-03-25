@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import AuthService from 'util/AuthService';
 import AjaxService from 'util/AjaxService';
 
 import dispatcher from 'dispatcher';
@@ -31,7 +30,7 @@ class NotificationStore extends EventEmitter {
     AjaxService.get({
       endpoint: 'broadcast',
       success(response) {
-        dispatcher.dispatch({type: "NOTIFICATIONS_GET", notifications: response.data});
+        dispatcher.dispatch({ type: 'NOTIFICATIONS_GET', notifications: response.data });
       },
       error(error) {
         dispatcher.dispatch({type: "NOTIFICATION_ERROR", error: error.error});
@@ -47,7 +46,7 @@ class NotificationStore extends EventEmitter {
         dispatcher.dispatch({ type: 'NOTIFICATION_ADD', notification, id: response.data.id });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'ERROR', error: error.error });
+        dispatcher.dispatch({ type: 'NOTIFICATION_ERROR', error: error.error });
       },
     });
     return this.notifications;
@@ -109,6 +108,9 @@ class NotificationStore extends EventEmitter {
         onClick: () => this.handleDismiss(notification),
       };
     });
+    self.notifications = self.notifications.sort((a, b) => {
+      return a.expirytime > b.expirytime;
+    });
     self.notifications = self.notifications.sort((a, b) => a.expirytime > b.expirytime);
     return self.notifications;
   }
@@ -135,7 +137,7 @@ class NotificationStore extends EventEmitter {
         this.notifications = action.notifications.map((notification) => {
           return notification.attributes;
         });
-        this.emit("received");
+        this.emit('received');
         break;
       }
       case 'NOTIFICATION_UPDATE': {
@@ -158,7 +160,7 @@ class NotificationStore extends EventEmitter {
         this.emit('deleteNotifications');
         break;
       }
-      case 'ERROR': {
+      case 'NOTIFICATION_ERROR': {
         this.error = action.error;
         this.emit('error');
         break;

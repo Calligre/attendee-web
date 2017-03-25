@@ -92,7 +92,7 @@ class AjaxService {
 
   // processdata: false, datatype: json
   call(options) {
-    const { url, endpoint, type, data, contentType, success, error} = options;
+    const { url, endpoint, type, data, contentType, success, error } = options;
     const xhr = new XMLHttpRequest();
     const path = url || `${this.url}/${endpoint}`;
     xhr.open(type, path);
