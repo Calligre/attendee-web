@@ -3,11 +3,7 @@ import { isTokenExpired } from './jwtHelper';
 import Auth0Lock from 'auth0-lock';
 import * as config from 'auth0.config.js';
 import PeopleStore from 'stores/PeopleStore';
-import UrlService from 'util/UrlService';
-
-const $ = require('jquery');
-
-const url = UrlService.getUrl();
+import AjaxService from 'util/AjaxService';
 
 
 class AuthService extends EventEmitter {
@@ -58,15 +54,10 @@ class AuthService extends EventEmitter {
   _createUser() {
     const profile = this.getProfile();
     const id = this.getCurrentUserId();
-    $.ajax({
-      url: `${url}/user/${id}`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${this.getToken()}`,
-      },
-      cache: false,
-      success(response) {},
-      error(error) {
+    AjaxService.get({
+      endpoint: `user/${id}`,
+      success() {},
+      error() {
         const userData = {
           id,
           first_name: profile.given_name || profile.name.split(' ')[0],

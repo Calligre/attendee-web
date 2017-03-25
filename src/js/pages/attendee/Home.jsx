@@ -1,5 +1,4 @@
 import React from "react";
-var $ = require('jquery');
 
 import BroadcastMessage from "components/BroadcastMessage";
 import EventStore from "stores/EventStore";
@@ -209,7 +208,7 @@ export default class Featured extends React.Component {
           <Card type="survey" item={survey}/>
       );
     }
-    
+
     let sponsorCards = null;
     if (sponsors !== undefined && sponsors.length > 0) {
       sponsorCards = sponsors.map((sublist) =>

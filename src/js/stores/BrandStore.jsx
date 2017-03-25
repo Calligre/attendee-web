@@ -3,9 +3,6 @@ import AjaxService from 'util/AjaxService';
 
 import dispatcher from 'dispatcher';
 
-const $ = require('jquery');
-
-
 class BrandStore extends EventEmitter {
   constructor() {
     super();

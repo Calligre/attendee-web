@@ -1,13 +1,8 @@
-import AuthService from "util/AuthService";
-import UrlService from 'util/UrlService';
 import BrandStore from "stores/BrandStore";
 import Card from "components/Card";
-import dispatcher from "dispatcher";
 import React from "react";
 
 var moment = require('moment');
-const url = UrlService.getUrl();
-const $ = require("jquery");
 
 export default class Branding extends React.Component {
   constructor(props) {
@@ -31,7 +26,7 @@ export default class Branding extends React.Component {
       twitter: '',
     };
   }
- 
+
   componentWillMount() {
     BrandStore.on("receivedBranding", this.setBranding);
     BrandStore.on("savedBranding", this.brandingSaved)
@@ -98,7 +93,7 @@ export default class Branding extends React.Component {
       color: this.state.color_primary,
       WebkitTextFillColor: this.state.color_primary,
     }
- 
+
     let mapCard = null;
     let confPackageCard = null;
     let socialCard = null;
