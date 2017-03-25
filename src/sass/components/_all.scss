@@ -232,3 +232,23 @@ button {
 .navHeader {
   margin-top: 60px;
 }
+
+.sidebarLink {
+  color: white !important;
+}
+
+.conferenceSwitcher{
+  h1 {
+    margin-bottom: 30px;
+  }
+  .conferenceElement {
+    display: inline-block;
+    vertical-align: top;
+    margin: 20px;
+    width: 200px;
+
+    img {
+      height: 100px;
+    }
+  }
+}
