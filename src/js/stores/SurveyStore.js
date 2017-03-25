@@ -1,12 +1,7 @@
 import { EventEmitter } from 'events';
-import AuthService from 'util/AuthService';
-import UrlService from 'util/UrlService';
+import AjaxService from 'util/AjaxService';
 
 import dispatcher from 'dispatcher';
-
-const $ = require('jquery');
-
-const url = UrlService.getUrl();
 
 
 class SurveyStore extends EventEmitter {
@@ -17,13 +12,8 @@ class SurveyStore extends EventEmitter {
   }
 
   getAll() {
-    $.ajax({
-      url: `${url}/survey`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      cache: false,
+    AjaxService.get({
+      endpoint: 'survey',
       success(response) {
         dispatcher.dispatch({ type: 'SURVEYS_GET', surveys: response.data });
       },
@@ -35,18 +25,11 @@ class SurveyStore extends EventEmitter {
   }
 
   create(survey) {
-    $.ajax({
-      url: `${url}/survey`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      type: 'POST',
-      contentType: 'application/json',
-      data : JSON.stringify(survey),
-      cache: false,
+    AjaxService.create({
+      endpoint: 'survey',
+      data: survey,
       success(response) {
-        dispatcher.dispatch({ type: 'SURVEYS_CREATE', survey: survey, id: response.data.id });
+        dispatcher.dispatch({ type: 'SURVEYS_CREATE', survey, id: response.data.id });
       },
       failure(error) {
         dispatcher.dispatch({ type: 'SURVEYS_ERROR', error: error.error });
@@ -56,18 +39,11 @@ class SurveyStore extends EventEmitter {
   }
 
   update(survey) {
-    $.ajax({
-      url: `${url}/survey/${survey.id}`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      type: 'PATCH',
-      contentType: 'application/json',
-      data : JSON.stringify(survey),
-      cache: false,
-      success(response) {
-        dispatcher.dispatch({ type: 'SURVEYS_UPDATE', survey: survey });
+    AjaxService.update({
+      endpoint: 'survey',
+      data: survey,
+      success() {
+        dispatcher.dispatch({ type: 'SURVEYS_UPDATE', survey });
       },
       failure(error) {
         dispatcher.dispatch({ type: 'SURVEYS_ERROR', error: error.error });
@@ -77,18 +53,11 @@ class SurveyStore extends EventEmitter {
   }
 
   delete(id) {
-    $.ajax({
-      url: `${url}/survey/${id}`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      processData: false,
-      type: 'DELETE',
-      contentType: 'application/json',
-      cache: false,
+    AjaxService.delete({
+      endpoint: 'survey',
+      id,
       success() {
-        dispatcher.dispatch({ type: 'SURVEYS_DELETE', id: id });
+        dispatcher.dispatch({ type: 'SURVEYS_DELETE', id });
       },
       failure(error) {
         dispatcher.dispatch({ type: 'SURVEYS_ERROR', error: error.error });
@@ -108,7 +77,7 @@ class SurveyStore extends EventEmitter {
       case 'SURVEYS_UPDATE': {
         this.surveys.forEach((survey) => {
           if (survey.id === action.survey.id) {
-            $.extend(survey, action.survey);
+            Object.assign(survey, action.survey);
           }
         });
         this.emit('updated');

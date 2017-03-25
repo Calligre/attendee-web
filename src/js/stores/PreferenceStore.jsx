@@ -1,13 +1,7 @@
 import { EventEmitter } from 'events';
-import AuthService from 'util/AuthService';
-import UrlService from 'util/UrlService';
 import AjaxService from 'util/AjaxService';
 
 import dispatcher from 'dispatcher';
-
-const $ = require('jquery');
-
-const url = UrlService.getUrl();
 
 
 class PreferenceStore extends EventEmitter {
