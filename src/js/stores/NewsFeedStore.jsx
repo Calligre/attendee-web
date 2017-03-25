@@ -1,10 +1,6 @@
 import { EventEmitter } from 'events';
-import AuthService from 'util/AuthService';
-import UrlService from 'util/UrlService';
+import AjaxService from 'util/AjaxService';
 import dispatcher from 'dispatcher';
-import $ from 'jquery';
-
-const url = UrlService.getUrl();
 
 class NewsFeedStore extends EventEmitter {
 
@@ -27,15 +23,9 @@ class NewsFeedStore extends EventEmitter {
     // TODO: Should there be a way to specify limit?
     // params.limit = 10;
 
-    $.ajax({
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      type: 'GET',
-      url: `${url}/social`,
+    AjaxService.get({
+      endpoint: 'social',
       data: params,
-      dataType: 'json',
-      cache: false,
       success(response) {
         dispatcher.dispatch({ type: 'NEWSFEED_GET', response });
       },
@@ -56,23 +46,15 @@ class NewsFeedStore extends EventEmitter {
   likePost(pid) {
     const postId = pid;
 
-    $.ajax({
-      type: 'POST',
-      url: `${url}/social/${postId}/likes`,
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      contentType: 'application/json',
-      cache: false,
-      statusCode: {
-        500() {
-          alert('Unable to perform this action, please try again later');
-        },
-      },
+    AjaxService.create({
+      endpoint: `social/${postId}/likes`,
       success() {
         dispatcher.dispatch({ type: 'POST_LIKE', postId });
       },
-      error(error) {
+      error(error, status) {
+        if (status === 500) {
+          alert('Unable to perform this action, please try again later');
+        }
         dispatcher.dispatch({ type: 'POST_LIKE_ERROR', error });
       },
     });
@@ -81,14 +63,9 @@ class NewsFeedStore extends EventEmitter {
   unlikePost(pid) {
     const postId = pid;
 
-    $.ajax({
-      type: 'DELETE',
-      url: `${url}/social/${postId}/likes`,
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      contentType: 'application/json',
-      cache: false,
+    AjaxService.delete({
+      endpoint: 'social',
+      id: `${postId}/likes`,
       success() {
         dispatcher.dispatch({ type: 'POST_UNLIKE', postId });
       },
@@ -99,16 +76,9 @@ class NewsFeedStore extends EventEmitter {
   }
 
   postToNewsFeed(data) {
-    $.ajax({
-      type: 'POST',
-      url: `${url}/social`,
-      data: JSON.stringify(data),
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      contentType: 'application/json',
-      cache: false,
+    AjaxService.create({
+      endpoint: 'social',
+      data,
       success(response) {
         dispatcher.dispatch({ type: 'CREATE_POST_SUCCESS', post: response.id });
       },
@@ -133,27 +103,19 @@ class NewsFeedStore extends EventEmitter {
       };
 
       // Obtain the media URL to post our photo to
-      $.ajax({
-        headers: {
-          Authorization: `Bearer ${AuthService.getToken()}`,
-        },
+      AjaxService.call({
         type: 'GET',
         data: photoType,
-        dataType: 'json',
-        url: `${url}/social-image-upload-url`,
-        contentType: 'application/json',
-        cache: false,
+        endpoint: 'social-image-upload-url',
         success(response) {
           const photoUploadURL = response.data;
 
           // Put the photo at the url
-          $.ajax({
+          AjaxService.call({
             url: photoUploadURL,
-            type: 'put',
+            type: 'PUT',
             data: photo,
             contentType: photo.type,
-            processData: false,
-            cache: false,
             success() {
               data.media_link = photoUploadURL;
               self.postToNewsFeed(data);

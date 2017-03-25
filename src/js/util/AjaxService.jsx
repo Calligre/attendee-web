@@ -43,7 +43,7 @@ class AjaxService {
         success(response);
       } else {
         const response = (xhr.response) ? JSON.parse(xhr.response) : {};
-        error(JSON.response, xhr.status);
+        error(response, xhr.status);
       }
     };
     xhr.send(JSON.stringify(data));
@@ -63,7 +63,7 @@ class AjaxService {
         success(response);
       } else {
         const response = (xhr.response) ? JSON.parse(xhr.response) : {};
-        error(JSON.response, xhr.status);
+        error(response, xhr.status);
       }
     };
     xhr.send(JSON.stringify(data));
@@ -83,10 +83,37 @@ class AjaxService {
         success(response);
       } else {
         const response = (xhr.response) ? JSON.parse(xhr.response) : {};
-        error(JSON.response, xhr.status);
+        error(response, xhr.status);
       }
     };
     xhr.send();
+  }
+
+
+  // processdata: false, datatype: json
+  call(options) {
+    const { url, endpoint, type, data, contentType, success, error} = options;
+    const xhr = new XMLHttpRequest();
+    const path = url || `${this.url}/${endpoint}`;
+    xhr.open(type, path);
+    xhr.setRequestHeader('Authorization', `Bearer ${AuthService.getToken()}`);
+    xhr.setRequestHeader('Content-Type', contentType || 'application/json');
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        const response = (xhr.response) ? JSON.parse(xhr.response) : {};
+        success(response);
+      } else {
+        const response = (xhr.response) ? JSON.parse(xhr.response) : {};
+        error(response, xhr.status);
+      }
+    };
+
+    if (data) {
+      xhr.send(JSON.stringify(data));
+    } else {
+      xhr.send();
+    }
   }
 
 }
