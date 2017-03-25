@@ -67,11 +67,11 @@ export default class Event extends React.Component {
         <div className="nameContainer" style={streamStyle}>
           <div className="header">
             <div className="dates">
-              <h4 className="date">{moment.unix(starttime).format('MMM Do')}</h4>
-              <h4 className="date">{moment.unix(starttime).format('h:mm a')}</h4>
-              <h4 className="date">{moment.unix(endtime).format('h:mm a')}</h4>
+              <h4 className="date outlined">{moment.unix(starttime).format('MMM Do')}</h4>
+              <h4 className="date outlined">{moment.unix(starttime).format('h:mm a')}</h4>
+              <h4 className="date outlined">{moment.unix(endtime).format('h:mm a')}</h4>
             </div>
-            <h1>{name}</h1>
+            <h1 className="primaryText outlined">{name}</h1>
           </div>
           <SubscribeButton className="isSubscribed" id={this.state.event.id} subscribed={isSubscribed} />
         </div>
