@@ -1,11 +1,9 @@
 import { EventEmitter } from 'events';
 import AuthService from 'util/AuthService';
-import UrlService from 'util/UrlService';
+import AjaxService from 'util/AjaxService';
 
 import dispatcher from 'dispatcher';
 
-const $ = require('jquery');
-const url = UrlService.getUrl();
 const moment = require('moment');
 
 // for the UI
@@ -30,40 +28,21 @@ class NotificationStore extends EventEmitter {
   }
 
   getAll() {
-    const self = this;
-    $.ajax({
-      url: `${url}/broadcast`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      cache: false,
+    AjaxService.get({
+      endpoint: 'broadcast',
       success(response) {
-        self.notifications = response.data;
-        self.notifications = self.notifications.map((notification) => {
-          return formatData(notification.attributes);
-        });
-        dispatcher.dispatch({ type: 'NOTIFICATIONS_GET', notifications: self.notifications });
+        dispatcher.dispatch({type: "NOTIFICATIONS_GET", notifications: response.data});
       },
       error(error) {
-        dispatcher.dispatch({ type: 'ERROR', error: error.error });
-      },
-    });
+        dispatcher.dispatch({type: "NOTIFICATION_ERROR", error: error.error});
+      }
     return self.notifications;
   }
 
   add(notification) {
-    const self = this;
-    $.ajax({
-      url: `${url}/broadcast`,
-      data: JSON.stringify(formatValues(notification)),
-      type: 'POST',
-      contentType: 'application/json',
-      processData: false,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
+    AjaxService.create({
+      endpoint: 'broadcast',
+      data: formatValues(notification),
       success(response) {
         dispatcher.dispatch({ type: 'NOTIFICATION_ADD', notification, id: response.data.id });
       },
@@ -71,21 +50,14 @@ class NotificationStore extends EventEmitter {
         dispatcher.dispatch({ type: 'ERROR', error: error.error });
       },
     });
-    return self.notifications;
+    return this.notifications;
   }
 
 
   update(notification) {
-    $.ajax({
-      url: `${url}/broadcast/${notification.id}`,
-      data: JSON.stringify(formatValues(notification)),
-      type: 'PATCH',
-      contentType: 'application/json',
-      processData: false,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
+    AjaxService.update({
+      endpoint: 'broadcast',
+      data: formatValues(notification),
       success() {
         dispatcher.dispatch({ type: 'NOTIFICATION_UPDATE', notification });
       },
@@ -98,15 +70,9 @@ class NotificationStore extends EventEmitter {
   }
 
   delete(id) {
-    $.ajax({
-      url: `${url}/broadcast/${id}`,
-      type: 'DELETE',
-      contentType: 'application/json',
-      processData: false,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
+    AjaxService.delete({
+      endpoint: 'broadcast',
+      id,
       success() {
         dispatcher.dispatch({ type: 'NOTIFICATION_DELETE', id });
       },
@@ -166,7 +132,10 @@ class NotificationStore extends EventEmitter {
   handleActions(action) {
     switch (action.type) {
       case 'NOTIFICATIONS_GET': {
-        this.emit('received');
+        this.notifications = action.notifications.map((notification) => {
+          return notification.attributes;
+        });
+        this.emit("received");
         break;
       }
       case 'NOTIFICATION_UPDATE': {
