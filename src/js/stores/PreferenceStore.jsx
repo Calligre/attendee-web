@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import AuthService from 'util/AuthService';
 import UrlService from 'util/UrlService';
+import AjaxService from 'util/AjaxService';
 
 import dispatcher from 'dispatcher';
 
@@ -33,17 +34,12 @@ class PreferenceStore extends EventEmitter {
   }
 
   loadAll() {
-    $.ajax({
-      url: `${url}/preference`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      cache: false,
+    AjaxService.get({
+      endpoint: 'preference',
       success(response) {
         dispatcher.dispatch({ type: 'PREFERENCES_GET', preferences: response.data.attributes });
       },
-      failure(error) {
+      error(error) {
         dispatcher.dispatch({ type: 'PREFERENCES_ERROR', error: error.error });
       },
     });
@@ -51,20 +47,13 @@ class PreferenceStore extends EventEmitter {
   }
 
   update(key, value) {
-    $.ajax({
-      url: `${url}/preference`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      type: 'PATCH',
-      contentType: 'application/json',
-      data: JSON.stringify({ [key]: value }),
-      cache: false,
+    AjaxService.update({
+      endpoint: 'preference',
+      data: { [key]: value },
       success() {
         dispatcher.dispatch({ type: 'PREFERENCES_UPDATE', key, value });
       },
-      failure(error) {
+      error(error) {
         dispatcher.dispatch({ type: 'PREFERENCES_ERROR', error: error.error });
       },
     });
