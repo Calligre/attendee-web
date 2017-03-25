@@ -1,11 +1,8 @@
 import { EventEmitter } from "events";
-import AuthService from "util/AuthService";
-import UrlService from 'util/UrlService';
+import AjaxService from "util/AjaxService";
 
 import dispatcher from "dispatcher";
 
-var $ = require("jquery");
-const url = UrlService.getUrl();
 
 class PeopleStore extends EventEmitter {
   constructor() {
@@ -15,21 +12,14 @@ class PeopleStore extends EventEmitter {
   }
 
   create(data) {
-    $.ajax({
-      url: `${url}/user`,
-      dataType: "json",
-      contentType: "application/json",
-      data: JSON.stringify(data),
-      type: 'POST',
-      headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+    AjaxService.create({
+      endpoing: 'user',
+      data,
+      success(response) {
+        dispatcher.dispatch({ type: "PEOPLE_CREATE", people: response });
       },
-      cache: false,
-      success: function(response){
-        dispatcher.dispatch({type: "PEOPLE_CREATE", people: response});
-      },
-      error: function(error){
-        dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
+      error(error) {
+        dispatcher.dispatch({ type: "PEOPLE_ERROR", error });
       }
     });
     return this.people;
@@ -37,17 +27,12 @@ class PeopleStore extends EventEmitter {
 
 
   getAll() {
-    $.ajax({
-      url: `${url}/user`,
-      dataType: "json",
-      headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
-      },
-      cache: false,
-      success: function(response){
+    AjaxService.get({
+      endpoint: 'user',
+      success(response){
         dispatcher.dispatch({type: "PEOPLE_GET", people: response});
       },
-      error: function(error){
+      error(error){
         dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
       }
     });
@@ -59,45 +44,32 @@ class PeopleStore extends EventEmitter {
     const fileReader = new FileReader();
     fileReader.readAsDataURL(photo);
     fileReader.onloadend = function (e) {
-      $.ajax({
-        url: `${url}/user/${id}/photo`,
-        contentType : 'application/json',
-        type: 'put',
-        data: JSON.stringify({data: this.result}),
-        headers: {
-          "Authorization": "Bearer " + AuthService.getToken()
-        },
-        processData: false,
-        cache: false,
-        success: function(response){
+      AjaxService.call({
+        endpoint: `user/${id}/photo`,
+        type: 'PUT',
+        data: {data: this.result},
+        success(response) {
           self.updatePerson({id: id, photo: response.data.url});
           //dispatcher.dispatch({type: "PEOPLE_GET", people: response});
         },
-        error: function(error){
+        error(error) {
           console.log(error);
           //dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
-        }
+        },
       });
       return this.people;
     }
   }
 
   updatePerson(person) {
-    $.ajax({
-      url: `${url}/user/${person.id}`,
-      data : JSON.stringify(person),
-      type : 'PATCH',
-      contentType : 'application/json',
-      processData: false,
-      dataType: 'json',
-      headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
-      },
-      success: function(response){
+    AjaxService.update({
+      endppoint: 'user',
+      data: person,
+      success(response){
         console.log(response);
         //dispatcher.dispatch({type: "PEOPLE_GET", people: response});
       },
-      error: function(error){
+      error(error){
         console.log(error);
         //dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
       }
