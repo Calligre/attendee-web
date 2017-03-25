@@ -1,14 +1,13 @@
 import { EventEmitter } from 'events';
+
 import AuthService from 'util/AuthService';
-import UrlService from 'util/UrlService';
+import AjaxService from 'util/AjaxService';
 
 import dispatcher from 'dispatcher';
 
-const $ = require('jquery');
 const randomColor = require('randomcolor');
 
 const streamMap = {};
-const url = UrlService.getUrl();
 
 
 class EventStore extends EventEmitter {
@@ -21,18 +20,13 @@ class EventStore extends EventEmitter {
   }
 
   getStreams() {
-    $.ajax({
-      url: `${url}/stream`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      cache: false,
+    AjaxService.get({
+      endpoint: 'stream',
       success(response) {
         const streams = response.data.map(d => d.attributes.stream);
         dispatcher.dispatch({ type: 'STREAM_GET', stream: streams });
       },
-      failure(error) {
+      error(error) {
         dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
       },
     });
@@ -40,32 +34,22 @@ class EventStore extends EventEmitter {
   }
 
   getAll() {
-    $.ajax({
-      url: `${url}/event`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      cache: false,
+    AjaxService.get({
+      endpoint: 'event',
       success(response) {
         const events = response.data;
-        $.ajax({
-          url: `${url}/user/${AuthService.getCurrentUserId()}/subscription`,
-          dataType: 'json',
-          headers: {
-            Authorization: `Bearer ${AuthService.getToken()}`,
-          },
-          cache: false,
+        AjaxService.get({
+          endpoint: `user/${AuthService.getCurrentUserId()}/subscription`,
           success(response2) {
             const subscription = response2.data.map(sub => sub.attributes.event_id);
             dispatcher.dispatch({ type: 'EVENTS_GET', events, subscriptions: subscription });
           },
-          failure(error) {
+          error(error) {
             dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
           },
         });
       },
-      failure(error) {
+      error(error) {
         dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
       },
     });
@@ -73,82 +57,55 @@ class EventStore extends EventEmitter {
   }
 
   updateEvent(event) {
-    $.ajax({
-      url: `${url}/event/${event.id}`,
-      data: JSON.stringify(event),
-      type: 'PATCH',
-      contentType: 'application/json',
-      processData: false,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
+    AjaxService.update({
+      endpoint: 'event',
+      data: event,
       success() {
-        dispatcher.dispatch({ type: 'EVENT_UPDATE', event });
+        dispatcher.dispatch({ type: 'EVENTS_UPDATE', event });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+        dispatcher.dispatch({ type: 'EVENTS_ERROR', error });
       },
     });
     return this.events;
   }
 
   addEvent(event) {
-    $.ajax({
-      url: `${url}/event`,
-      data: JSON.stringify(event),
-      type: 'POST',
-      contentType: 'application/json',
-      processData: false,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
+    AjaxService.create({
+      endpoint: 'event',
+      data: event,
       success(response) {
-        dispatcher.dispatch({ type: 'EVENT_ADD', event, id: response.data.id });
+        dispatcher.dispatch({ type: 'EVENTS_ADD', event, id: response.data.id });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+        dispatcher.dispatch({ type: 'EVENTS_ERROR', error });
       },
     });
     return this.events;
   }
 
   deleteEvent(id) {
-    $.ajax({
-      url: `${url}/event/${id}`,
-      type: 'DELETE',
-      contentType: 'application/json',
-      processData: false,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
+    AjaxService.delete({
+      endpoint: 'event',
+      id,
       success() {
-        dispatcher.dispatch({ type: 'EVENT_DELETE', id });
+        dispatcher.dispatch({ type: 'EVENTS_UPDATE', id });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+        dispatcher.dispatch({ type: 'EVENTS_ERROR', error });
       },
     });
     return this.events;
   }
 
   subscribeToEvent(id) {
-    $.ajax({
-      url: `${url}/user/${AuthService.getCurrentUserId()}/subscription`,
-      type: 'POST',
-      data: JSON.stringify({ event_id: id }),
-      contentType: 'application/json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      dataType: 'json',
-      cache: false,
+    AjaxService.create({
+      endpoint: `user/${AuthService.getCurrentUserId()}/subscription`,
+      data: { event_id: id },
       success() {
         dispatcher.dispatch({ type: 'EVENT_SUBSCRIBE', event: id, isSubscribed: true });
       },
-      failure(error) {
+      error(error) {
         dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
       },
     });
@@ -156,18 +113,13 @@ class EventStore extends EventEmitter {
   }
 
   unsubscribeToEvent(id) {
-    $.ajax({
-      url: `${url}/user/${AuthService.getCurrentUserId()}/subscription/${id}`,
-      type: 'DELETE',
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      cache: false,
+    AjaxService.delete({
+      endpoint: `user/${AuthService.getCurrentUserId()}/subscription`,
+      id,
       success() {
         dispatcher.dispatch({ type: 'EVENT_UNSUBSCRIBE', event: id, isSubscribed: false });
       },
-      failure(error) {
+      error(error) {
         dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
       },
     });

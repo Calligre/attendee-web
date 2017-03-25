@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import AuthService from 'util/AuthService';
 import AjaxService from 'util/AjaxService';
 
 import dispatcher from 'dispatcher';
