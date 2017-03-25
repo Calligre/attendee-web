@@ -137,8 +137,12 @@ export default class Profile extends React.Component {
         <h4>Points: {points}</h4>
         <h4>Rank: {rank}</h4>
         {this.renderLinkedAccountsList(myProfile)}
-        <Input type='text' label='Organization' name='organization' value={this.state.organization} onChange={this.handleChange.bind(this, 'organization')} />
-        <Input type='text' label='About you' name='description' value={this.state.description} onChange={this.handleChange.bind(this, 'description')} />
+        { (myProfile || this.state.organization.length > 0) &&
+          <Input type='text' label='Organization' name='organization' value={this.state.organization} onChange={this.handleChange.bind(this, 'organization')} disabled={!myProfile}/>
+        }
+        { (myProfile || this.state.description.length > 0) &&
+          <Input type='text' label='About you' name='description' value={this.state.description} onChange={this.handleChange.bind(this, 'description')} disabled={!myProfile}/>
+        }
         <button className="secondaryBackground submitChanges" onClick={this.submitChanges}>Save changes</button>
       </div>
     );
