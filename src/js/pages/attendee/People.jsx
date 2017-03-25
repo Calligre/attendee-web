@@ -95,7 +95,8 @@ export default class People extends React.Component {
 
     // Filter based on the multi-select organization field. Match all selected.
     const filteredPeople = people.filter(person => self.state.filterTerms.length === 0 ||
-             self.state.filterTerms.indexOf(person.organization) >= 0);
+             (self.state.filterTerms.indexOf(person.organization) >= 0 &&
+             person.organization !== ''));
 
     // Filter based on search input. Match only on all search terms separated by spaces
     const KEYS = ['first_name', 'last_name', 'organization'];
@@ -105,7 +106,7 @@ export default class People extends React.Component {
     const organizations = people.map(person => ({
       value: person.organization,
       label: person.organization,
-    })).filter((value, index, self) => self.indexOf(value) === index);
+    })).filter((value, index, self) => (self.indexOf(value) === index) && value.value !== '');
 
     const buttonIcon = React.createElement(SwapVert, null);
 
