@@ -19,18 +19,18 @@ export default class Notifications extends React.Component {
   componentWillMount() {
     NotificationStore.on('received', this.loadNotifications);
     NotificationStore.on('created', this.loadNotifications);
-    NotificationStore.on('addNotification', this.loadNotifications);
-    NotificationStore.on('deleteNotification', this.loadNotifications);
-    NotificationStore.on('updateNotification', this.loadNotifications);
+    NotificationStore.on('addNotifications', this.loadNotifications);
+    NotificationStore.on('deleteNotifications', this.loadNotifications);
+    NotificationStore.on('updateNotifications', this.loadNotifications);
     NotificationStore.on('error', this.showError);
   }
 
   componentWillUnmount() {
     NotificationStore.removeListener('received', this.loadNotifications);
     NotificationStore.removeListener('created', this.loadNotifications);
-    NotificationStore.removeListener('addNotification', this.loadNotifications);
-    NotificationStore.removeListener('deleteNotification', this.loadNotifications);
-    NotificationStore.removeListener('updateNotification', this.loadNotifications);
+    NotificationStore.removeListener('addNotifications', this.loadNotifications);
+    NotificationStore.removeListener('deleteNotifications', this.loadNotifications);
+    NotificationStore.removeListener('updateNotifications', this.loadNotifications);
     NotificationStore.removeListener('error', this.showError);
   }
 
@@ -43,8 +43,6 @@ export default class Notifications extends React.Component {
   }
 
   updateNotification = (row) => {
-    const data = row;
-    data.expirytime = moment(row.expirytime, 'YYYY-MM-DDTHH:mm').valueOf();
     NotificationStore.update(data);
   }
 
@@ -57,7 +55,7 @@ export default class Notifications extends React.Component {
   }
 
   formatExpiry = (cell) => {
-    const format = 'MMM Do hh:mm a';
+    const format = 'MMM DD, YYYY hh:mm a';
     return moment(cell).format(format);
   }
 

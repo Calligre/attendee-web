@@ -8,6 +8,20 @@ const $ = require('jquery');
 const url = UrlService.getUrl();
 const moment = require('moment');
 
+// for the UI
+function formatData(notification) {
+  const value = notification;
+  value.expirytime = moment.unix(value.expirytime).valueOf();
+  return value;
+}
+
+// for the DB
+function formatValues(notification) {
+  const value = notification;
+  value.expirytime = moment(value.expirytime).unix();
+  return value;
+}
+
 class NotificationStore extends EventEmitter {
   constructor() {
     super();
@@ -27,7 +41,7 @@ class NotificationStore extends EventEmitter {
       success(response) {
         self.notifications = response.data;
         self.notifications = self.notifications.map((notification) => {
-          return notification.attributes;
+          return formatData(notification.attributes);
         });
         dispatcher.dispatch({ type: 'NOTIFICATIONS_GET', notifications: self.notifications });
       },
@@ -42,7 +56,7 @@ class NotificationStore extends EventEmitter {
     const self = this;
     $.ajax({
       url: `${url}/broadcast`,
-      data: JSON.stringify(notification),
+      data: JSON.stringify(formatValues(notification)),
       type: 'POST',
       contentType: 'application/json',
       processData: false,
@@ -51,7 +65,7 @@ class NotificationStore extends EventEmitter {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
       success(response) {
-        dispatcher.dispatch({ type: 'NOTIFICATIONS_ADD', notification, id: response.data.id });
+        dispatcher.dispatch({ type: 'NOTIFICATION_ADD', notification, id: response.data.id });
       },
       error(error) {
         dispatcher.dispatch({ type: 'ERROR', error: error.error });
@@ -64,7 +78,7 @@ class NotificationStore extends EventEmitter {
   update(notification) {
     $.ajax({
       url: `${url}/broadcast/${notification.id}`,
-      data: JSON.stringify(notification),
+      data: JSON.stringify(formatValues(notification)),
       type: 'PATCH',
       contentType: 'application/json',
       processData: false,
@@ -157,13 +171,13 @@ class NotificationStore extends EventEmitter {
       }
       case 'NOTIFICATION_UPDATE': {
         const entry = this.notifications.find(c => c.id === action.notification.id);
-        Object.assign(entry, action.notification);
+        Object.assign(entry, formatData(action.notification));
         this.emit('updateNotifications');
         break;
       }
       case 'NOTIFICATION_ADD': {
         action.notification.id = action.id;
-        this.notifications.push(action.notification);
+        this.notifications.push(formatData(action.notification));
         this.emit('addNotifications');
         break;
       }
