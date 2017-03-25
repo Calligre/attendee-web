@@ -98,15 +98,10 @@ class NewsFeedStore extends EventEmitter {
     };
     // Did the user want to upload a photo?
     if (photo) {
-      const photoType = {
-        'Content-Type': photo.type,
-      };
-
       // Obtain the media URL to post our photo to
       AjaxService.call({
         type: 'GET',
-        data: photoType,
-        endpoint: 'social-image-upload-url',
+        endpoint: `social-image-upload-url?Content-Type=${encodeURI(photo.type)}`,
         success(response) {
           const photoUploadURL = response.data;
 
@@ -116,6 +111,7 @@ class NewsFeedStore extends EventEmitter {
             type: 'PUT',
             data: photo,
             contentType: photo.type,
+            noAuth: true,
             success() {
               data.media_link = photoUploadURL;
               self.postToNewsFeed(data);

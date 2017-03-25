@@ -10,7 +10,6 @@ class AjaxService {
     return this.url;
   }
 
-  // data type, cache
   get(options) {
     const { endpoint, success, error } = options;
     const xhr = new XMLHttpRequest();
@@ -29,7 +28,6 @@ class AjaxService {
     xhr.send();
   }
 
-  // processdata: false, datatype: json
   update(options) {
     const { endpoint, success, error, data } = options;
     const xhr = new XMLHttpRequest();
@@ -49,7 +47,6 @@ class AjaxService {
     xhr.send(JSON.stringify(data));
   }
 
-  // processdata: false, datatype: json
   create(options) {
     const { endpoint, success, error, data } = options;
     const xhr = new XMLHttpRequest();
@@ -69,7 +66,6 @@ class AjaxService {
     xhr.send(JSON.stringify(data));
   }
 
-  // processdata: false, datatype: json
   delete(options) {
     const { endpoint, success, error, id } = options;
     const xhr = new XMLHttpRequest();
@@ -90,13 +86,14 @@ class AjaxService {
   }
 
 
-  // processdata: false, datatype: json
   call(options) {
-    const { url, endpoint, type, data, contentType, success, error } = options;
+    const { url, endpoint, type, data, contentType, noAuth, success, error } = options;
     const xhr = new XMLHttpRequest();
     const path = url || `${this.url}/${endpoint}`;
     xhr.open(type, path);
-    xhr.setRequestHeader('Authorization', `Bearer ${AuthService.getToken()}`);
+    if (!noAuth) {
+      xhr.setRequestHeader('Authorization', `Bearer ${AuthService.getToken()}`);
+    }
     xhr.setRequestHeader('Content-Type', contentType || 'application/json');
 
     xhr.onload = () => {
