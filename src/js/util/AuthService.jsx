@@ -68,7 +68,7 @@ class AuthService extends EventEmitter {
       success: function(response){},
       error: function(error){
         const userData = {
-          id: this.getCurrentUserId(),
+          id: id,
           first_name: profile.given_name || profile.name.split(" ")[0],
           last_name: profile.family_name || profile.name.split(" ")[profile.name.split(" ").length - 1],
           email: profile.email || "test@example.com",
