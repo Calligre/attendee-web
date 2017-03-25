@@ -20,7 +20,7 @@ export default class Events extends React.Component {
       streams: [],
       searchTerm: '',
       filterTerms: {
-        startDate: moment.now(),
+        startDate: undefined,
         stream: [],
       },
     };
@@ -84,7 +84,7 @@ export default class Events extends React.Component {
     let filteredEvents = events.filter(createFilter(searchTerm, ['name']));
     filteredEvents = filteredEvents.filter((event) => {
       if (filterTerms.stream.length > 0 && !filterTerms.stream.includes(event.stream)) return false;
-      if (moment.unix(event.starttime).isAfter(filterTerms.startDate)) return false;
+      if (filterTerms.startDate && moment.unix(event.starttime).isAfter(filterTerms.startDate)) return false;
 
       return true;
     });

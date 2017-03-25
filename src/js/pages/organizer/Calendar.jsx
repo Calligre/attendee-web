@@ -41,7 +41,7 @@ export default class Calendar extends React.Component {
       location: '',
       stream: '',
       starttime: '',
-      endttime: '',
+      endtime: '',
     };
     for (const prop in row) {
       if (prop == 'starttime' || prop == 'endtime') {
