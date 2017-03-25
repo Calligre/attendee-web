@@ -237,8 +237,9 @@ button {
   color: white !important;
 }
 
-.conferenceSwitcher{
-  h1 {
+[class^="theme__dialog"] {
+  h6 {
+    font-size: 40px;
     margin-bottom: 30px;
   }
   .conferenceElement {
@@ -249,6 +250,15 @@ button {
 
     img {
       height: 100px;
+    }
+  }
+
+  button {
+    border-radius: .2rem !important;
+    padding: 0 1.2rem !important;
+
+    &:hover {
+      background: rgba(33,33,33,.2) !important;
     }
   }
 }

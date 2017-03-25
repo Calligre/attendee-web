@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sidebar, SidebarItem } from 'react-responsive-sidebar';
-import Modal from 'react-modal';
+import Dialog from 'react-toolbox/lib/dialog';
 
 import Footer from 'components/layout/Footer';
 import BrandStore from 'stores/BrandStore';
@@ -56,6 +56,8 @@ export default class Layout extends React.Component {
     myStyle.insertRule(".secondaryText { color: " + branding.color_secondary + " !important }", 0);
     myStyle.insertRule(".secondaryBackground { background-color: " + branding.color_secondary + " !important }", 0);
     myStyle.insertRule(".nameContainer { background-image: url('" + branding.background_logo + "')!important }", 0);
+    myStyle.insertRule("h6 { color: " + branding.color_primary + " !important }", 0);
+    myStyle.insertRule("button[class^='theme__button'] { color: " + branding.color_secondary + " !important }", 0);
   }
 
   showError = () => {
@@ -116,15 +118,16 @@ export default class Layout extends React.Component {
             <Footer/>
           </div>
         </Sidebar>
-		<Modal isOpen={switcherModal} onRequestClose={this.closeModal} contentLabel="Switch Conferences">
-            <div className="conferenceSwitcher">
-              <h1 className="primaryText">Switch Conference</h1>
-              {this.state.conferences.map(conference =>
-                  <Conference key={conference.id} {...conference} />
-              )}
-            </div>
-            <button className="secondaryBackground" onClick={this.closeModal}>Cancel</button>
-          </Modal>
+		<Dialog
+          actions={[{ label: "Cancel", onClick: this.closeModal }]}
+          active={switcherModal}
+          onEscKeyDown={this.closeModal}
+          onOverlayClick={this.closeModal}
+          title='Switch Conference'>
+		  {this.state.conferences.map(conference =>
+			  <Conference key={conference.id} {...conference} />
+		  )}
+        </Dialog>
       </div>
     );
   }
