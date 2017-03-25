@@ -1,12 +1,12 @@
-import { EventEmitter } from "events";
-import AjaxService from "util/AjaxService";
+import { EventEmitter } from 'events';
+import AjaxService from 'util/AjaxService';
 
-import dispatcher from "dispatcher";
+import dispatcher from 'dispatcher';
 
 
 class PeopleStore extends EventEmitter {
   constructor() {
-    super()
+    super();
     this.people = [];
     this.error = null;
   }
@@ -16,11 +16,11 @@ class PeopleStore extends EventEmitter {
       endpoing: 'user',
       data,
       success(response) {
-        dispatcher.dispatch({ type: "PEOPLE_CREATE", people: response });
+        dispatcher.dispatch({ type: 'PEOPLE_CREATE', people: response });
       },
       error(error) {
-        dispatcher.dispatch({ type: "PEOPLE_ERROR", error });
-      }
+        dispatcher.dispatch({ type: 'PEOPLE_ERROR', error });
+      },
     });
     return this.people;
   }
@@ -29,12 +29,12 @@ class PeopleStore extends EventEmitter {
   getAll() {
     AjaxService.get({
       endpoint: 'user',
-      success(response){
-        dispatcher.dispatch({type: "PEOPLE_GET", people: response});
+      success(response) {
+        dispatcher.dispatch({ type: 'PEOPLE_GET', people: response });
       },
-      error(error){
-        dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
-      }
+      error(error) {
+        dispatcher.dispatch({ type: 'PEOPLE_ERROR', error });
+      },
     });
     return this.people;
   }
@@ -43,63 +43,66 @@ class PeopleStore extends EventEmitter {
     const self = this;
     const fileReader = new FileReader();
     fileReader.readAsDataURL(photo);
-    fileReader.onloadend = function (e) {
+    fileReader.onloadend = function () {
       AjaxService.call({
         endpoint: `user/${id}/photo`,
         type: 'PUT',
-        data: {data: this.result},
+        data: { data: this.result },
         success(response) {
-          self.updatePerson({id: id, photo: response.data.url});
-          //dispatcher.dispatch({type: "PEOPLE_GET", people: response});
+          self.updatePerson({ id, photo: response.data.url });
+          // dispatcher.dispatch({type: "PEOPLE_GET", people: response});
         },
         error(error) {
           console.log(error);
-          //dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
+          // dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
         },
       });
       return this.people;
-    }
+    };
   }
 
   updatePerson(person) {
     AjaxService.update({
       endppoint: 'user',
       data: person,
-      success(response){
+      success(response) {
         console.log(response);
-        //dispatcher.dispatch({type: "PEOPLE_GET", people: response});
+        // dispatcher.dispatch({type: "PEOPLE_GET", people: response});
       },
-      error(error){
+      error(error) {
         console.log(error);
-        //dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
-      }
+        // dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
+      },
     });
     return this.people;
   }
 
   handleActions(action) {
-    switch(action.type) {
-      case "PEOPLE_CREATE":
+    switch (action.type) {
+      case 'PEOPLE_CREATE':
         this.people.push(action.person);
-        this.emit("received");
+        this.emit('received');
         break;
-      case "PEOPLE_GET": {
-        this.people = action.people.data.map(function(person) {
+      case 'PEOPLE_GET': {
+        this.people = action.people.data.map((person) => {
           return person.attributes;
         });
-        this.emit("received");
+        this.emit('received');
         break;
       }
-      case "PEOPLE_ERROR": {
+      case 'PEOPLE_ERROR': {
         this.error = action.error;
-        this.emit("error");
+        this.emit('error');
+        break;
+      }
+      default: {
         break;
       }
     }
   }
 }
 
-const peopleStore = new PeopleStore;
+const peopleStore = new PeopleStore();
 dispatcher.register(peopleStore.handleActions.bind(peopleStore));
 
 export default peopleStore;
