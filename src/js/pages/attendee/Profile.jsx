@@ -170,21 +170,19 @@ export default class Profile extends React.Component {
           <Input type='text' label='About you' name='description' value={this.state.description} onChange={this.handleChange.bind(this, 'description')} disabled={!myProfile}/>
         }
         { myProfile &&
-          <div className="socialMediaInput">
-            <div className="prefix">facebook.com/</div>
-            <Input type='text' label='Facebook' name='facebook' value={this.state.facebook} onChange={this.handleChange.bind(this, 'facebook')} disabled={!myProfile}/>
-          </div>
-        }
-        { myProfile &&
-          <div className="socialMediaInput">
-            <div className="prefix">@</div>
-            <Input type='text' label='Twitter' name='twitter' value={this.state.twitter} onChange={this.handleChange.bind(this, 'twitter')} disabled={!myProfile}/>
-          </div>
-        }
-        { myProfile &&
-          <div className="socialMediaInput">
-            <div className="prefix">linkedin.com/</div>
-            <Input type='text' label='LinkedIn' name='linkedin' value={this.state.linkedin} onChange={this.handleChange.bind(this, 'linkedin')} disabled={!myProfile}/>
+          <div>
+            <div className="socialMediaInput">
+              <div className="prefix">facebook.com/</div>
+              <Input type='text' label='Facebook' name='facebook' value={this.state.facebook} onChange={this.handleChange.bind(this, 'facebook')} disabled={!myProfile}/>
+            </div>
+            <div className="socialMediaInput">
+              <div className="prefix">@</div>
+              <Input type='text' label='Twitter' name='twitter' value={this.state.twitter} onChange={this.handleChange.bind(this, 'twitter')} disabled={!myProfile}/>
+            </div>
+            <div className="socialMediaInput">
+              <div className="prefix">linkedin.com/</div>
+              <Input type='text' label='LinkedIn' name='linkedin' value={this.state.linkedin} onChange={this.handleChange.bind(this, 'linkedin')} disabled={!myProfile}/>
+            </div>
           </div>
         }
         <button className="secondaryBackground submitChanges" onClick={this.submitChanges}>Save changes</button>
