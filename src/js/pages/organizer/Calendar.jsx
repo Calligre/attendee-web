@@ -1,7 +1,7 @@
-import React from "react";
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import EventStore from "stores/EventStore";
-var moment = require('moment');
+import React from 'react';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import EventStore from 'stores/EventStore';
+const moment = require('moment');
 
 export default class Calendar extends React.Component {
 
@@ -31,20 +31,20 @@ export default class Calendar extends React.Component {
   }
 
   showError = () => {
-    console.log(EventStore.error)
+    console.log(EventStore.error);
   }
 
   generateEvent = (row) => {
-    var updatedEvent = {
+    const updatedEvent = {
       id: -1,
-      name: "",
-      location: "",
-      stream: "",
-      starttime: "",
-      endttime: "",
-    }
+      name: '',
+      location: '',
+      stream: '',
+      starttime: '',
+      endttime: '',
+    };
     for (const prop in row) {
-      if (prop == "starttime" || prop == "endtime") {
+      if (prop == 'starttime' || prop == 'endtime') {
         updatedEvent[prop] = moment(row[prop]).unix();
       } else {
         updatedEvent[prop] = row[prop];
@@ -64,23 +64,28 @@ export default class Calendar extends React.Component {
 
   deleteEvents = (rowKeys) => {
     for (const key in rowKeys) {
-      EventStore.deleteEvent(rowKeys[key])
+      EventStore.deleteEvent(rowKeys[key]);
     }
   }
 
   getEvents = () => {
     this.setState({
-      events: EventStore.events.map((event) => {
-        event.starttime = moment.unix(event.starttime).format("YYYY-MM-DDTHH:mm");
-        event.endtime = moment.unix(event.endtime).format("YYYY-MM-DDTHH:mm");
-        return event;
-      })
+      events: EventStore.events,
     });
+  }
+
+  insertModal = (columns, validateState, ignoreEditable) => {
+    return (<InsertModalBody columns={columns} validateState={validateState} ignoreEditable={ignoreEditable} />);
+  }
+
+  formatDate = (cell) => {
+    const format = 'MMM Do hh:mm a';
+    return moment(cell).format(format);
   }
 
   render() {
     const selectRowProp = {
-      mode: 'checkbox'
+      mode: 'checkbox',
     };
     const cellEditProp = {
       mode: 'click',
@@ -89,33 +94,134 @@ export default class Calendar extends React.Component {
     const options = {
       afterInsertRow: this.addEvent,
       afterDeleteRow: this.deleteEvents,
+      insertModalBody: this.insertModal,
+      handleConfirmDeleteRow: this.removeAlertOnDelete,
+      defaultSortName: 'starttime',
+      defaultSortOrder: 'asc',
     };
 
-    const dateFormatter = function enumFormatter(cell, row) {
-      return moment(cell).format("hh:mma YYYY-MM-DD");
-    }
+    const timeEditor = (onUpdate, props) => (<TimeEditor onUpdate={onUpdate} {...props} />);
 
     return (
       <BootstrapTable data={this.state.events} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditProp} options={options}>
-        <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Event ID</TableHeaderColumn>
-        <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+        <TableHeaderColumn dataField="id" isKey hidden hiddenOnInsert autoValue>Event ID</TableHeaderColumn>
+        <TableHeaderColumn dataField="name" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
           Event Title
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='stream' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+        <TableHeaderColumn dataField="stream" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
           Stream
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='location' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+        <TableHeaderColumn dataField="location" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
           Location
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='starttime' dataSort dataFormat={ dateFormatter } editable={ { type: 'datetime' } }>
+        <TableHeaderColumn dataField="starttime" dataSort dataFormat={this.formatDate} customEditor={{ getElement: timeEditor }}>
           Start time
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='endtime' dataSort dataFormat={ dateFormatter } editable={ { type: 'datetime' } }>
+        <TableHeaderColumn dataField="endtime" dataSort dataFormat={this.formatDate} customEditor={{ getElement: timeEditor }}>
           End time
         </TableHeaderColumn>
-        <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>
+        <TableHeaderColumn dataField="description">Description</TableHeaderColumn>
       </BootstrapTable>
     );
   }
+}
 
+function removeAlertOnDelete(next) {
+  next();
+}
+
+
+class TimeEditor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { value: moment(props.defaultValue).format('YYYY-MM-DDTHH:mm') };
+  }
+  focus() {
+    this.refs.inputRef.focus();
+  }
+  render() {
+    return (
+      <span>
+        <input
+          ref="inputRef"
+          type="datetime-local"
+          value={this.state.value}
+          onKeyDown={this.props.onKeyDown}
+          onChange={(ev) => { this.setState({ value: ev.currentTarget.value }); }}
+        />
+      </span>
+    );
+  }
+}
+
+class InsertModalBody extends React.Component {
+  getFieldValue() {
+    const newRow = {
+      name: this.refs.name.value,
+      stream: this.refs.stream.value,
+      location: this.refs.location.value,
+      starttime: moment(this.refs.starttime.value, 'YYYY-MM-DDTHH:mm').valueOf(),
+      endtime: moment(this.refs.endtime.value, 'YYYY-MM-DDTHH:mm').valueOf(),
+      description: this.refs.description.value,
+      id: moment(),
+    };
+    return newRow;
+  }
+
+  render() {
+    return (
+      <div className="modal-body">
+        <div>
+          <div className="form-group" key="name">
+            <label>Name</label>
+            <input
+              ref="name"
+              type="text"
+              className="form-control editor edit-text"
+            />
+          </div>
+          <div className="form-group" key="stream">
+            <label>Stream</label>
+            <input
+              ref="stream"
+              type="text"
+              className="form-control editor edit-text"
+            />
+          </div>
+          <div className="form-group" key="location">
+            <label>Location</label>
+            <input
+              ref="location"
+              type="text"
+              className="form-control editor edit-text"
+            />
+          </div>
+          <div className="form-group" key="starttime">
+            <label>Start Time</label>
+            <input
+              ref="starttime"
+              type="datetime-local"
+              className="form-control editor edit-text"
+            />
+          </div>
+          <div className="form-group" key="endtime">
+            <label>End Time</label>
+            <input
+              ref="endtime"
+              type="datetime-local"
+              className="form-control editor edit-text"
+            />
+          </div>
+          <div className="form-group" key="description">
+            <label>Description</label>
+            <input
+              ref="description"
+              type="text"
+              className="form-control editor edit-text"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
