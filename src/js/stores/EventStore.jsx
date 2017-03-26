@@ -72,69 +72,69 @@ class EventStore extends EventEmitter {
     return this.events;
   }
 
-  updateEvent(event){
+  updateEvent(event) {
     $.ajax({
       url: `${url}/event/${event.id}`,
-      data : JSON.stringify(event),
-      type : 'PATCH',
-      contentType : 'application/json',
+      data: JSON.stringify(event),
+      type: 'PATCH',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
-        console.log(response);
+      success() {
+        dispatcher.dispatch({ type: 'EVENT_UPDATE', event });
       },
-      error: function(error){
-        console.error(error);
-      }
+      error(error) {
+        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+      },
     });
     return this.events;
-  };
+  }
 
-  addEvent(event){
+  addEvent(event) {
     $.ajax({
       url: `${url}/event`,
-      data : JSON.stringify(event),
-      type : 'POST',
-      contentType : 'application/json',
+      data: JSON.stringify(event),
+      type: 'POST',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
-        console.log(response);
+      success(response) {
+        dispatcher.dispatch({ type: 'EVENT_ADD', event, id: response.data.id });
       },
-      error: function(error){
-        console.error(error);
-      }
+      error(error) {
+        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+      },
     });
     return this.events;
-  };
+  }
 
-  deleteEvent(id){
+  deleteEvent(id) {
     $.ajax({
       url: `${url}/event/${id}`,
-      type : 'DELETE',
-      contentType : 'application/json',
+      type: 'DELETE',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
-        console.log(response);
+      success() {
+        dispatcher.dispatch({ type: 'EVENT_DELETE', id });
       },
-      error: function(error){
-        console.error(error);
-      }
+      error(error) {
+        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+      },
     });
     return this.events;
-  };
+  }
 
-  subscribeToEvent(id){
+  subscribeToEvent(id) {
     $.ajax({
       url: `${url}/user/${AuthService.getCurrentUserId()}/subscription`,
       type: 'POST',
@@ -196,6 +196,29 @@ class EventStore extends EventEmitter {
         this.emit('received');
         break;
       }
+      case 'EVENT_UPDATE': {
+        const entry = this.events.find(c => c.id === action.event.id);
+        Object.assign(entry, action.event);
+        this.emit('updateEvents');
+        break;
+      }
+      case 'EVENT_ADD': {
+        const event = action.event;
+        event.id = action.id;
+        streamMap[event.stream] = streamMap[event.stream] || randomColor();
+        event.streamColor = streamMap[event.stream];
+        this.events.push(event);
+        this.emit('addEvents');
+        break;
+      }
+      case 'EVENT_DELETE': {
+        const index = this.events.findIndex(c => c.id === action.id);
+        if (index > -1) {
+          this.events.splice(index, 1);
+        }
+        this.emit('deleteEvents');
+        break;
+      }
       case 'STREAM_GET': {
         this.streams = action.stream;
         this.emit('stream');
@@ -214,6 +237,9 @@ class EventStore extends EventEmitter {
       case 'ERROR': {
         this.error = action.error;
         this.emit('error');
+        break;
+      }
+      default: {
         break;
       }
     }
