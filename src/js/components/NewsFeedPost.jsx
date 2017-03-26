@@ -14,7 +14,6 @@ export default class NewsFeedPost extends React.Component {
     super(props);
     this.state = Object.assign({}, props);
     this.state.userId = AuthService.getProfile().user_id;
-
     this.changeFlag = this.changeFlag.bind(this);
     this.changeLike = this.changeLike.bind(this);
     this.deletePost = this.deletePost.bind(this);
