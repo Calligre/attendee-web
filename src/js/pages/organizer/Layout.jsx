@@ -48,8 +48,14 @@ export default class Layout extends React.Component {
       <SidebarItem href='/preferences'>Preferences</SidebarItem>,
       <SidebarItem href='/surveys'>Surveys</SidebarItem>,
       <SidebarItem href='/notifications'>Notifications</SidebarItem>,
-      <SidebarItem href='/login' onClick={AuthService.logout}>Logout</SidebarItem>,
     ];
+    if (AuthService.loggedIn()) {
+      items.push(
+        <SidebarItem href='/login'>
+          <a className="sidebarLink" onClick={AuthService.logout}>Logout</a>
+        </SidebarItem>
+      );
+    }
 
     return (
       <div>
