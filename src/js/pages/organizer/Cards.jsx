@@ -2,6 +2,8 @@ import React from "react";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import BrandStore from "stores/BrandStore";
 import PreferenceStore from 'stores/PreferenceStore';
+import Switch from 'react-toolbox/lib/switch';
+import Input from 'react-toolbox/lib/input';
 
 export default class Cards extends React.Component {
 
@@ -12,6 +14,8 @@ export default class Cards extends React.Component {
       locations: [],
       contacts: [],
       sponsors: [],
+      map: "",
+      package: "",
       preferences: PreferenceStore.getDefaults(),
     };
 
@@ -20,6 +24,7 @@ export default class Cards extends React.Component {
   }
 
   componentWillMount() {
+    BrandStore.on("receivedBranding", this.loadBranding);
     BrandStore.on("receivedCards", this.getCards);
     BrandStore.on("addCards", this.getCards);
     BrandStore.on("updateCards", this.getCards);
@@ -36,12 +41,13 @@ export default class Cards extends React.Component {
     BrandStore.on("addSponsors", this.getSponsors);
     BrandStore.on("updateSponsors", this.getSponsors);
     BrandStore.on("deleteSponsors", this.getSponsors);
+    BrandStore.on("error", this.showError);
     PreferenceStore.on('loaded', this.loadPreferences);
     PreferenceStore.on('error', this.showError);
-    BrandStore.on("error", this.showError);
   }
 
   componentWillUnmount() {
+    BrandStore.removeListener("receivedBranding", this.loadBranding);
     BrandStore.removeListener("receivedCards", this.getCards);
     BrandStore.removeListener("addCards", this.getCards);
     BrandStore.removeListener("updateCards", this.getCards);
@@ -58,9 +64,9 @@ export default class Cards extends React.Component {
     BrandStore.removeListener("addSponsors", this.getSponsors);
     BrandStore.removeListener("updateSponsors", this.getSponsors);
     BrandStore.removeListener("deleteSponsors", this.getSponsors);
+    BrandStore.removeListener("error", this.showError);
     PreferenceStore.removeListener('loaded', this.loadPreferences);
     PreferenceStore.removeListener('error', this.showError);
-    BrandStore.removeListener("error", this.showError);
   }
 
   showError = () => {
@@ -68,8 +74,27 @@ export default class Cards extends React.Component {
     console.log(PreferenceStore.error);
   }
 
+  handleChange = (field, value) => {
+    PreferenceStore.update(field, value);
+    let updatedPreferences = this.state.preferences;
+    updatedPreferences[field] = value;
+    this.setState({ preferences: updatedPreferences });
+  }
+
+  updateBranding = (name, value) => {
+    BrandStore.update(name, value);
+    this.setState({ [name]: value });
+  }
+
   loadPreferences = () => {
     this.setState({ preferences: PreferenceStore.preferences });
+  }
+
+  loadBranding = () => {
+    this.setState({
+      map: BrandStore.branding.map,
+      package: BrandStore.branding.package,
+    });
   }
 
   generateCard = (row) => {
@@ -243,41 +268,72 @@ export default class Cards extends React.Component {
 
     return (
       <div>
-        <h1 className="primaryText largeTopMargin">Important Locations</h1>
-        { preferences.location ?
-          <BootstrapTable data={this.state.locations} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropLocations} options={optionsLocations}>
-            <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Location ID</TableHeaderColumn>
-            <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
-              Location
-            </TableHeaderColumn>
-            <TableHeaderColumn dataField='address'>Address</TableHeaderColumn>
-          </BootstrapTable>
-        : <div className="disabled-placeholder">Locations card has been disabled, check your preferences</div>
-        }
-        <h1 className="primaryText largeTopMargin">Important Contacts</h1>
-        { preferences.contact ?
-          <BootstrapTable data={this.state.contacts} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropContacts} options={optionsContacts}>
-            <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Contact ID</TableHeaderColumn>
-            <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
-              Contact Name
-            </TableHeaderColumn>
-            <TableHeaderColumn dataField='phone'>Phone</TableHeaderColumn>
-          </BootstrapTable>
-          : <div className="disabled-placeholder">Contacts card has been disabled, check your preferences</div>
-        }
+        <h1 className="primaryText">Cards</h1>
+        <h2 className="secondaryText largeTopMargin">Upcoming Events</h2>
+		<Switch
+          checked={this.state.preferences.events}
+          label="Show cards for users' upcoming events"
+          onChange={this.handleChange.bind(this, 'events')}
+        />
 
-        <h1 className="primaryText largeTopMargin">Text Cards</h1>
-        { preferences.content ?
-          <BootstrapTable data={this.state.cards} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropCards} options={optionsCards}>
-            <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Card ID</TableHeaderColumn>
-            <TableHeaderColumn dataField='data' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
-              Text
-            </TableHeaderColumn>
-          </BootstrapTable>
-          : <div className="disabled-placeholder">Content card has been disabled, check your preferences</div>
-        }
+        <h2 className="secondaryText largeTopMargin">Map</h2>
+		<Switch
+          checked={this.state.preferences.map}
+          label="Show card with link to download map"
+          onChange={this.handleChange.bind(this, 'map')}
+        />
+        <Input type='url' label='Link to Map' value={this.state.map} onChange={this.updateBranding.bind(this, 'map')} disabled={!this.state.preferences.map}/>
 
-        <h1 className="primaryText largeTopMargin">Sponsors</h1>
+        <h2 className="secondaryText largeTopMargin">Conference Package</h2>
+		<Switch
+          checked={this.state.preferences.package}
+          label="Show card with link to download conference package"
+          onChange={this.handleChange.bind(this, 'package')}
+        />
+        <Input type='url' label='Link to Conference Package' value={this.state.package} onChange={this.updateBranding.bind(this, 'package')} disabled={!this.state.preferences.package}/>
+
+        <h2 className="secondaryText largeTopMargin">Important Locations</h2>
+		<Switch
+          checked={this.state.preferences.location}
+          label="Show location card"
+          onChange={this.handleChange.bind(this, 'location')}
+        />
+		<BootstrapTable data={this.state.locations} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropLocations} options={optionsLocations} className={this.state.preferences.location ? "" : "disabled"}>
+		  <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Location ID</TableHeaderColumn>
+		  <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+			Location
+		  </TableHeaderColumn>
+		  <TableHeaderColumn dataField='address'>Address</TableHeaderColumn>
+		</BootstrapTable>
+ 
+        <h2 className="secondaryText largeTopMargin">Important Contacts</h2>
+		<Switch
+          checked={this.state.preferences.contact}
+          label="Show contacts card"
+          onChange={this.handleChange.bind(this, 'contact')}
+        />
+        <BootstrapTable data={this.state.contacts} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropContacts} options={optionsContacts} className={this.state.preferences.contact ? "" : "disabled"}>
+          <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Contact ID</TableHeaderColumn>
+          <TableHeaderColumn dataField='name' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+            Contact Name
+          </TableHeaderColumn>
+          <TableHeaderColumn dataField='phone'>Phone</TableHeaderColumn>
+        </BootstrapTable>
+
+        <h2 className="secondaryText largeTopMargin">Text Cards</h2>
+		<Switch
+          checked={this.state.preferences.content}
+          label="Show extra text cards"
+          onChange={this.handleChange.bind(this, 'content')}
+        />
+        <BootstrapTable data={this.state.cards} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropCards} options={optionsCards} className={this.state.preferences.content ? "" : "disabled"}>
+          <TableHeaderColumn dataField='id' isKey hidden hiddenOnInsert autoValue>Card ID</TableHeaderColumn>
+          <TableHeaderColumn dataField='data' dataSort filter={ { type: 'TextFilter', delay: 100 } }>
+            Text
+          </TableHeaderColumn>
+        </BootstrapTable>
+
+        <h2 className="secondaryText largeTopMargin">Sponsors</h2>
         <h3>Note: The same rank *must* be used for each level</h3>
         <h3>For example, all Gold sponsors have rank 0, all Silver sponsors rank 1, and all Bronze rank 2.</h3>
         <BootstrapTable data={this.state.sponsors} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropSponsors} options={optionsSponsors}>

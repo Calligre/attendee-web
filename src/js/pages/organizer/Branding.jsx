@@ -4,6 +4,7 @@ import BrandStore from "stores/BrandStore";
 import Card from "components/Card";
 import dispatcher from "dispatcher";
 import React from "react";
+import Input from 'react-toolbox/lib/input';
 
 var moment = require('moment');
 const url = UrlService.getUrl();
@@ -25,8 +26,6 @@ export default class Branding extends React.Component {
       background_logo: '',
       icon: '',
       background_logo: '',
-      map: '',
-      package: '',
       facebook: '',
       twitter: '',
     };
@@ -50,8 +49,8 @@ export default class Branding extends React.Component {
     this.setState(branding);
   }
 
-  handleChange = (event) => {
-    this.setState({[event.target.name]:event.target.value});
+  handleChange = (field, value) => {
+    this.setState({ [field] : value });
   }
 
   handleSave = (event) => {
@@ -67,8 +66,6 @@ export default class Branding extends React.Component {
       background_logo: this.state.background_logo,
       icon: this.state.icon,
       background_logo: this.state.background_logo,
-      map: this.state.map,
-      package: this.state.package,
       facebook: this.state.facebook,
       twitter: this.state.twitter,
     };
@@ -99,25 +96,7 @@ export default class Branding extends React.Component {
       WebkitTextFillColor: this.state.color_primary,
     }
  
-    let mapCard = null;
-    let confPackageCard = null;
     let socialCard = null;
-    const map = {
-      "name" : "Map",
-      "link" : this.state.map,
-    };
-    const confPackage = {
-      "name" : "Conference Package",
-      "link" : this.state.package,
-    };
-
-    if (this.state.map) {
-      mapCard = <Card type="download" buttonStyle={secondaryBackground} headerStyle={primaryText} item={map}/>;
-    }
-    if (this.state.package) {
-      confPackageCard = <Card type="download" buttonStyle={secondaryBackground} headerStyle={primaryText} item={confPackage}/>;
-    }
-
     if (this.state.facebook || this.state.twitter) {
       socialCard = <Card type="social" headerStyle={primaryText} facebook={this.state.facebook} twitter={this.state.twitter}/>;
     }
@@ -127,65 +106,22 @@ export default class Branding extends React.Component {
 
     return (
       <div>
+        <h1 className="primaryText">Branding</h1>
         <div id="brandingForm">
-          <div className="field">
-            <h3 className="label">Name:</h3>
-            <input type="text" value={this.state.name} name="name" placeholder="Name" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Organization:</h3>
-            <input type="text" value={this.state.organization} name="organization" placeholder="Organization" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Start Date:</h3>
-            <input type="datetime-local" value={this.state.starttime} name="starttime" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">End Date:</h3>
-            <input type="datetime-local" value={this.state.endtime} name="endtime" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Primary Colour:</h3>
-            <input type="color" value={this.state.color_primary} name="color_primary" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Secondary Colour:</h3>
-            <input type="color" value={this.state.color_secondary} name="color_secondary" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Logo:</h3>
-            <input type="url" value={this.state.logo} name="logo" placeholder="http://www.company.com/logo.png" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Square Logo:</h3>
-            <input type="url" value={this.state.logo_square} placeholder="http://www.company.com/square_logo.png" name="logo_square" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Icon:</h3>
-            <input type="url" value={this.state.icon} name="icon" placeholder="http://www.company.com/icon.png" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Background:</h3>
-            <input type="url" value={this.state.background_logo} name="background_logo" placeholder="http://www.company.com/background.png" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Map:</h3>
-            <input type="url" value={this.state.map} name="map" placeholder="http://www.company.com/map.pdf" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Conference Package:</h3>
-            <input type="url" value={this.state.package} name="package" placeholder="http://www.company.com/package.pdf" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Facebook:</h3>
-            <input type="url" value={this.state.facebook} name="facebook" placeholder="http://www.facebook.com/calligre" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Twitter:</h3>
-            <input type="url" value={this.state.twitter} name="twitter" placeholder="http://www.twitter.com/calligre" onChange={this.handleChange} />
-          </div>
+          <Input type="text" value={this.state.name} label="Conference Name" onChange={this.handleChange.bind(this, 'name')} />
+          <Input type="text" value={this.state.organization} label="Organization" onChange={this.handleChange.bind(this, 'organization')} />
+          <Input type="datetime-local" value={this.state.starttime} label="Start Date" onChange={this.handleChange.bind(this, 'starttime')} />
+          <Input type="datetime-local" value={this.state.endtime} label="End Date" onChange={this.handleChange.bind(this, 'endtime')} />
+          <Input type="color" value={this.state.color_primary} label="Primary Colour" onChange={this.handleChange.bind(this, 'color_primary')} />
+          <Input type="color" value={this.state.color_secondary} label="Secondary Colour" onChange={this.handleChange.bind(this, 'color_secondary')} />
+          <Input type="url" value={this.state.logo} label="Logo" hint="http://www.company.com/logo.png" onChange={this.handleChange.bind(this, 'logo')} />
+          <Input type="url" value={this.state.logo_square} label="Square Logo" hint="http://www.company.com/square_logo.png" onChange={this.handleChange.bind(this, 'logo_square')} />
+          <Input type="url" value={this.state.icon} label="Icon" hint="http://www.company.com/icon.png" onChange={this.handleChange.bind(this, 'icon')} />
+          <Input type="url" value={this.state.background_logo} Label="Event Background Photo" hint="http://www.company.com/background.png" onChange={this.handleChange.bind(this, 'background_logo')} />
+          <Input type="url" value={this.state.facebook} label="Facebook" hint="http://www.facebook.com/calligre" onChange={this.handleChange.bind(this, 'facebook')} />
+          <Input type="url" value={this.state.twitter} label="Twitter" hint="http://www.twitter.com/calligre" onChange={this.handleChange.bind(this, 'twitter')} />
 
-          <button onClick={this.handleSave}> Save </button>
+          <button onClick={this.handleSave} style={secondaryBackground}> Save </button>
         </div>
 
         <div id="preview">
@@ -201,8 +137,6 @@ export default class Branding extends React.Component {
           </div>
           <div id="eventPreview" style={backgroundImage}> Event Page Header Preview</div>
           {socialCard}
-          {mapCard}
-          {confPackageCard}
         </div>
       </div>
     );
