@@ -42,7 +42,8 @@ export default class Surveys extends React.Component {
   }
 
   loadPreferences = () => {
-    this.setState({ disabled: !PreferenceStore.preferences.survey,
+    this.setState({
+      disabled: !PreferenceStore.preferences.survey,
       loaded: true,
     });
   }
