@@ -12,16 +12,16 @@ const url = UrlService.getUrl();
 const moment = require('moment');
 
 // for the UI
-function formatData(notification) {
-  const value = notification;
+function formatData(event) {
+  const value = event;
   value.starttime = moment.unix(value.starttime).valueOf();
   value.endtime = moment.unix(value.endtime).valueOf();
   return value;
 }
 
 // for the DB
-function formatValues(notification) {
-  const value = notification;
+function formatValues(event) {
+  const value = event;
   value.starttime = moment(value.starttime).unix();
   value.endtime = moment(value.endtime).unix();
   return value;
@@ -217,7 +217,7 @@ class EventStore extends EventEmitter {
       }
       case 'EVENT_UPDATE': {
         const entry = this.events.find(c => c.id === action.event.id);
-        Object.assign(entry, action.event);
+        Object.assign(entry, formatData(action.event));
         this.emit('updateEvents');
         break;
       }
@@ -226,7 +226,7 @@ class EventStore extends EventEmitter {
         event.id = action.id;
         streamMap[event.stream] = streamMap[event.stream] || randomColor();
         event.streamColor = streamMap[event.stream];
-        this.events.push(event);
+        this.events.push(formatData(event));
         this.emit('addEvents');
         break;
       }
