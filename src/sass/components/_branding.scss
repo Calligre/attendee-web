@@ -42,11 +42,10 @@
   }
 
   #eventPreview {
+    @extend .outlined;
     background-size: cover;
     background-image: url('http://kingofwallpapers.com/grey-background/grey-background-005.jpg');
     background-position: center;
-    -webkit-text-stroke-width: 0.5px;
-    -webkit-text-stroke-color: white;
     font-size: 20pt;
     font-weight: bold;
     height: 200px;

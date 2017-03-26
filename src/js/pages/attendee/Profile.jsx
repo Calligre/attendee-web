@@ -1,12 +1,11 @@
 import React, { PropTypes } from 'react';
 import $ from 'jquery';
+import Dropzone from 'react-dropzone';
+import Input from 'react-toolbox/lib/input';
 
 import LinkedAccountsList from 'components/LinkedAccountsList';
 import PeopleStore from 'stores/PeopleStore';
 import AuthService from 'util/AuthService';
-import Dropzone from 'react-dropzone';
-import Clear from 'react-icons/lib/md/clear';
-import Edit from 'react-icons/lib/md/mode-edit';
 
 export default class Profile extends React.Component {
   constructor(props) {
@@ -16,11 +15,9 @@ export default class Profile extends React.Component {
       preview: '',
       uploadInProgress: false,
       newPhoto: null,
+      organization: "",
+      description: "",
     };
-    this.getProfile = this.getProfile.bind(this);
-    this.submitChanges = this.submitChanges.bind(this);
-    this.onDrop = this.onDrop.bind(this);
-    this.cancelDrop = this.cancelDrop.bind(this);
     PeopleStore.getAll();
     AuthService.on('profile_updated', (newProfile) => {
       this.getProfile();
@@ -64,6 +61,8 @@ export default class Profile extends React.Component {
     this.setState({
       profile: profiles[0],
       preview: profiles[0].photo,
+      organization: profiles[0].organization,
+      description: profiles[0].description,
     });
 
     $('.editableContainer').each(function () {
@@ -81,11 +80,11 @@ export default class Profile extends React.Component {
     });
   }
 
-  showError() {
+  showError = () => {
     console.log(PeopleStore.error);
   }
 
-  onDrop(files) {
+  onDrop = (files) => {
     this.setState({
       preview: files[0].preview,
       newPhoto: files[0],
@@ -93,7 +92,7 @@ export default class Profile extends React.Component {
     });
   }
 
-  cancelDrop(e) {
+  cancelDrop = (e) => {
     e.stopPropagation();
     this.setState({
       preview: this.state.profile.photo,
@@ -102,12 +101,16 @@ export default class Profile extends React.Component {
     });
   }
 
-  submitChanges() {
+  handleChange = (name, value) => {
+    this.setState({...this.state, [name]: value});
+  };
+
+  submitChanges = () => {
     const form = $('.profile');
     const profile = {
       id: this.state.profile.id,
-      description: form.find('.description').text(),
-      organization: form.find('.organization').text(),
+      description: this.state.description,
+      organization: this.state.organization,
     };
 
     if (this.state.newPhoto != null) {
@@ -116,7 +119,7 @@ export default class Profile extends React.Component {
     PeopleStore.updatePerson(profile);
   }
 
-  renderLinkedAccountsList(myProfile) {
+  renderLinkedAccountsList = (myProfile) => {
     if (myProfile) {
       return (
         <LinkedAccountsList profile={AuthService.getProfile()} />
@@ -138,28 +141,22 @@ export default class Profile extends React.Component {
     const displayCancel = myProfile && this.state.uploadInProgress ? 'visible' : 'hidden';
     const myProfileClass = myProfile ? 'myProfile' : '';
 
-    const buttonIcon = React.createElement(Clear, null);
-    const editIcon = React.createElement(Edit, null);
-
     return (
       <div className={`profile ${myProfileClass}`}>
         <Dropzone className="dropzone" onDrop={this.onDrop} multiple={false} disableClick={!myProfile}>
           <img src={this.state.preview} />
-          <button className={`secondaryBackground cancel ${displayCancel}`} onClick={this.cancelDrop}>{buttonIcon}</button>
           <p className="label">Upload new photo</p>
         </Dropzone>
         <h2 className="primaryText">{first_name} {last_name}</h2>
         <h4>Points: {points}</h4>
         <h4>Rank: {rank}</h4>
         {this.renderLinkedAccountsList(myProfile)}
-        <div className="editableContainer profileItem">
-          <h3 contentEditable={myProfile} className="organization editable">{organization}</h3>
-          <div className="editIcon">{editIcon}</div>
-        </div>
-        <div className="editableContainer profileItem">
-          <p contentEditable={myProfile} className="description editable">{description}</p>
-          <div className="editIcon">{editIcon}</div>
-        </div>
+        { (myProfile || this.state.organization.length > 0) &&
+          <Input type='text' label='Organization' name='organization' value={this.state.organization} onChange={this.handleChange.bind(this, 'organization')} disabled={!myProfile}/>
+        }
+        { (myProfile || this.state.description.length > 0) &&
+          <Input type='text' label='About you' name='description' value={this.state.description} onChange={this.handleChange.bind(this, 'description')} disabled={!myProfile}/>
+        }
         <button className="secondaryBackground submitChanges" onClick={this.submitChanges}>Save changes</button>
       </div>
     );

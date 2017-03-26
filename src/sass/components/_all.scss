@@ -232,3 +232,38 @@ button {
 .navHeader {
   margin-top: 60px;
 }
+
+.sidebarLink {
+  color: white !important;
+}
+
+[class^="theme__dialog"] {
+  h6 {
+    font-size: 40px;
+    margin-bottom: 30px;
+  }
+  .conferenceElement {
+    display: inline-block;
+    vertical-align: top;
+    margin: 20px;
+    width: 200px;
+
+    img {
+      height: 100px;
+    }
+  }
+
+  button {
+    border-radius: .2rem !important;
+    padding: 0 1.2rem !important;
+
+    &:hover {
+      background: rgba(33,33,33,.2) !important;
+    }
+  }
+}
+
+.outlined {
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: white;
+}
