@@ -44,7 +44,7 @@ export default class Surveys extends React.Component {
 
   loadPreferences = () => {
     this.setState({
-      enabled: !PreferenceStore.preferences.survey,
+      enabled: PreferenceStore.preferences.survey,
       loaded: true,
     });
   }
@@ -55,9 +55,8 @@ export default class Surveys extends React.Component {
 
   handleChange = (name, value) => {
     PreferenceStore.update(name, value);
-    this.setState({ enabled : value });
+    this.setState({ enabled: value });
   }
-    
 
   updateSurvey = (row) => {
     SurveyStore.update(row);
@@ -97,7 +96,7 @@ export default class Surveys extends React.Component {
     return (
       <div>
         <h1 className="primaryText">Surveys</h1>
-		<Switch
+        <Switch
           checked={enabled}
           label="Enable surveys on the home page"
           onChange={this.handleChange.bind(this, 'survey')}
@@ -111,11 +110,12 @@ export default class Surveys extends React.Component {
           striped
           hover
           options={tableOptions}
-          className={enabled ? "" : "disabled"}>
-          <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
-          <TableHeaderColumn dataField='link' editable={ { validator: requireSurveyLink } }>Survey Link</TableHeaderColumn>
-          <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>
-          <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField='id'>Id</TableHeaderColumn>
+          className={enabled ? '' : 'disabled'}
+        >
+          <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
+          <TableHeaderColumn dataField="link" editable={{ validator: requireSurveyLink }}>Survey Link</TableHeaderColumn>
+          <TableHeaderColumn dataField="description">Description</TableHeaderColumn>
+          <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField="id">Id</TableHeaderColumn>
         </BootstrapTable>
       </div>
     );
