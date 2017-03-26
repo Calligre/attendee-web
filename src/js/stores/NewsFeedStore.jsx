@@ -106,12 +106,9 @@ class NewsFeedStore extends EventEmitter {
           const photoUploadURL = response.data;
 
           // Put the photo at the url
-          AjaxService.call({
+          AjaxService.photoUpload({
             url: photoUploadURL,
-            type: 'PUT',
-            data: photo,
-            contentType: photo.type,
-            noAuth: true,
+            file: photo,
             success() {
               data.media_link = photoUploadURL;
               self.postToNewsFeed(data);

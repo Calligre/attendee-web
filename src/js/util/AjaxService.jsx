@@ -149,8 +149,27 @@ class AjaxService {
     }
   }
 
-}
+  photoUpload(options) {
+    const { file, url, success, error } = options;
 
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', url);
+    xhr.setRequestHeader('Content-Type', file.type);
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        const response = (xhr.response) ? JSON.parse(xhr.response) : {};
+        success(response);
+      } else {
+        const response = (xhr.response) ? JSON.parse(xhr.response) : {};
+        error(response, xhr.status);
+      }
+    };
+
+    xhr.send(file);
+  }
+}
 
 const ajaxService = new AjaxService();
 export default ajaxService;
+
