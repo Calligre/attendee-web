@@ -169,7 +169,7 @@ a {
   margin-top: 50px !important;
 }
 
-button {
+button:not([class^='theme__button']) {
   font-size: 16px;
   padding: 10px 15px !important;
   background-image: none !important;

@@ -25,6 +25,8 @@ export default class Layout extends React.Component {
     myStyle.insertRule(".secondaryText { color: " + branding.color_secondary + " !important }", 0);
     myStyle.insertRule(".secondaryBackground { background-color: " + branding.color_secondary + " !important }", 0);
     myStyle.insertRule(".nameContainer { background-image: url('" + branding.background_logo + "')!important }", 0);
+    myStyle.insertRule("[class*='theme__large'] > div > h5[class^='theme__title'] { color: " + branding.color_primary + " !important }", 0);
+    myStyle.insertRule("[class*='theme__small'] > div > h5[class^='theme__title'] { color: " + branding.color_secondary + " !important }", 0);
   }
 
   render() {

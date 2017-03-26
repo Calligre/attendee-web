@@ -2,6 +2,9 @@ import React from 'react';
 import Event from 'components/Event';
 
 import Clear from 'react-icons/lib/fa/times-circle';
+import { Card as BetterCard, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card';
+import { Button } from 'react-toolbox/lib/button';
+import { SocialIcon } from 'react-social-icons';
 
 export default class Card extends React.Component {
   constructor(props) {
@@ -23,7 +26,7 @@ export default class Card extends React.Component {
         renderedContent = <Event key={item.id} {...item} />;
         break;
       case 'content':
-        renderedContent = <div className="contentCard cardContent">{item}</div>;
+        renderedContent = <ContentCard data={item}/>;
         break;
       case 'sponsor':
         renderedContent = <SponsorCard data={item} headerStyle={headerStyle}/>;
@@ -57,21 +60,39 @@ export default class Card extends React.Component {
   }; 
 }
 
+var ContentCard = React.createClass({
+  render: function() {
+    return (
+	  <BetterCard>
+		<CardTitle
+		  avatar="https://image.flaticon.com/icons/svg/172/172116.svg"
+		  title="Message"/>
+        <CardText>{this.props.data}</CardText>
+	  </BetterCard>
+    );
+  }
+});
+
 var ContactCard = React.createClass({
   render: function() {
     var contactNodes = this.props.data.map(function(contact) {
       return (
         <div className="contact" key={contact.id}>
-          <h3>{contact.name}</h3>
+          <h4>{contact.name}</h4>
           <p>{contact.phone}</p>
         </div>
       );
     });
     return (
-      <div className="contactCard cardContent">
-        <h2 className="primaryText" style={this.props.headerStyle}>Important Contacts</h2>
-        {contactNodes}
-      </div>
+	  <BetterCard>
+		<CardTitle
+		  avatar="https://image.flaticon.com/icons/svg/172/172166.svg"
+		  title="Information"/>
+		<CardTitle
+		  title="Important Contacts"
+          style={this.props.headerStyle}/>
+        <CardText>{contactNodes}</CardText>
+	  </BetterCard>
     );
   }
 });
@@ -81,16 +102,21 @@ var LocationCard = React.createClass({
     var locationNodes = this.props.data.map(function(confLocation) {
       return (
         <div className="location" key={confLocation.id}>
-          <h3>{confLocation.name}</h3>
+          <h4>{confLocation.name}</h4>
           <p>{confLocation.address}</p>
         </div>
       );
     });
     return (
-      <div className="locationCard cardContent">
-        <h2 className="primaryText" style={this.props.headerStyle}>Locations</h2>
-        {locationNodes}
-      </div>
+	  <BetterCard>
+		<CardTitle
+		  avatar="https://image.flaticon.com/icons/svg/172/172166.svg"
+		  title="Information"/>
+		<CardTitle
+		  title="Locations"
+          style={this.props.headerStyle}/>
+        <CardText>{locationNodes}</CardText>
+	  </BetterCard>
     );
   }
 });
@@ -98,32 +124,44 @@ var LocationCard = React.createClass({
 var DownloadCard = React.createClass({
   render: function() {
     return (
-      <div className="downloadCard cardContent">
-        <h2 className="primaryText" style={this.props.headerStyle}>{this.props.data.name}</h2>
-        <a href={this.props.data.link} download>
-          <button className="secondaryBackground" style={this.props.buttonStyle}>Download</button>
-        </a>
-      </div>
+	  <BetterCard>
+		<CardTitle
+		  avatar="https://image.flaticon.com/icons/svg/172/172140.svg"
+		  title="Download"/>
+        { this.props.data.name === "Map" &&
+          <CardMedia
+            aspectRatio="wide"
+            image="https://images.pexels.com/photos/297642/pexels-photo-297642.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/> }
+        { this.props.data.name === "Conference Package" &&
+          <CardMedia
+            aspectRatio="wide"
+            image="https://images.pexels.com/photos/30027/pexels-photo-30027.jpg?w=940&h=650&auto=compress&cs=tinysrgb"/> }
+		<CardTitle
+		  title={this.props.data.name}
+          style={this.props.headerStyle}/>
+		<CardActions>
+		  <Button style={this.props.buttonStyle} label="Download" href={this.props.data.link} download/>
+		</CardActions>
+	  </BetterCard>
     );
   }
 });
 
 var SocialCard = React.createClass({
   render: function() {
-    let facebookLink = null;
-    let twitterLink = null;
-    if (this.props.facebook) {
-      facebookLink = <a href={this.props.facebook} className="socialLink"><img src="https://cdn4.iconfinder.com/data/icons/social-media-2110/64/Facebook-01-128.png"/> </a>;
-    }
-    if (this.props.twitter) {
-      twitterLink = <a href={this.props.twitter} className="socialLink"><img src="https://cdn4.iconfinder.com/data/icons/social-media-2110/64/Twitter-01-128.png"/> </a>;
-    }
     return (
-      <div className="socialCard cardContent">
-        <h2 className="primaryText" style={this.props.headerStyle}>Connect With Us</h2>
-        {facebookLink}
-        {twitterLink}
-      </div>
+	  <BetterCard>
+		<CardTitle
+		  avatar="https://image.flaticon.com/icons/svg/172/172115.svg"
+		  title="Connect With Us"/>
+        <CardMedia
+          aspectRatio="wide"
+          image="https://images.pexels.com/photos/267447/pexels-photo-267447.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/>
+        <CardText>
+          { this.props.facebook && <SocialIcon url={this.props.facebook} className="socialLink" /> }
+          { this.props.twitter && <SocialIcon url={this.props.twitter} className="socialLink" /> }
+        </CardText>
+	  </BetterCard>
     );
   }
 });
@@ -131,13 +169,21 @@ var SocialCard = React.createClass({
 var SurveyCard = React.createClass({
   render: function() {
     return (
-      <div className="surveyCard cardContent">
-        <h2 className="primaryText" style={this.props.headerStyle}>{this.props.data.name}</h2>
-        <p>{this.props.data.description}</p>
-        <a href={this.props.data.link} target="_blank">
-          <button className="secondaryBackground" style={this.props.buttonStyle}>Take Survey</button>
-        </a>
-      </div>
+	  <BetterCard>
+		<CardTitle
+		  avatar="https://image.flaticon.com/icons/svg/172/172168.svg"
+		  title="Survey"/>
+        <CardMedia
+          aspectRatio="wide"
+          image="https://images.pexels.com/photos/210585/pexels-photo-210585.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/>
+		<CardTitle
+		  title={this.props.data.name}
+          style={this.props.headerStyle}/>
+		<CardText>{this.props.data.description}</CardText>
+		<CardActions>
+		  <Button style={this.props.buttonStyle} label="Take Survey" />
+		</CardActions>
+	  </BetterCard>
     );
   }
 });
@@ -153,10 +199,15 @@ var SponsorCard = React.createClass({
         </div>
     );
     return (
-      <div className="sponsorCard cardContent">
-        <h2 className="primaryText" style={this.props.headerStyle}>{this.props.data[0].level} Sponsors</h2>
-        {sponsors}
-      </div>
+	  <BetterCard>
+		<CardTitle
+		  avatar="https://image.flaticon.com/icons/svg/172/172096.svg"
+		  title="Sponsors"/>
+		<CardTitle
+		  title={this.props.data[0].level + " Sponsors"}
+          style={this.props.headerStyle}/>
+        <CardText>{sponsors}</CardText>
+	  </BetterCard>
     );
   }
 });

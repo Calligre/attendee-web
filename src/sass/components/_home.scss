@@ -31,50 +31,56 @@
 }
 
 .card {
-  display: inline-block;
-  position: relative;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  border-radius: 10px;
-  width: 100%;
-  margin: 20px 0px;
-  text-align: center;
-  padding: 20px 30px;
+  margin: 40px;
+}
 
-  .eventPageEvent {
-    margin-left: 50px;
+[class^='theme__card'] {
+  p {
+    text-align: left;
   }
 
-  .contentCard {
-    padding: 15px 0px;
+  [class^='theme__cardText'] {
+    text-align: left;
   }
 
-  .socialCard {
-    img {
-      width: 70px;
-      margin: 0 20px;
+  .contact, .location {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+
+    h4 {
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    p {
+      display: inline-block;
     }
   }
+
+  .socialLink {
+    margin: 20px 20px 20px 0 !important;
+  }
  
-  .sponsorCard {
-    .sponsorContainer {
-      display: inline-block;
-      width: 200px;
-      margin: 20px;
-      vertical-align: top;
-      position: relative;
-      overflow: hidden;
+  .sponsorContainer {
+    display: inline-block;
+    width: 200px;
+    margin: 20px;
+    vertical-align: top;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
 
-      img {
-        height: 100px;
-        left: -100%;
-        right: -100%;
-        position: absolute;
-        margin: auto;
-      }
+    img {
+      height: 100px;
+      left: -100%;
+      right: -100%;
+      position: absolute;
+      margin: auto;
+    }
 
-      h3 {
-        margin-top: 120px;
-      }
+    h3 {
+      margin-top: 120px;
     }
   }
 }
