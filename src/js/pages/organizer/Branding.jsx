@@ -112,10 +112,10 @@ export default class Branding extends React.Component {
     };
 
     if (this.state.map) {
-      mapCard = <Card type="download" buttonStyle={secondaryBackground} headerStyle={primaryText} item={map}/>;
+      mapCard = <Card type="download" buttonStyle={secondaryText} item={map}/>;
     }
     if (this.state.package) {
-      confPackageCard = <Card type="download" buttonStyle={secondaryBackground} headerStyle={primaryText} item={confPackage}/>;
+      confPackageCard = <Card type="download" buttonStyle={secondaryText} item={confPackage}/>;
     }
 
     if (this.state.facebook || this.state.twitter) {
