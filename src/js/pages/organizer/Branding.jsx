@@ -25,8 +25,6 @@ export default class Branding extends React.Component {
       background_logo: '',
       icon: '',
       background_logo: '',
-      map: '',
-      package: '',
       facebook: '',
       twitter: '',
     };
@@ -67,8 +65,6 @@ export default class Branding extends React.Component {
       background_logo: this.state.background_logo,
       icon: this.state.icon,
       background_logo: this.state.background_logo,
-      map: this.state.map,
-      package: this.state.package,
       facebook: this.state.facebook,
       twitter: this.state.twitter,
     };
@@ -99,25 +95,7 @@ export default class Branding extends React.Component {
       WebkitTextFillColor: this.state.color_primary,
     }
  
-    let mapCard = null;
-    let confPackageCard = null;
     let socialCard = null;
-    const map = {
-      "name" : "Map",
-      "link" : this.state.map,
-    };
-    const confPackage = {
-      "name" : "Conference Package",
-      "link" : this.state.package,
-    };
-
-    if (this.state.map) {
-      mapCard = <Card type="download" buttonStyle={secondaryBackground} headerStyle={primaryText} item={map}/>;
-    }
-    if (this.state.package) {
-      confPackageCard = <Card type="download" buttonStyle={secondaryBackground} headerStyle={primaryText} item={confPackage}/>;
-    }
-
     if (this.state.facebook || this.state.twitter) {
       socialCard = <Card type="social" headerStyle={primaryText} facebook={this.state.facebook} twitter={this.state.twitter}/>;
     }
@@ -169,14 +147,6 @@ export default class Branding extends React.Component {
             <input type="url" value={this.state.background_logo} name="background_logo" placeholder="http://www.company.com/background.png" onChange={this.handleChange} />
           </div>
           <div className="field">
-            <h3 className="label">Map:</h3>
-            <input type="url" value={this.state.map} name="map" placeholder="http://www.company.com/map.pdf" onChange={this.handleChange} />
-          </div>
-          <div className="field">
-            <h3 className="label">Conference Package:</h3>
-            <input type="url" value={this.state.package} name="package" placeholder="http://www.company.com/package.pdf" onChange={this.handleChange} />
-          </div>
-          <div className="field">
             <h3 className="label">Facebook:</h3>
             <input type="url" value={this.state.facebook} name="facebook" placeholder="http://www.facebook.com/calligre" onChange={this.handleChange} />
           </div>
@@ -201,8 +171,6 @@ export default class Branding extends React.Component {
           </div>
           <div id="eventPreview" style={backgroundImage}> Event Page Header Preview</div>
           {socialCard}
-          {mapCard}
-          {confPackageCard}
         </div>
       </div>
     );

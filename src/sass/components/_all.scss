@@ -6,6 +6,7 @@ $blue: #5F9EDF;
 $teal: #62D0DB;
 $grey: #D7D8DA;
 $darkGrey: #CCC;
+$darkestGrey: #666;
 $black: #000;
 $white: #FFF;
 $error: #D83B31;
@@ -178,7 +179,7 @@ button {
   color: white !important;
 
   &:hover {
-    background-color: $darkBlue !important;
+    background-color: $darkestGrey !important;
   }
 
   &:disabled {
@@ -266,4 +267,9 @@ button {
 .outlined {
   -webkit-text-stroke-width: 0.5px;
   -webkit-text-stroke-color: white;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.3;
 }
