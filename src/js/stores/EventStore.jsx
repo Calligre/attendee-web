@@ -10,6 +10,21 @@ const randomColor = require('randomcolor');
 const streamMap = {};
 const url = UrlService.getUrl();
 
+// for the UI
+function formatData(notification) {
+  const value = notification;
+  value.starttime = moment.unix(value.starttime).valueOf();
+  value.endtime = moment.unix(value.endtime).valueOf();
+  return value;
+}
+
+// for the DB
+function formatValues(notification) {
+  const value = notification;
+  value.starttime = moment(value.starttime).unix();
+  value.endtime = moment(value.endtime).unix();
+  return value;
+}
 
 class EventStore extends EventEmitter {
   constructor() {
@@ -72,7 +87,9 @@ class EventStore extends EventEmitter {
     return this.events;
   }
 
-  updateEvent(event) {
+  updateEvent(data) {
+    const event = formatValues(data);
+
     $.ajax({
       url: `${url}/event/${event.id}`,
       data: JSON.stringify(event),
@@ -93,7 +110,8 @@ class EventStore extends EventEmitter {
     return this.events;
   }
 
-  addEvent(event) {
+  addEvent(data) {
+    const event = formatValues(data);
     $.ajax({
       url: `${url}/event`,
       data: JSON.stringify(event),
@@ -186,7 +204,7 @@ class EventStore extends EventEmitter {
       }
       case 'EVENTS_GET': {
         this.events = action.events.map((event) => {
-          const attributes = event.attributes;
+          const attributes = formatData(event.attributes);
           streamMap[attributes.stream] = streamMap[attributes.stream] || randomColor();
           attributes.streamColor = streamMap[attributes.stream];
           attributes.isSubscribed = action.subscriptions.includes(attributes.id);
