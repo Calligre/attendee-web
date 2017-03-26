@@ -33,8 +33,9 @@ class NotificationStore extends EventEmitter {
         dispatcher.dispatch({ type: 'NOTIFICATIONS_GET', notifications: response.data });
       },
       error(error) {
-        dispatcher.dispatch({type: "NOTIFICATION_ERROR", error: error.error});
-      }
+        dispatcher.dispatch({ type: 'NOTIFICATION_ERROR', error: error.error });
+      },
+    });
     return self.notifications;
   }
 
