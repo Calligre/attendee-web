@@ -34,7 +34,21 @@ export default class Profile extends React.Component {
     PeopleStore.removeListener('error', this.showError);
   }
 
-  getProfile= () => {
+  componentDidUpdate(prevProps, prevState) {
+    let oldId = -1;
+    let newId = -1;
+    if (prevProps.params.hasOwnProperty('id')) {
+      oldId = prevProps.params.id;
+    }
+    if (this.props.params.hasOwnProperty('id')) {
+      newId = this.props.params.id;
+    }
+    if (oldId != newId) {
+      this.getProfile();
+    }
+  }
+
+  getProfile = () => {
     if (!AuthService.getProfile().identities) {
       return;
     }

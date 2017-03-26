@@ -44,6 +44,7 @@ export default class Layout extends React.Component {
       <SidebarItem href='/calendar'>Calendar</SidebarItem>,
       <SidebarItem href='/preferences'>Preferences</SidebarItem>,
       <SidebarItem href='/surveys'>Surveys</SidebarItem>,
+      <SidebarItem href='/notifications'>Notifications</SidebarItem>,
       <SidebarItem href='/login' onClick={AuthService.logout}>Logout</SidebarItem>,
     ];
 
