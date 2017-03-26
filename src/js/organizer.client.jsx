@@ -28,6 +28,11 @@ const requireAuth = (nextState) => {
   if (!AuthService.loggedIn()) {
     localStorage.setItem('redirect_after_login', nextState.location.pathname);
     AppHistory.push('login');
+  }
+  if (!AuthService.hasAdminCapabilities()) {
+    alert('This user does not have admin privileges.\n' +
+      'They will not be able to make any lasting changes, but can still look around.\n\n' +
+      'Were you looking for the attendee app?');
   } else {
     AuthService.on('profile_updated', redirectCallback);
   }
