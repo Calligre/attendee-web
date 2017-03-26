@@ -17,6 +17,8 @@ export default class Layout extends React.Component {
       switcherModal: false,
       newsfeed: PreferenceStore.getDefaults().newsfeed,
       conferences: [],
+      background: null,
+      highlight: null,
     };
 
     BrandStore.getBranding();
@@ -52,8 +54,34 @@ export default class Layout extends React.Component {
 
   setBranding = () => {
     let branding = BrandStore.branding;
-    this.setState({ branding: branding });
-    let myStyle = document.styleSheets[6];
+
+    // janky color math here
+    let secondary = branding.color_secondary.slice(1);
+    let r2 = parseInt(secondary.slice(0, 2), 16);
+    let g2 = parseInt(secondary.slice(2, 4), 16);
+    let b2 = parseInt(secondary.slice(4, 6), 16);
+    let a = 0.2;
+    let r1 = Math.round(r2/(1-a));
+    let g1 = Math.round(g2/(1-a));
+    let b1 = Math.round(b2/(1-a));
+
+    let background = "#" + r1.toString(16) + g1.toString(16) + b1.toString(16);
+ 
+    // more janky color math here
+    a = 0.14902;
+    r1 = Math.round(r2 * (1-a));
+    g1 = Math.round(g2 * (1-a));
+    b1 = Math.round(b2 * (1-a));
+
+    let highlight = "#" + r1.toString(16) + g1.toString(16) + b1.toString(16);
+
+    this.setState({
+      branding: branding,
+      background: background,
+      highlight: highlight,
+    });
+
+    let myStyle = document.styleSheets[6]
     myStyle.insertRule(".primaryText { color: " + branding.color_primary + " !important }", 0);
     myStyle.insertRule(".primaryBackground { background-color: " + branding.color_primary + " !important }", 0);
     myStyle.insertRule(".secondaryText { color: " + branding.color_secondary + " !important }", 0);
@@ -61,6 +89,7 @@ export default class Layout extends React.Component {
     myStyle.insertRule(".nameContainer { background-image: url('" + branding.background_logo + "')!important }", 0);
     myStyle.insertRule("h6 { color: " + branding.color_primary + " !important }", 0);
     myStyle.insertRule("button[class^='theme__button'] { color: " + branding.color_secondary + " !important }", 0);
+
   }
 
   showError = () => {
@@ -78,7 +107,7 @@ export default class Layout extends React.Component {
   }
 
   render() {
-    const { branding, newsfeed, switcherModal } = this.state;
+    const { branding, newsfeed, switcherModal, background, highlight } = this.state;
     
     if (!branding) {
       return null;
@@ -90,7 +119,7 @@ export default class Layout extends React.Component {
     }
 
     const items = [
-      <SidebarItem href='/'>Home</SidebarItem>,
+      <SidebarItem href='/' background={background} hoverHighlight={highlight}>Home</SidebarItem>,
     ];
     if (newsfeed) {
       items.push(<SidebarItem href='/newsfeed'>News Feed</SidebarItem>);
