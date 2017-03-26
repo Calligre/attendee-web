@@ -37,6 +37,8 @@ export default class Layout extends React.Component {
     PreferenceStore.removeListener('error', this.showError);
     ConferenceStore.removeListener('loadedConferences', this.loadedConferences);
     ConferenceStore.removeListener('error', this.showError);
+    BrandStore.removeListener('receivedBranding', this.setBranding);
+    BrandStore.removeListener('error', this.showError);
   }
 
   loadPreferences = () => {
@@ -94,14 +96,14 @@ export default class Layout extends React.Component {
     if (newsfeed) {
       items.push(<SidebarItem href='/newsfeed'>News Feed</SidebarItem>);
     }
-    Array.prototype.push.apply(items, [
+    items.push(
       <SidebarItem href='/events'>Events</SidebarItem>,
       <SidebarItem href='/people'>People</SidebarItem>,
       <SidebarItem href='/profile'>My Profile</SidebarItem>,
       <SidebarItem>
         <a className="sidebarLink" onClick={this.showConferenceSwitcher}>Switch Conferences</a>
-      </SidebarItem>,
-    ]);
+      </SidebarItem>
+    );
     if (AuthService.loggedIn()) {
       items.push(
         <SidebarItem href='/login'>
