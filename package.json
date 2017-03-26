@@ -26,6 +26,7 @@
     "react-dom": "15.3.2",
     "react-dropzone": "3.10.0",
     "react-icons": "2.2.3",
+    "react-modal": "1.7.3",
     "react-notification": "6.6.0",
     "react-router": "2.8.1",
     "react-search-input": "0.10.4",

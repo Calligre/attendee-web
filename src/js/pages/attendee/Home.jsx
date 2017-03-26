@@ -7,6 +7,7 @@ import NotificationStore from "stores/NotificationStore";
 import BrandStore from 'stores/BrandStore';
 import Card from "components/Card";
 import PreferenceStore from 'stores/PreferenceStore';
+import SurveyStore from 'stores/SurveyStore';
 
 import { NotificationStack } from 'react-notification';
 var moment = require('moment');
@@ -22,30 +23,39 @@ export default class Featured extends React.Component {
       cards: [],
       locations: [],
       contacts: [],
+      surveys: [],
+      sponsors: [],
       preferences: PreferenceStore.getDefaults(),
     };
+  };
+
+  componentWillMount() {
+    NotificationStore.on("received", this.getNotifications);
+    NotificationStore.on("error", this.showNotificationStoreError);
+    NotificationStore.getAll();
+
+    EventStore.on("received", this.getEvents);
+    EventStore.on("error", this.showEventStoreError);
+    EventStore.getAll();
+
+    PreferenceStore.on('loaded', this.loadPreferences);
+    PreferenceStore.on('error', this.showPreferenceError);
+    PreferenceStore.loadAll();
 
     BrandStore.on('receivedBranding', this.setBranding);
     BrandStore.on('receivedCards', this.setCards);
     BrandStore.on('receivedLocations', this.setLocations);
     BrandStore.on('receivedContacts', this.setContacts);
+    BrandStore.on('receivedSponsors', this.setSponsors);
     BrandStore.getBranding();
     BrandStore.getLocations();
     BrandStore.getContacts();
     BrandStore.getCards();
+    BrandStore.getSponsors();
 
-    PreferenceStore.loadAll();
-  };
-
-  componentWillMount() {
-    PreferenceStore.on('loaded', this.loadPreferences);
-    NotificationStore.on("received", this.getNotifications);
-    NotificationStore.on("error", this.showNotificationStoreError);
-    EventStore.on("received", this.getEvents);
-    PreferenceStore.on('error', this.showPreferenceError);
-    EventStore.on("error", this.showEventStoreError);
-    NotificationStore.getAll();
-    EventStore.getAll();
+    SurveyStore.on('loaded', this.getSurveys);
+    SurveyStore.on('error', this.showSurveyStoreError);
+    SurveyStore.getAll();
   };
 
   componentWillUnmount() {
@@ -55,6 +65,12 @@ export default class Featured extends React.Component {
     NotificationStore.removeListener("error", this.showNotificationStoreError);
     EventStore.removeListener("received", this.getEvents);
     EventStore.removeListener("error", this.showEventStoreError);
+    BrandStore.removeListener('receivedBranding', this.setBranding);
+    BrandStore.removeListener('receivedCards', this.setCards);
+    BrandStore.removeListener('receivedLocations', this.setLocations);
+    BrandStore.removeListener('receivedContacts', this.setContacts);
+    SurveyStore.removeListener('loaded', this.getSurveys);
+    SurveyStore.removeListener('error', this.showSurveyStoreError);
   };
 
   getNotifications = () => {
@@ -68,7 +84,7 @@ export default class Featured extends React.Component {
 
   getEvents = () => {
     this.setState({
-      events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment(event.starttime)))
+      events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment.unix(event.starttime)))
     });
   };
 
@@ -106,15 +122,45 @@ export default class Featured extends React.Component {
     this.setState({locations: BrandStore.locations});
   }
 
+  getSurveys = () => {
+    this.setState({surveys: SurveyStore.surveys});
+  };
+
+  showSurveyStoreError = () => {
+    console.log(SurveyStore.error)
+  }
+
+  setSponsors = () => {
+    let sponsors = Array.from(BrandStore.sponsors);
+    sponsors.sort((a, b) => {
+      return a.rank > b.rank;
+    });
+
+    let right = 0;
+    let sponsorsSplit = [];
+    while (sponsors.length > 0) {
+      if (sponsors[0].rank != sponsors[right].rank) {
+        sponsorsSplit.push(sponsors.splice(0, right));
+        right = 0;
+      } else if (right == sponsors.length - 1) {
+        sponsorsSplit.push(sponsors);
+        break;
+      } else {
+        right++;
+      }
+    }
+    this.setState({sponsors: sponsorsSplit});
+  }
+
   render() {
     if (localStorage.getItem('redirect_after_login')) {
       return (<div></div>)
     }
-    const { messages, events, notifications, logo, branding, locations, cards, contacts, preferences} = this.state;
+    const { messages, events, notifications, logo, branding, locations, cards, contacts, surveys, sponsors, preferences} = this.state;
 
     var eventCount = 0;
     const EventComponents = events.map((event) => {
-      if (moment().diff(moment(event.starttime), "hours") < 2 || eventCount < 3) {
+      if (moment().diff(moment.unix(event.starttime), "hours") < 2 || eventCount < 3) {
         eventCount++;
         return <Card type="event" key={"event-" + event.id} item={event}/>;
       }
@@ -157,6 +203,20 @@ export default class Featured extends React.Component {
       contactsCard = <Card type="contact" item={contacts}/>;
     }
 
+    let surveyCards = null;
+    if (surveys !== undefined && surveys.length > 0 && preferences.survey) {
+      surveyCards = surveys.map((survey) =>
+          <Card type="survey" item={survey}/>
+      );
+    }
+    
+    let sponsorCards = null;
+    if (sponsors !== undefined && sponsors.length > 0) {
+      sponsorCards = sponsors.map((sublist) =>
+        <Card type="sponsor" item={sublist}/>
+      );
+    }
+
     return (
       <div>
         <NotificationStack
@@ -179,6 +239,8 @@ export default class Featured extends React.Component {
           {mapCard}
           {confPackageCard}
           {contentCards}
+          {surveyCards}
+          {sponsorCards}
         </div>
       </div>
     );

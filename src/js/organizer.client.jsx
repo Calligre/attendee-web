@@ -5,6 +5,7 @@ import { Router, Route, IndexRoute } from 'react-router';
 import Layout from 'pages/organizer/Layout';
 import Branding from 'pages/organizer/Branding';
 import Calendar from 'pages/organizer/Calendar';
+import Cards from 'pages/organizer/Cards';
 import Preferences from 'pages/organizer/Preferences';
 import Surveys from 'pages/organizer/Surveys';
 import Notifications from 'pages/organizer/Notifications';
@@ -47,6 +48,7 @@ ReactDOM.render(
     <Route path="/" component={Layout}>
       <IndexRoute apiBaseURL={UrlService.getUrl()} component={Branding} onEnter={requireAuth} />
       <Route path="calendar" component={Calendar} onEnter={requireAuth} />
+      <Route path="cards" component={Cards} onEnter={requireAuth} />
       <Route path="preferences" component={Preferences} onEnter={requireAuth} />
       <Route path="surveys" component={Surveys} onEnter={requireAuth} />
       <Route path="notifications" component={Notifications} onEnter={requireAuth} />

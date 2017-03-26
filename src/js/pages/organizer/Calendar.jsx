@@ -15,13 +15,19 @@ export default class Calendar extends React.Component {
   }
 
   componentWillMount() {
-    EventStore.on('received', this.getEvents);
-    EventStore.on('error', this.showError);
+    EventStore.on("received", this.getEvents);
+    EventStore.on("addEvents", this.getEvents);
+    EventStore.on("updateEvents", this.getEvents);
+    EventStore.on("deleteEvents", this.getEvents);
+    EventStore.on("error", this.showError);
   }
 
   componentWillUnmount() {
-    EventStore.removeListener('received', this.getEvents);
-    EventStore.removeListener('error', this.showError);
+    EventStore.removeListener("received", this.getEvents);
+    EventStore.removeListener("addEvents", this.getEvents);
+    EventStore.removeListener("updateEvents", this.getEvents);
+    EventStore.removeListener("deleteEvents", this.getEvents);
+    EventStore.removeListener("error", this.showError);
   }
 
   showError = () => {

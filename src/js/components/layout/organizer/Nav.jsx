@@ -45,8 +45,11 @@ export default class Nav extends React.Component {
               <li className={calendarClass}>
                 <Link to="calendar" onClick={this.toggleCollapse}>Calendar</Link>
               </li>
-              <li className={preferencesClass}>
-                <Link to="preferences" onClick={this.toggleCollapse}>Preferences</Link>
+              <li class={cardsClass}>
+                <Link to="cards" onClick={this.toggleCollapse.bind(this)}>Cards</Link>
+              </li>
+              <li class={preferencesClass}>
+                <Link to="preferences" onClick={this.toggleCollapse.bind(this)}>Preferences</Link>
               </li>
               <li className={surveyClass}>
                 <Link to="surveys" onClick={this.toggleCollapse}>Surveys</Link>
