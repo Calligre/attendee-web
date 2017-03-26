@@ -65,8 +65,12 @@ class AuthService extends EventEmitter {
         Authorization: `Bearer ${this.getToken()}`,
       },
       cache: false,
-      success(response) {},
+      success(response) {
+        // admins have capabilities 7 or higher
+        localStorage.setItem('admin_capabilities', response.data.attributes.capabilities >= 7);
+      },
       error(error) {
+        localStorage.setItem('admin_capabilities', false);
         const userData = {
           id,
           first_name: profile.given_name || profile.name.split(' ')[0],
@@ -121,6 +125,13 @@ class AuthService extends EventEmitter {
   getToken() {
     // Retrieves the user token from localStorage
     return localStorage.getItem('id_token');
+  }
+
+  hasAdminCapabilities() {
+    // NOTE: This is easily mess-with-able by the user.
+    // Only use it for warnings, not real security.
+    // Needs the comparison because localStorage stores everything as strings
+    return localStorage.getItem('admin_capabilities') === 'true';
   }
 
   logout() {
