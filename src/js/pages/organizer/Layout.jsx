@@ -9,7 +9,7 @@ export default class Layout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      branding: {},
+      branding: null,
     };
 
     BrandStore.on('receivedBranding', this.setBranding);

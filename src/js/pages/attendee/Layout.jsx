@@ -2,20 +2,18 @@ import React from 'react';
 import { Sidebar, SidebarItem } from 'react-responsive-sidebar';
 import Dialog from 'react-toolbox/lib/dialog';
 
-import Footer from 'components/layout/Footer';
 import BrandStore from 'stores/BrandStore';
 import ConferenceStore from 'stores/ConferenceStore';
 import PreferenceStore from 'stores/PreferenceStore';
 
 import Footer from 'components/layout/Footer';
-import BrandStore from 'stores/BrandStore';
 import AuthService from 'util/AuthService';
 
 export default class Layout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      branding: {},
+      branding: null,
       switcherModal: false,
       newsfeed: PreferenceStore.getDefaults().newsfeed,
       conferences: [],
@@ -50,7 +48,6 @@ export default class Layout extends React.Component {
 
   loadConferences = () => {
     this.setState({ conferences: ConferenceStore.conferences });
-    };
   }
 
   setBranding = () => {
@@ -82,7 +79,6 @@ export default class Layout extends React.Component {
 
   render() {
     const { branding, newsfeed, switcherModal } = this.state;
-    var self = this;
     
     if (!branding) {
       return null;
