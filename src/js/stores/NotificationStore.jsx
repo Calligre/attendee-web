@@ -52,11 +52,12 @@ class NotificationStore extends EventEmitter {
     return self.notifications;
   }
 
-  add(notification) {
+  add(data) {
+    const notification = JSON.stringify(formatValues(data));
     const self = this;
     $.ajax({
       url: `${url}/broadcast`,
-      data: JSON.stringify(formatValues(notification)),
+      data: notification,
       type: 'POST',
       contentType: 'application/json',
       processData: false,
@@ -75,10 +76,12 @@ class NotificationStore extends EventEmitter {
   }
 
 
-  update(notification) {
+  update(data) {
+    const notification = JSON.stringify(formatValues(data));
+
     $.ajax({
       url: `${url}/broadcast/${notification.id}`,
-      data: JSON.stringify(formatValues(notification)),
+      data: notification,
       type: 'PATCH',
       contentType: 'application/json',
       processData: false,
@@ -171,13 +174,13 @@ class NotificationStore extends EventEmitter {
       }
       case 'NOTIFICATION_UPDATE': {
         const entry = this.notifications.find(c => c.id === action.notification.id);
-        Object.assign(entry, formatData(action.notification));
+        Object.assign(entry, action.notification);
         this.emit('updateNotifications');
         break;
       }
       case 'NOTIFICATION_ADD': {
         action.notification.id = action.id;
-        this.notifications.push(formatData(action.notification));
+        this.notifications.push(action.notification);
         this.emit('addNotifications');
         break;
       }
