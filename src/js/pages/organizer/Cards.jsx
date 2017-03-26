@@ -281,7 +281,7 @@ export default class Cards extends React.Component {
           label="Show card with link to download map"
           onChange={this.handleChange.bind(this, 'map')}
         />
-        <Input type='text' label='Link to Map' value={this.state.map} onChange={this.updateBranding.bind(this, 'map')} disabled={!this.state.preferences.map}/>
+        <Input type='url' label='Link to Map' value={this.state.map} onChange={this.updateBranding.bind(this, 'map')} disabled={!this.state.preferences.map}/>
 
         <h1 className="primaryText largeTopMargin">Conference Package</h1>
 		<Switch
@@ -289,7 +289,7 @@ export default class Cards extends React.Component {
           label="Show card with link to download conference package"
           onChange={this.handleChange.bind(this, 'package')}
         />
-        <Input type='text' label='Link to Conference Package' value={this.state.package} onChange={this.updateBranding.bind(this, 'package')} disabled={!this.state.preferences.package}/>
+        <Input type='url' label='Link to Conference Package' value={this.state.package} onChange={this.updateBranding.bind(this, 'package')} disabled={!this.state.preferences.package}/>
 
         <h1 className="primaryText largeTopMargin">Important Locations</h1>
 		<Switch
