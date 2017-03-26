@@ -27,7 +27,7 @@ class EventStore extends EventEmitter {
         dispatcher.dispatch({ type: 'STREAM_GET', stream: streams });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+        dispatcher.dispatch({ type: 'EVENT_ERROR', error: error.error });
       },
     });
     return this.events;
@@ -42,15 +42,15 @@ class EventStore extends EventEmitter {
           endpoint: `user/${AuthService.getCurrentUserId()}/subscription`,
           success(response2) {
             const subscription = response2.data.map(sub => sub.attributes.event_id);
-            dispatcher.dispatch({ type: 'EVENTS_GET', events, subscriptions: subscription });
+            dispatcher.dispatch({ type: 'EVENT_GET', events, subscriptions: subscription });
           },
           error(error) {
-            dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+            dispatcher.dispatch({ type: 'EVENT_ERROR', error: error.error });
           },
         });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+        dispatcher.dispatch({ type: 'EVENT_ERROR', error: error.error });
       },
     });
     return this.events;
@@ -61,10 +61,10 @@ class EventStore extends EventEmitter {
       endpoint: 'event',
       data: event,
       success() {
-        dispatcher.dispatch({ type: 'EVENTS_UPDATE', event });
+        dispatcher.dispatch({ type: 'EVENT_UPDATE', event });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error });
+        dispatcher.dispatch({ type: 'EVENT_ERROR', error });
       },
     });
     return this.events;
@@ -75,10 +75,10 @@ class EventStore extends EventEmitter {
       endpoint: 'event',
       data: event,
       success(response) {
-        dispatcher.dispatch({ type: 'EVENTS_ADD', event, id: response.data.id });
+        dispatcher.dispatch({ type: 'EVENT_ADD', event, id: response.data.id });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error });
+        dispatcher.dispatch({ type: 'EVENT_ERROR', error });
       },
     });
     return this.events;
@@ -89,10 +89,10 @@ class EventStore extends EventEmitter {
       endpoint: 'event',
       id,
       success() {
-        dispatcher.dispatch({ type: 'EVENTS_UPDATE', id });
+        dispatcher.dispatch({ type: 'EVENT_DELETE', id });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error });
+        dispatcher.dispatch({ type: 'EVENT_ERROR', error });
       },
     });
     return this.events;
@@ -106,7 +106,7 @@ class EventStore extends EventEmitter {
         dispatcher.dispatch({ type: 'EVENT_SUBSCRIBE', event: id, isSubscribed: true });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+        dispatcher.dispatch({ type: 'EVENT_ERROR', error: error.error });
       },
     });
     return this.events;
@@ -120,7 +120,7 @@ class EventStore extends EventEmitter {
         dispatcher.dispatch({ type: 'EVENT_UNSUBSCRIBE', event: id, isSubscribed: false });
       },
       error(error) {
-        dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
+        dispatcher.dispatch({ type: 'EVENT_ERROR', error: error.error });
       },
     });
     return this.events;
@@ -136,7 +136,7 @@ class EventStore extends EventEmitter {
         this.emit('streams');
         break;
       }
-      case 'EVENTS_GET': {
+      case 'EVENT_GET': {
         this.events = action.events.map((event) => {
           const attributes = event.attributes;
           streamMap[attributes.stream] = streamMap[attributes.stream] || randomColor();

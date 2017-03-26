@@ -109,9 +109,6 @@ class NotificationStore extends EventEmitter {
         onClick: () => this.handleDismiss(notification),
       };
     });
-    self.notifications = self.notifications.sort((a, b) => {
-      return a.expirytime > b.expirytime;
-    });
     self.notifications = self.notifications.sort((a, b) => a.expirytime > b.expirytime);
     return self.notifications;
   }
