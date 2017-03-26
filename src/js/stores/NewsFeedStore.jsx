@@ -70,7 +70,7 @@ class NewsFeedStore extends EventEmitter {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
       type: 'GET',
-      url: `${url}/api/social/flags`,
+      url: `${url}/social/flags`,
       data: params,
       dataType: 'json',
       cache: false,
@@ -140,7 +140,7 @@ class NewsFeedStore extends EventEmitter {
 
     $.ajax({
       type: 'POST',
-      url: `${url}/api/social/${postId}/flag`,
+      url: `${url}/social/${postId}/flag`,
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
@@ -167,7 +167,7 @@ class NewsFeedStore extends EventEmitter {
 
     $.ajax({
       type: 'DELETE',
-      url: `${url}/api/social/${postId}/flag`,
+      url: `${url}/social/${postId}/flag`,
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
@@ -189,7 +189,7 @@ class NewsFeedStore extends EventEmitter {
 
     $.ajax({
       type: 'DELETE',
-      url: `${url}/api/social/${postId}`,
+      url: `${url}/social/${postId}`,
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
@@ -216,6 +216,7 @@ class NewsFeedStore extends EventEmitter {
       contentType: 'application/json',
       cache: false,
       success(response) {
+        console.log(response);
         dispatcher.dispatch({ type: 'CREATE_POST_SUCCESS', post: response.data });
       },
       error(error) {
@@ -351,6 +352,7 @@ class NewsFeedStore extends EventEmitter {
         const arrayLength = this.contentFeed.items.length;
         for (let i = 0; i < arrayLength; i += 1) {
           if (this.contentFeed.items[i].id === action.postId) {
+            console.log("HERE");
             this.contentFeed.items[i].current_user_flagged = true;
             // Assume that store and UI are in sync if action was correct
             // this.emit('updated');
@@ -406,28 +408,24 @@ class NewsFeedStore extends EventEmitter {
         break;
       }
       case 'POST_LIKE_ERROR': {
-        this.emit('revert');
         this.error = 'Error liking post';
-        this.emit('error');
+        this.emit('revert');
         break;
       }
       case 'POST_UNLIKE_ERROR': {
-        this.emit('revert');
         this.error = 'Error unliking post';
-        this.emit('error');
+        this.emit('revert');
         break;
       }
       case 'POST_FLAG_ERROR': {
-        this.emit('revert');
         this.error = 'Error flagging post';
-        this.emit('error');
+        this.emit('revert');
         break;
       }
       case 'POST_UNFLAG_ERROR':
       case 'ADMIN_POST_UNFLAG_ERROR': {
-        this.emit('revert');
         this.error = 'Error unflagging post';
-        this.emit('error');
+        this.emit('revert');
         break;
       }
       case 'POST_DELETE_ERROR':

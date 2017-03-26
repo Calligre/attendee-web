@@ -10,7 +10,6 @@ import Preferences from 'pages/organizer/Preferences';
 import Surveys from 'pages/organizer/Surveys';
 import Notifications from 'pages/organizer/Notifications';
 import Moderation from 'pages/organizer/Moderation';
->>>>>>> Base Organizer moderation page
 import Login from 'pages/Login';
 
 import AppHistory from 'util/AppHistory';
