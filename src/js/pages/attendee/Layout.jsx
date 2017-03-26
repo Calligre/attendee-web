@@ -81,7 +81,7 @@ export default class Layout extends React.Component {
       highlight: highlight,
     });
 
-    let myStyle = document.styleSheets[6]
+    let myStyle = document.styleSheets[document.styleSheets.length - 1]
     myStyle.insertRule(".primaryText { color: " + branding.color_primary + " !important }", 0);
     myStyle.insertRule(".primaryBackground { background-color: " + branding.color_primary + " !important }", 0);
     myStyle.insertRule(".secondaryText { color: " + branding.color_secondary + " !important }", 0);
