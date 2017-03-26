@@ -1,9 +1,7 @@
-import AuthService from 'util/AuthService';
 import BrandStore from 'stores/BrandStore';
 import React from 'react';
 
 const moment = require('moment');
-const $ = require('jquery');
 
 export default class Info extends React.Component {
   constructor() {
@@ -53,7 +51,7 @@ export default class Info extends React.Component {
 
         <div> <img src={logo_square} alt="Square Logo" height="100 "/>
               <img src={icon} alt="Icon" height="100 "/> </div>
-        <div> <a href={facebook}> <img src="https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png" alt="Facebook" height="50" /> </a> 
+        <div> <a href={facebook}> <img src="https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png" alt="Facebook" height="50" /> </a>
               <a href={twitter}> <img src="https://upload.wikimedia.org/wikipedia/en/archive/9/9f/20161107041729!Twitter_bird_logo_2012.svg" alt="Twitter" height="50" /> </a> </div>
       </div>
     );

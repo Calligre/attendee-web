@@ -13,11 +13,11 @@ import Login from 'pages/Login';
 
 import AppHistory from 'util/AppHistory';
 import AuthService from 'util/AuthService';
-import UrlService from 'util/UrlService';
+import AjaxService from 'util/AjaxService';
 
 require('!style!css!sass!../sass/main.scss');
 
-const apiBaseURL = UrlService.getUrl();
+const apiBaseURL = AjaxService.getUrl();
 
 const app = document.getElementById('app');
 const redirectCallback = () => {
@@ -46,7 +46,7 @@ const redirectAfterLogin = () => {
 ReactDOM.render(
   <Router history={AppHistory}>
     <Route path="/" component={Layout}>
-      <IndexRoute apiBaseURL={UrlService.getUrl()} component={Branding} onEnter={requireAuth} />
+      <IndexRoute apiBaseURL={AjaxService.getUrl()} component={Branding} onEnter={requireAuth} />
       <Route path="calendar" component={Calendar} onEnter={requireAuth} />
       <Route path="cards" component={Cards} onEnter={requireAuth} />
       <Route path="preferences" component={Preferences} onEnter={requireAuth} />

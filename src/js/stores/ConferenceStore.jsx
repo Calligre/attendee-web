@@ -1,10 +1,8 @@
-import AuthService from 'util/AuthService';
+import AjaxService from 'util/AjaxService';
+
 import dispatcher from 'dispatcher';
 import { EventEmitter } from 'events';
-import UrlService from 'util/UrlService';
 
-const url = UrlService.getUrl();
-const $ = require('jquery');
 
 class ConferenceStore extends EventEmitter {
   constructor() {
@@ -15,13 +13,8 @@ class ConferenceStore extends EventEmitter {
 
   getConferences() {
     const self = this;
-    $.ajax({
-      url: `${url}/conference`,
-      dataType: 'json',
-      headers: {
-        Authorization: `Bearer ${AuthService.getToken()}`,
-      },
-      cache: false,
+    AjaxService.get({
+      endpoint: 'conference',
       success(response) {
         self.conferences = response.data;
         self.conferences = self.conferences.map(conference => conference.attributes);
