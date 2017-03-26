@@ -92,7 +92,7 @@ class EventStore extends EventEmitter {
 
     $.ajax({
       url: `${url}/event/${event.id}`,
-      data: data,
+      data: event,
       type: 'PATCH',
       contentType: 'application/json',
       processData: false,
