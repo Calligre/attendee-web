@@ -10,6 +10,7 @@ export default class Surveys extends React.Component {
     this.state = {
       surveys: [],
       disabled: PreferenceStore.getDefaults().survey,
+      loaded: false,
     };
 
     SurveyStore.getAll();
@@ -41,7 +42,9 @@ export default class Surveys extends React.Component {
   }
 
   loadPreferences = () => {
-    this.setState({ disabled: !PreferenceStore.preferences.survey });
+    this.setState({ disabled: !PreferenceStore.preferences.survey,
+      loaded: true,
+    });
   }
 
   showPreferenceError = () => {
@@ -61,7 +64,11 @@ export default class Surveys extends React.Component {
   }
 
   render() {
-    const { surveys, disabled } = this.state;
+    const { surveys, disabled, loaded } = this.state;
+
+    if (!loaded) {
+      return (<div> Loading... </div>);
+    }
 
     if (disabled) {
       return (<div> Surveys have been disabled, please check your preferences. </div>);
@@ -78,7 +85,7 @@ export default class Surveys extends React.Component {
       afterInsertRow: this.addSurvey,
       afterDeleteRow: this.deleteSurvey,
       handleConfirmDeleteRow: removeAlertOnDelete,
-    }
+    };
 
     const selectRowProp = {
       mode: 'checkbox',
@@ -93,11 +100,12 @@ export default class Surveys extends React.Component {
         deleteRow
         striped
         hover
-        options={tableOptions}>
-        <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
-        <TableHeaderColumn dataField='link' editable={ { validator: requireSurveyLink } }>Survey Link</TableHeaderColumn>
-        <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>
-        <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField='id'>Id</TableHeaderColumn>
+        options={tableOptions}
+      >
+        <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
+        <TableHeaderColumn dataField="link" editable={{ validator: requireSurveyLink }}>Survey Link</TableHeaderColumn>
+        <TableHeaderColumn dataField="description">Description</TableHeaderColumn>
+        <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField="id">Id</TableHeaderColumn>
       </BootstrapTable>
     );
   }
