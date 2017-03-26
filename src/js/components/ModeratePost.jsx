@@ -13,16 +13,13 @@ export default class ModeratePost extends React.Component {
   constructor(props) {
     super(props);
     this.state = props;
-
-    this.unflagPost = this.unflagPost.bind(this);
-    this.deletePost = this.deletePost.bind(this);
   }
 
-  unflagPost() {
+  unflagPost = () => {
     NewsFeedStore.unflagPost(this.state.id, true);
   }
 
-  deletePost() {
+  deletePost = () => {
     NewsFeedStore.deletePost(this.state.id, true);
   }
 
@@ -57,10 +54,10 @@ export default class ModeratePost extends React.Component {
         <div className="post-text inline">
           <div className="right-options">
             <Button className="right-icons btn-danger" onClick={this.deletePost}>
-              Delete Post
+              Delete
             </Button>
             <Button className="right-icons btn-danger" onClick={this.unflagPost}>
-              Unflag post
+              Unflag
             </Button>
           </div>
           <p className="username">{poster_name}</p>

@@ -164,7 +164,6 @@ class NewsFeedStore extends EventEmitter {
     const postId = pid;
     const successStatus = adminFlag ? 'ADMIN_POST_UNFLAG' : 'POST_UNFLAG';
     const failStatus = adminFlag ? 'ADMIN_POST_UNFLAG_ERROR' : 'POST_UNFLAG_ERROR';
-    console.log(adminFlag);
 
     $.ajax({
       type: 'DELETE',
@@ -187,7 +186,6 @@ class NewsFeedStore extends EventEmitter {
     const postId = pid;
     const successStatus = adminFlag ? 'ADMIN_POST_DELETE' : 'POST_DELETE';
     const failStatus = adminFlag ? 'ADMIN_POST_DELETE_ERROR' : 'POST_DELETE_ERROR';
-    console.log(adminFlag);
 
     $.ajax({
       type: 'DELETE',
@@ -290,7 +288,7 @@ class NewsFeedStore extends EventEmitter {
     switch (action.type) {
       case 'NEWSFEED_GET': {
         this.dataFetched = true;
-        Array.prototype.push.apply(this.contentFeed.items, action.response.data.posts[0]);
+        this.contentFeed.items.push(...action.response.data.posts[0]);
         this.contentFeed.nextOffset = action.response.data.nextOffset;
         this.contentFeed.count = action.response.data.count;
         this.emit('updated');
@@ -298,9 +296,8 @@ class NewsFeedStore extends EventEmitter {
       }
       case 'FLAGGED_GET': {
         this.dataFetched = true;
-        Array.prototype.push.apply(this.flaggedPosts.items, action.response.data.posts[0]);
-        this.contentFeed.nextOffset = action.response.data.nextOffset;
-        this.contentFeed.count = action.response.data.count;
+        this.flaggedPosts.items.push(...action.response.data.posts[0]);
+        this.flaggedPosts.nextOffset = action.response.data.nextOffset;
         this.emit('updated');
         break;
       }
@@ -373,7 +370,6 @@ class NewsFeedStore extends EventEmitter {
         break;
       }
       case 'ADMIN_POST_UNFLAG': {
-        const arrayLength = this.flaggedPosts.items.length;
         this.flaggedPosts.items = this.flaggedPosts.items.filter(function(item) {
           return action.postId !== item.id;
         });

@@ -17,8 +17,6 @@ export default class Moderation extends React.Component {
 
     NewsFeedStore.getFlaggedOnLoad();
     PreferenceStore.loadAll();
-
-    this.showError = this.showError.bind(this);
   }
 
   componentWillMount() {

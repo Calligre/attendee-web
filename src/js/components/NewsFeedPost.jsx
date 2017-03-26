@@ -94,7 +94,7 @@ export default class NewsFeedPost extends React.Component {
       userId,
     } = this.state;
 
-    const owner = poster_id === userId ? true : false;
+    const owner = poster_id === userId;
 
     const heartColor = {
       color: current_user_likes ? 'red' : 'inherit',
