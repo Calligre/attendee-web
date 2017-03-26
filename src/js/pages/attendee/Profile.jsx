@@ -128,10 +128,14 @@ export default class Profile extends React.Component {
     PeopleStore.updatePerson(profile);
   }
 
-  renderSocialMediaList = (profile) => {
-    if (profile.facebook || profile.twitter || profile.linkedin) {
+  renderSocialMediaList = () => {
+    if (this.state.facebook || this.state.twitter || this.state.linkedin) {
       return (
-        <SocialMediaList profile={profile} />
+        <SocialMediaList profile={{
+          facebook: this.state.facebook,
+          twitter: this.state.twitter,
+          linkedin: this.state.linkedin,
+        }} />
       );
     }
     return null;
@@ -158,7 +162,7 @@ export default class Profile extends React.Component {
         <h2 className="primaryText">{first_name} {last_name}</h2>
         <h4>Points: {points}</h4>
         <h4>Rank: {rank}</h4>
-        { this.renderSocialMediaList(this.state.profile) }
+        { this.renderSocialMediaList() }
         { (myProfile || this.state.organization.length > 0) &&
           <Input type='text' label='Organization' name='organization' value={this.state.organization} onChange={this.handleChange.bind(this, 'organization')} disabled={!myProfile}/>
         }
