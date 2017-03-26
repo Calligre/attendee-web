@@ -14,6 +14,11 @@ class NewsFeedStore extends EventEmitter {
       items: [],
       nextOffset: null,
     };
+    // Used in Organizer to moderate flagged posts
+    this.flaggedPosts = {
+      items: [],
+      nextOffset: null,
+    };
     this.error = null;
     this.dataFetched = false;
     this.retweetText = '';
@@ -51,6 +56,38 @@ class NewsFeedStore extends EventEmitter {
     } else {
       dispatcher.dispatch({ type: 'NEWSFEED_FROM_STORE' });
     }
+  }
+
+  getFlagged() {
+
+    const params = {};
+    if (this.flaggedPosts.nextOffset) {
+      params.offset = this.contentFeed.nextOffset;
+    }
+
+    $.ajax({
+      headers: {
+        Authorization: `Bearer ${AuthService.getToken()}`,
+      },
+      type: 'GET',
+      url: `${url}/social/flags`,
+      data: params,
+      dataType: 'json',
+      cache: false,
+      success(response) {
+        dispatcher.dispatch({ type: 'FLAGGED_GET', response });
+      },
+      error(error) {
+        dispatcher.dispatch({ type: 'FLAGGED_GET_ERROR', error });
+      },
+    });
+  }
+
+  getFlaggedOnLoad() {
+    // Don't cache, always want new data
+    this.flaggedPosts.items = [];
+    this.flaggedPosts.nextOffset = null;
+    this.getFlagged();
   }
 
   likePost(pid) {
@@ -98,6 +135,75 @@ class NewsFeedStore extends EventEmitter {
     });
   }
 
+  flagPost(pid) {
+    const postId = pid;
+
+    $.ajax({
+      type: 'POST',
+      url: `${url}/social/${postId}/flag`,
+      headers: {
+        Authorization: `Bearer ${AuthService.getToken()}`,
+      },
+      contentType: 'application/json',
+      cache: false,
+      statusCode: {
+        500() {
+          alert('Unable to perform this action, please try again later');
+        },
+      },
+      success() {
+        dispatcher.dispatch({ type: 'POST_FLAG', postId });
+      },
+      error(error) {
+        dispatcher.dispatch({ type: 'POST_FLAG_ERROR', error });
+      },
+    });
+  }
+
+  unflagPost(pid, adminFlag) {
+    const postId = pid;
+    const successStatus = adminFlag ? 'ADMIN_POST_UNFLAG' : 'POST_UNFLAG';
+    const failStatus = adminFlag ? 'ADMIN_POST_UNFLAG_ERROR' : 'POST_UNFLAG_ERROR';
+
+    $.ajax({
+      type: 'DELETE',
+      url: `${url}/social/${postId}/flag`,
+      headers: {
+        Authorization: `Bearer ${AuthService.getToken()}`,
+      },
+      contentType: 'application/json',
+      cache: false,
+      success() {
+        dispatcher.dispatch({ type: successStatus, postId });
+      },
+      error(error) {
+        dispatcher.dispatch({ type: failStatus, error });
+      },
+    });
+  }
+
+  deletePost(pid, adminFlag) {
+    const postId = pid;
+    const successStatus = adminFlag ? 'ADMIN_POST_DELETE' : 'POST_DELETE';
+    const failStatus = adminFlag ? 'ADMIN_POST_DELETE_ERROR' : 'POST_DELETE_ERROR';
+
+    $.ajax({
+      type: 'DELETE',
+      url: `${url}/social/${postId}`,
+      headers: {
+        Authorization: `Bearer ${AuthService.getToken()}`,
+      },
+      contentType: 'application/json',
+      cache: false,
+      success() {
+        dispatcher.dispatch({ type: successStatus, postId });
+      },
+      error(error) {
+        dispatcher.dispatch({ type: failStatus, error });
+      },
+    });
+  }
+
   postToNewsFeed(data) {
     $.ajax({
       type: 'POST',
@@ -110,7 +216,7 @@ class NewsFeedStore extends EventEmitter {
       contentType: 'application/json',
       cache: false,
       success(response) {
-        dispatcher.dispatch({ type: 'CREATE_POST_SUCCESS', post: response.id });
+        dispatcher.dispatch({ type: 'CREATE_POST_SUCCESS', post: response.data });
       },
       error(error) {
         dispatcher.dispatch({ type: 'CREATE_POST_ERROR', error });
@@ -182,9 +288,16 @@ class NewsFeedStore extends EventEmitter {
     switch (action.type) {
       case 'NEWSFEED_GET': {
         this.dataFetched = true;
-        Array.prototype.push.apply(this.contentFeed.items, action.response.data.posts[0]);
+        this.contentFeed.items.push(...action.response.data.posts[0]);
         this.contentFeed.nextOffset = action.response.data.nextOffset;
         this.contentFeed.count = action.response.data.count;
+        this.emit('updated');
+        break;
+      }
+      case 'FLAGGED_GET': {
+        this.dataFetched = true;
+        this.flaggedPosts.items.push(...action.response.data.posts[0]);
+        this.flaggedPosts.nextOffset = action.response.data.nextOffset;
         this.emit('updated');
         break;
       }
@@ -194,7 +307,18 @@ class NewsFeedStore extends EventEmitter {
         break;
       }
       case 'CREATE_POST_SUCCESS': {
+        let newPost = action.post;
+        newPost.current_user_likes = false;
+        newPost.like_count = 0;
+        newPost.timestamp = newPost.id;
+        this.contentFeed.items.unshift(newPost);
         this.emit('post');
+        if (newPost.media_link) {
+          // Photos take time to load
+          setTimeout(function(){newsFeedStore.emit('updated')}, 1800);
+        } else {
+          this.emit('updated');
+        }
         break;
       }
       case 'POST_LIKE': {
@@ -223,23 +347,88 @@ class NewsFeedStore extends EventEmitter {
         }
         break;
       }
+      case 'POST_FLAG': {
+        const arrayLength = this.contentFeed.items.length;
+        for (let i = 0; i < arrayLength; i += 1) {
+          if (this.contentFeed.items[i].id === action.postId) {
+            this.contentFeed.items[i].current_user_flagged = true;
+            // Assume that store and UI are in sync if action was correct
+            // this.emit('updated');
+          }
+        }
+        break;
+      }
+      case 'POST_UNFLAG': {
+        const arrayLength = this.contentFeed.items.length;
+        for (let i = 0; i < arrayLength; i += 1) {
+          if (this.contentFeed.items[i].id === action.postId) {
+            this.contentFeed.items[i].current_user_flagged = false;
+            // Assume that store and UI are in sync if action was correct
+            // this.emit('updated');
+          }
+        }
+        break;
+      }
+      case 'ADMIN_POST_UNFLAG': {
+        this.flaggedPosts.items = this.flaggedPosts.items.filter(function(item) {
+          return action.postId !== item.id;
+        });
+        this.emit('updated');
+        break;
+      }
+      case 'POST_DELETE': {
+        this.contentFeed.items = this.contentFeed.items.filter(function(item) {
+          return action.postId !== item.id;
+        });
+        this.emit('updated');
+        break;
+      }
+      case 'ADMIN_POST_DELETE': {
+        this.flaggedPosts.items = this.flaggedPosts.items.filter(function(item) {
+          return action.postId !== item.id;
+        });
+        this.emit('updated');
+        break;
+      }
       case 'RETWEET': {
         this.emit('retweet');
         break;
       }
       case 'NEWSFEED_GET_ERROR': {
         this.dataFetched = false;
-        break;
-      }
-      case 'POST_LIKE_ERROR': {
-        this.emit('revert');
-        this.error = 'Error liking post';
+        this.error = 'Error retrieving posts';
         this.emit('error');
         break;
       }
-      case 'POST_UNLIKE_ERROR': {
+      case 'FLAGGED_GET_ERROR': {
+        this.error = 'Error getting flagged posts';
+        this.emit('error');
+        break;
+      }
+      case 'POST_LIKE_ERROR': {
+        this.error = 'Error liking post';
         this.emit('revert');
+        break;
+      }
+      case 'POST_UNLIKE_ERROR': {
         this.error = 'Error unliking post';
+        this.emit('revert');
+        break;
+      }
+      case 'POST_FLAG_ERROR': {
+        this.error = 'Error flagging post';
+        this.emit('revert');
+        break;
+      }
+      case 'POST_UNFLAG_ERROR':
+      case 'ADMIN_POST_UNFLAG_ERROR': {
+        this.error = 'Error unflagging post';
+        this.emit('revert');
+        break;
+      }
+      case 'POST_DELETE_ERROR':
+      case 'ADMIN_POST_DELETE_ERROR': {
+        this.error = 'Error deleting post';
         this.emit('error');
         break;
       }
