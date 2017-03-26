@@ -103,25 +103,28 @@ export default class Calendar extends React.Component {
     const timeEditor = (onUpdate, props) => (<TimeEditor onUpdate={onUpdate} {...props} />);
 
     return (
-      <BootstrapTable data={this.state.events} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditProp} options={options}>
-        <TableHeaderColumn dataField="id" isKey hidden hiddenOnInsert autoValue>Event ID</TableHeaderColumn>
-        <TableHeaderColumn dataField="name" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
-          Event Title
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="stream" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
-          Stream
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="location" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
-          Location
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="starttime" dataSort dataFormat={this.formatDate} customEditor={{ getElement: timeEditor }}>
-          Start time
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="endtime" dataSort dataFormat={this.formatDate} customEditor={{ getElement: timeEditor }}>
-          End time
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="description">Description</TableHeaderColumn>
-      </BootstrapTable>
+      <div>
+        <h1 className="primaryText">Calendar</h1>
+        <BootstrapTable data={this.state.events} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditProp} options={options}>
+          <TableHeaderColumn dataField="id" isKey hidden hiddenOnInsert autoValue>Event ID</TableHeaderColumn>
+          <TableHeaderColumn dataField="name" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
+            Event Title
+          </TableHeaderColumn>
+          <TableHeaderColumn dataField="stream" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
+            Stream
+          </TableHeaderColumn>
+          <TableHeaderColumn dataField="location" dataSort filter={{ type: 'TextFilter', delay: 100 }}>
+            Location
+          </TableHeaderColumn>
+          <TableHeaderColumn dataField="starttime" dataSort dataFormat={this.formatDate} customEditor={{ getElement: timeEditor }}>
+            Start time
+          </TableHeaderColumn>
+          <TableHeaderColumn dataField="endtime" dataSort dataFormat={this.formatDate} customEditor={{ getElement: timeEditor }}>
+            End time
+          </TableHeaderColumn>
+          <TableHeaderColumn dataField="description">Description</TableHeaderColumn>
+        </BootstrapTable>
+      </div>
     );
   }
 }

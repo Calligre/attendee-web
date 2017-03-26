@@ -96,21 +96,24 @@ export default class Notifications extends React.Component {
 
 
     return (
-      <BootstrapTable
-        data={notifications}
-        cellEdit={cellEditProp}
-        selectRow={selectRowProp}
-        insertRow
-        deleteRow
-        hover
-        options={tableOptions}
-        trClassName={ this.trClassFormat }
-        id="notification-table"
-      >
-        <TableHeaderColumn dataField="message">Message</TableHeaderColumn>
-        <TableHeaderColumn dataField="expirytime" customEditor={{ getElement: timeEditor }} dataFormat={this.formatExpiry}>Expiration Time</TableHeaderColumn>
-        <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField="id">Id</TableHeaderColumn>
-      </BootstrapTable>
+      <div>
+        <h1 className="primaryText">Notifications</h1>
+        <BootstrapTable
+          data={notifications}
+          cellEdit={cellEditProp}
+          selectRow={selectRowProp}
+          insertRow
+          deleteRow
+          hover
+          options={tableOptions}
+          trClassName={ this.trClassFormat }
+          id="notification-table"
+        >
+          <TableHeaderColumn dataField="message">Message</TableHeaderColumn>
+          <TableHeaderColumn dataField="expirytime" customEditor={{ getElement: timeEditor }} dataFormat={this.formatExpiry}>Expiration Time</TableHeaderColumn>
+          <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField="id">Id</TableHeaderColumn>
+        </BootstrapTable>
+      </div>
     );
   }
 }

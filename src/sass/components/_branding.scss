@@ -17,6 +17,10 @@
       font-size: 12pt;
     }
   }
+
+  input[type |="color"] {
+    height: 50px;
+  }
 }
 
 #preview {

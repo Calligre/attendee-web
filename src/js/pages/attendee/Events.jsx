@@ -1,7 +1,9 @@
 import React from 'react';
 
 import SearchInput, { createFilter } from 'react-search-input';
-import { DateField, TransitionView, Calendar } from 'react-date-picker';
+import Input from 'react-toolbox/lib/input';
+import Checkbox from 'react-toolbox/lib/checkbox';
+import Switch from 'react-toolbox/lib/switch';
 import Select from 'react-select';
 import Event from 'components/Event';
 import EventStore from 'stores/EventStore';
@@ -20,8 +22,10 @@ export default class Events extends React.Component {
       streams: [],
       searchTerm: '',
       filterTerms: {
-        startDate: moment.now(),
+        startDate: null,
+        endDate: null,
         stream: [],
+        myCalendar: false,
       },
     };
     EventStore.getAll();
@@ -51,15 +55,19 @@ export default class Events extends React.Component {
     });
   }
 
+  enableDateFilter = (name, value) => {
+    this.setState({ [name] : value });
+  }
+
   searchUpdated = (term) => {
     this.setState({
       searchTerm: term,
     });
   }
 
-  filterTimeUpdated = (dateString, data) => {
+  filterTermUpdated = (name, value) => {
     const filter = this.state.filterTerms;
-    filter.startDate = data.dateMoment;
+    filter[name] = value;
     this.setState({
       filterTerms: filter,
     });
@@ -78,13 +86,23 @@ export default class Events extends React.Component {
   }
 
   render() {
-    const { events, searchTerm, filterTerms, streams } = this.state;
+    const { events, searchTerm, filterTerms, streams, startDateEnabled, endDateEnabled } = this.state;
 
     // filtering
     let filteredEvents = events.filter(createFilter(searchTerm, ['name']));
     filteredEvents = filteredEvents.filter((event) => {
-      if (filterTerms.stream.length > 0 && !filterTerms.stream.includes(event.stream)) return false;
-      if (moment.unix(event.starttime).isAfter(filterTerms.startDate)) return false;
+      if (filterTerms.myCalendar && !event.isSubscribed) {
+        return false;
+      }
+      if (filterTerms.stream.length > 0 && !filterTerms.stream.includes(event.stream)) {
+        return false;
+      }
+      if (startDateEnabled && moment.unix(event.starttime).isBefore(moment(filterTerms.startDate))) {
+        return false;
+      }
+      if (endDateEnabled && moment.unix(event.endtime).isAfter(moment(filterTerms.endDate))) {
+        return false;
+      }
 
       return true;
     });
@@ -107,9 +125,6 @@ export default class Events extends React.Component {
 
     const EventComponents = sortedEvents.map(event => <Event key={event.id} {...event} />);
 
-    const format = 'YYYY-MM-DD HH:mm';
-    const date = moment().format(format);
-
     return (
       <div>
         <h1 className="primaryText">Events</h1>
@@ -127,16 +142,32 @@ export default class Events extends React.Component {
           options={streamOptions}
           onChange={this.filterStreamUpdated}
         />
-        <DateField
-          forceValidDate
-          defaultValue={date}
-          dateFormat={format}
-          onChange={this.filterTimeUpdated}
-        >
-          <TransitionView>
-            <Calendar style={{ padding: 10 }} />
-          </TransitionView>
-        </DateField>
+        <div className="dateFilter">
+          <Checkbox
+            checked={startDateEnabled}
+            label="Events that start after"
+            onChange={this.enableDateFilter.bind(this, 'startDateEnabled')}/>
+          <Input
+            type="datetime-local"
+            value={filterTerms.startDate}
+            onChange={this.filterTermUpdated.bind(this, 'startDate')}
+            disabled={!startDateEnabled}/>
+        </div>
+        <div className="dateFilter">
+          <Checkbox
+            checked={endDateEnabled}
+            label="Events that end before"
+            onChange={this.enableDateFilter.bind(this, 'endDateEnabled')}/>
+          <Input
+            type="datetime-local"
+            value={filterTerms.endDate}
+            onChange={this.filterTermUpdated.bind(this, 'endDate')}
+            disabled={!endDateEnabled}/>
+        </div>
+        <Switch
+          checked={filterTerms.myCalendar}
+          label="Show only my calendar"
+          onChange={this.filterTermUpdated.bind(this, 'myCalendar')}/>
         <div className="eventsContainer">
           {EventComponents}
         </div>

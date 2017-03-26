@@ -168,7 +168,16 @@ export default class Featured extends React.Component {
 
     let mapCard = null;
     let confPackageCard = null;
+    let socialCard = null;
+    let primaryText = {};
+    let secondaryText = {};
     if (branding) {
+      primaryText = {
+        color: branding.color_primary,
+      };
+      secondaryText = {
+        color: branding.color_secondary,
+      };
       const map = {
         "name" : "Map",
         "link" : branding.map,
@@ -179,41 +188,44 @@ export default class Featured extends React.Component {
       };
 
       if (preferences.map) {
-        mapCard = <Card type="download" item={map}/>;
+        mapCard = <Card type="download" item={map} buttonStyle={secondaryText}/>;
       }
       if (preferences.package) {
-        confPackageCard = <Card type="download" item={confPackage}/>;
+        confPackageCard = <Card type="download" item={confPackage} buttonStyle={secondaryText}/>;
+      }
+      if (branding.facebook || branding.twitter) {
+        socialCard = <Card type="social" headerStyle={primaryText} facebook={branding.facebook} twitter={branding.twitter}/>;
       }
     }
 
     let contentCards = null;
     if (cards !== undefined && cards.length > 0 && preferences.content) {
       contentCards = cards.map((content) =>
-        <Card type="content" item={content}/>
+        <Card type="content" item={content} buttonStyle={secondaryText}/>
       );
     }
 
     let locationsCard = null;
     if (locations !== undefined && locations.length > 0 && preferences.location) {
-      locationsCard = <Card type="location" item={locations}/>;
+      locationsCard = <Card type="location" item={locations} buttonStyle={secondaryText}/>;
     }
 
     let contactsCard = null;
     if (contacts !== undefined && contacts.length > 0 && preferences.contact) {
-      contactsCard = <Card type="contact" item={contacts}/>;
+      contactsCard = <Card type="contact" item={contacts} buttonStyle={secondaryText}/>;
     }
 
     let surveyCards = null;
     if (surveys !== undefined && surveys.length > 0 && preferences.survey) {
       surveyCards = surveys.map((survey) =>
-          <Card type="survey" item={survey}/>
+          <Card type="survey" item={survey} buttonStyle={secondaryText}/>
       );
     }
     
     let sponsorCards = null;
     if (sponsors !== undefined && sponsors.length > 0) {
       sponsorCards = sponsors.map((sublist) =>
-        <Card type="sponsor" item={sublist}/>
+        <Card type="sponsor" item={sublist} buttonStyle={secondaryText}/>
       );
     }
 
@@ -238,6 +250,7 @@ export default class Featured extends React.Component {
           {contactsCard}
           {mapCard}
           {confPackageCard}
+          {socialCard}
           {contentCards}
           {surveyCards}
           {sponsorCards}
