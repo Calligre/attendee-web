@@ -17,7 +17,7 @@ class SurveyStore extends EventEmitter {
       success(response) {
         dispatcher.dispatch({ type: 'SURVEYS_GET', surveys: response.data });
       },
-      failure(error) {
+      error(error) {
         dispatcher.dispatch({ type: 'SURVEYS_ERROR', error: error.error });
       },
     });
@@ -31,7 +31,7 @@ class SurveyStore extends EventEmitter {
       success(response) {
         dispatcher.dispatch({ type: 'SURVEYS_CREATE', survey, id: response.data.id });
       },
-      failure(error) {
+      error(error) {
         dispatcher.dispatch({ type: 'SURVEYS_ERROR', error: error.error });
       },
     });
@@ -45,7 +45,7 @@ class SurveyStore extends EventEmitter {
       success() {
         dispatcher.dispatch({ type: 'SURVEYS_UPDATE', survey });
       },
-      failure(error) {
+      error(error) {
         dispatcher.dispatch({ type: 'SURVEYS_ERROR', error: error.error });
       },
     });
@@ -59,7 +59,7 @@ class SurveyStore extends EventEmitter {
       success() {
         dispatcher.dispatch({ type: 'SURVEYS_DELETE', id });
       },
-      failure(error) {
+      error(error) {
         dispatcher.dispatch({ type: 'SURVEYS_ERROR', error: error.error });
       },
     });

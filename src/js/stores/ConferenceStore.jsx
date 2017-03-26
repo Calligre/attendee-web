@@ -20,7 +20,7 @@ class ConferenceStore extends EventEmitter {
         self.conferences = self.conferences.map(conference => conference.attributes);
         dispatcher.dispatch({ type: 'LOADED_CONFERENCES', conferences: self.conferences });
       },
-      failure(error) {
+      error(error) {
         self.error = error;
         dispatcher.dispatch({ type: 'ERROR', error: self.error });
       },
