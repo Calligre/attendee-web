@@ -106,6 +106,7 @@ export default class Branding extends React.Component {
 
     return (
       <div>
+        <h1 className="primaryText">Branding</h1>
         <div id="brandingForm">
           <Input type="text" value={this.state.name} label="Conference Name" onChange={this.handleChange.bind(this, 'name')} />
           <Input type="text" value={this.state.organization} label="Organization" onChange={this.handleChange.bind(this, 'organization')} />

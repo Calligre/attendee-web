@@ -268,14 +268,15 @@ export default class Cards extends React.Component {
 
     return (
       <div>
-        <h1 className="primaryText largeTopMargin">Upcoming Events</h1>
+        <h1 className="primaryText">Cards</h1>
+        <h2 className="secondaryText largeTopMargin">Upcoming Events</h2>
 		<Switch
           checked={this.state.preferences.events}
           label="Show cards for users' upcoming events"
           onChange={this.handleChange.bind(this, 'events')}
         />
 
-        <h1 className="primaryText largeTopMargin">Map</h1>
+        <h2 className="secondaryText largeTopMargin">Map</h2>
 		<Switch
           checked={this.state.preferences.map}
           label="Show card with link to download map"
@@ -283,7 +284,7 @@ export default class Cards extends React.Component {
         />
         <Input type='url' label='Link to Map' value={this.state.map} onChange={this.updateBranding.bind(this, 'map')} disabled={!this.state.preferences.map}/>
 
-        <h1 className="primaryText largeTopMargin">Conference Package</h1>
+        <h2 className="secondaryText largeTopMargin">Conference Package</h2>
 		<Switch
           checked={this.state.preferences.package}
           label="Show card with link to download conference package"
@@ -291,7 +292,7 @@ export default class Cards extends React.Component {
         />
         <Input type='url' label='Link to Conference Package' value={this.state.package} onChange={this.updateBranding.bind(this, 'package')} disabled={!this.state.preferences.package}/>
 
-        <h1 className="primaryText largeTopMargin">Important Locations</h1>
+        <h2 className="secondaryText largeTopMargin">Important Locations</h2>
 		<Switch
           checked={this.state.preferences.location}
           label="Show location card"
@@ -305,7 +306,7 @@ export default class Cards extends React.Component {
 		  <TableHeaderColumn dataField='address'>Address</TableHeaderColumn>
 		</BootstrapTable>
  
-        <h1 className="primaryText largeTopMargin">Important Contacts</h1>
+        <h2 className="secondaryText largeTopMargin">Important Contacts</h2>
 		<Switch
           checked={this.state.preferences.contact}
           label="Show contacts card"
@@ -319,7 +320,7 @@ export default class Cards extends React.Component {
           <TableHeaderColumn dataField='phone'>Phone</TableHeaderColumn>
         </BootstrapTable>
 
-        <h1 className="primaryText largeTopMargin">Text Cards</h1>
+        <h2 className="secondaryText largeTopMargin">Text Cards</h2>
 		<Switch
           checked={this.state.preferences.content}
           label="Show extra text cards"
@@ -332,7 +333,7 @@ export default class Cards extends React.Component {
           </TableHeaderColumn>
         </BootstrapTable>
 
-        <h1 className="primaryText largeTopMargin">Sponsors</h1>
+        <h2 className="secondaryText largeTopMargin">Sponsors</h2>
         <h3>Note: The same rank *must* be used for each level</h3>
         <h3>For example, all Gold sponsors have rank 0, all Silver sponsors rank 1, and all Bronze rank 2.</h3>
         <BootstrapTable data={this.state.sponsors} striped hover insertRow deleteRow selectRow={selectRowProp} cellEdit={cellEditPropSponsors} options={optionsSponsors}>
