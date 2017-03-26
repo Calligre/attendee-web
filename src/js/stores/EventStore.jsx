@@ -9,6 +9,7 @@ const randomColor = require('randomcolor');
 
 const streamMap = {};
 const url = UrlService.getUrl();
+const moment = require('moment');
 
 // for the UI
 function formatData(notification) {
