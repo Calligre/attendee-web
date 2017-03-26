@@ -9,6 +9,7 @@ export default class Layout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      branding: null,
     };
 
     BrandStore.on('receivedBranding', this.setBranding);
@@ -34,7 +35,7 @@ export default class Layout extends React.Component {
     }
 
     const sidebarConfig = {
-      background: branding.color_secondary || 'white',
+      background: branding.color_secondary,
       width: '200',
     }
 

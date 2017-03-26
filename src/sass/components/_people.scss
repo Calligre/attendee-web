@@ -176,6 +176,21 @@
     }
   }
 
+  .socialMediaInput {
+    display: flex;
+
+    .prefix {
+      width: 100px;
+	  margin: 26px 10px 0 0;
+	  text-align: right;
+      font-size: 16px;
+    }
+
+    [class^='theme__input'] {
+      flex-grow: 1;
+    }
+  }
+
   &.myProfile {
     .cancel {
       display: none !important;

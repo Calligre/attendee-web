@@ -3,7 +3,7 @@ import $ from 'jquery';
 import Dropzone from 'react-dropzone';
 import Input from 'react-toolbox/lib/input';
 
-import LinkedAccountsList from 'components/LinkedAccountsList';
+import SocialMediaList from 'components/SocialMediaList';
 import PeopleStore from 'stores/PeopleStore';
 import AuthService from 'util/AuthService';
 
@@ -17,6 +17,9 @@ export default class Profile extends React.Component {
       newPhoto: null,
       organization: "",
       description: "",
+      facebook: "",
+      twitter: "",
+      linkedin: "",
     };
     PeopleStore.getAll();
     AuthService.on('profile_updated', (newProfile) => {
@@ -63,6 +66,9 @@ export default class Profile extends React.Component {
       preview: profiles[0].photo,
       organization: profiles[0].organization,
       description: profiles[0].description,
+      facebook: profiles[0].facebook,
+      twitter: profiles[0].twitter,
+      linkedin: profiles[0].linkedin,
     });
 
     $('.editableContainer').each(function () {
@@ -111,6 +117,9 @@ export default class Profile extends React.Component {
       id: this.state.profile.id,
       description: this.state.description,
       organization: this.state.organization,
+      facebook: this.state.facebook,
+      twitter: this.state.twitter,
+      linkedin: this.state.linkedin,
     };
 
     if (this.state.newPhoto != null) {
@@ -119,10 +128,14 @@ export default class Profile extends React.Component {
     PeopleStore.updatePerson(profile);
   }
 
-  renderLinkedAccountsList = (myProfile) => {
-    if (myProfile) {
+  renderSocialMediaList = () => {
+    if (this.state.facebook || this.state.twitter || this.state.linkedin) {
       return (
-        <LinkedAccountsList profile={AuthService.getProfile()} />
+        <SocialMediaList profile={{
+          facebook: this.state.facebook,
+          twitter: this.state.twitter,
+          linkedin: this.state.linkedin,
+        }} />
       );
     }
     return null;
@@ -135,7 +148,6 @@ export default class Profile extends React.Component {
 
     const { id, first_name, last_name, organization, points, description, rank } = this.state.profile;
 
-    // TODO: determine if this is my profile or not
     const myProfile = id === AuthService.getCurrentUserId();
 
     const displayCancel = myProfile && this.state.uploadInProgress ? 'visible' : 'hidden';
@@ -150,12 +162,28 @@ export default class Profile extends React.Component {
         <h2 className="primaryText">{first_name} {last_name}</h2>
         <h4>Points: {points}</h4>
         <h4>Rank: {rank}</h4>
-        {this.renderLinkedAccountsList(myProfile)}
+        { this.renderSocialMediaList() }
         { (myProfile || this.state.organization.length > 0) &&
           <Input type='text' label='Organization' name='organization' value={this.state.organization} onChange={this.handleChange.bind(this, 'organization')} disabled={!myProfile}/>
         }
         { (myProfile || this.state.description.length > 0) &&
           <Input type='text' label='About you' name='description' value={this.state.description} onChange={this.handleChange.bind(this, 'description')} disabled={!myProfile}/>
+        }
+        { myProfile &&
+          <div>
+            <div className="socialMediaInput">
+              <div className="prefix">facebook.com/</div>
+              <Input type='text' label='Facebook' name='facebook' value={this.state.facebook} onChange={this.handleChange.bind(this, 'facebook')} disabled={!myProfile}/>
+            </div>
+            <div className="socialMediaInput">
+              <div className="prefix">@</div>
+              <Input type='text' label='Twitter' name='twitter' value={this.state.twitter} onChange={this.handleChange.bind(this, 'twitter')} disabled={!myProfile}/>
+            </div>
+            <div className="socialMediaInput">
+              <div className="prefix">linkedin.com/</div>
+              <Input type='text' label='LinkedIn' name='linkedin' value={this.state.linkedin} onChange={this.handleChange.bind(this, 'linkedin')} disabled={!myProfile}/>
+            </div>
+          </div>
         }
         <button className="secondaryBackground submitChanges" onClick={this.submitChanges}>Save changes</button>
       </div>

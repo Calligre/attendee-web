@@ -2,17 +2,18 @@ import React from 'react';
 import { Sidebar, SidebarItem } from 'react-responsive-sidebar';
 import Dialog from 'react-toolbox/lib/dialog';
 
-import Footer from 'components/layout/Footer';
 import BrandStore from 'stores/BrandStore';
 import ConferenceStore from 'stores/ConferenceStore';
 import PreferenceStore from 'stores/PreferenceStore';
+
+import Footer from 'components/layout/Footer';
 import AuthService from 'util/AuthService';
 
 export default class Layout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      branding: {},
+      branding: null,
       switcherModal: false,
       newsfeed: PreferenceStore.getDefaults().newsfeed,
       conferences: [],
@@ -52,7 +53,7 @@ export default class Layout extends React.Component {
   setBranding = () => {
     let branding = BrandStore.branding;
     this.setState({ branding: branding });
-    let myStyle = document.styleSheets[document.styleSheets.length - 1];
+    let myStyle = document.styleSheets[6];
     myStyle.insertRule(".primaryText { color: " + branding.color_primary + " !important }", 0);
     myStyle.insertRule(".primaryBackground { background-color: " + branding.color_primary + " !important }", 0);
     myStyle.insertRule(".secondaryText { color: " + branding.color_secondary + " !important }", 0);
@@ -78,16 +79,14 @@ export default class Layout extends React.Component {
 
   render() {
     const { branding, newsfeed, switcherModal } = this.state;
-    var self = this;
     
     if (!branding) {
       return null;
     }
 
     const sidebarConfig = {
-      background: branding.color_secondary || 'white',
+      background: branding.color_secondary,
       width: '200',
-      breakPoint: '10000',
     }
 
     const items = [
