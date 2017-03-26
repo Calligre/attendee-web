@@ -45,7 +45,7 @@ class BrandStore extends EventEmitter {
       },
     });
   }
-
+ 
   getCards = () => {
     $.ajax({
       url: `${url}/info/card`,
@@ -393,6 +393,27 @@ class BrandStore extends EventEmitter {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
       },
     });
+  }
+
+  update(key, value) {
+    $.ajax({
+      url: `${url}/info`,
+      dataType: 'json',
+      headers: {
+        Authorization: `Bearer ${AuthService.getToken()}`,
+      },
+      type: 'PATCH',
+      contentType: 'application/json',
+      data: JSON.stringify({ [key]: value }),
+      cache: false,
+      success() {
+        dispatcher.dispatch({ type: 'BRANDING_SAVED', key, value });
+      },
+      failure(error) {
+        dispatcher.dispatch({ type: 'BRAND_ERROR', error: error.error });
+      },
+    });
+    return this.branding;
   }
 
   handleActions(action) {

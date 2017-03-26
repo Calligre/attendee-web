@@ -189,14 +189,14 @@
       min-height: 102px;
 
 
-      .user-photo-container {
+      .profile-photo {
         position: absolute;
         display: inline-block;
+      }
 
-        .user-photo {
-          height: 80px;
-          width: 80px;
-        }
+      .user-photo {
+        height: 80px;
+        width: 80px;
       }
 
       .post-text {
@@ -223,6 +223,16 @@
           font-size: 16px;
         }
 
+        .right-options {
+          color: #949494;
+          margin: 0.1em 0.1em 0 0;
+
+          .right-icons {
+            float: right;
+            margin-right: 0px !important;
+          }
+        }
+
         .soc-bar {
           vertical-align: bottom;
           font-size: 20px;
@@ -235,12 +245,19 @@
           .heart-icon {
             vertical-align: text-bottom;
             margin-right: 5px;
-            cursor: pointer;
-            cursor: hand;
           }
 
-          .retweet-button {
+          .social-spacing {
             margin-left: 10%;
+          }
+
+          .date-newsfeed {
+            font-size: 16px;
+            padding-top:0.5em;
+          }
+
+          .date {
+            float: right;
           }
 
           .show-image {
@@ -253,9 +270,13 @@
     }
   }
 
+
+
+
   .paginate {
     text-align: center;
     font-size: 16px;
   }
 
 }
+

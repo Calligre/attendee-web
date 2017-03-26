@@ -1,12 +1,11 @@
 import React, { PropTypes } from 'react';
 import $ from 'jquery';
+import Dropzone from 'react-dropzone';
+import Input from 'react-toolbox/lib/input';
 
-import LinkedAccountsList from 'components/LinkedAccountsList';
+import SocialMediaList from 'components/SocialMediaList';
 import PeopleStore from 'stores/PeopleStore';
 import AuthService from 'util/AuthService';
-import Dropzone from 'react-dropzone';
-import Clear from 'react-icons/lib/md/clear';
-import Edit from 'react-icons/lib/md/mode-edit';
 
 export default class Profile extends React.Component {
   constructor(props) {
@@ -16,11 +15,12 @@ export default class Profile extends React.Component {
       preview: '',
       uploadInProgress: false,
       newPhoto: null,
+      organization: "",
+      description: "",
+      facebook: "",
+      twitter: "",
+      linkedin: "",
     };
-    this.getProfile = this.getProfile.bind(this);
-    this.submitChanges = this.submitChanges.bind(this);
-    this.onDrop = this.onDrop.bind(this);
-    this.cancelDrop = this.cancelDrop.bind(this);
     PeopleStore.getAll();
     AuthService.on('profile_updated', (newProfile) => {
       this.getProfile();
@@ -37,7 +37,21 @@ export default class Profile extends React.Component {
     PeopleStore.removeListener('error', this.showError);
   }
 
-  getProfile() {
+  componentDidUpdate(prevProps, prevState) {
+    let oldId = -1;
+    let newId = -1;
+    if (prevProps.params.hasOwnProperty('id')) {
+      oldId = prevProps.params.id;
+    }
+    if (this.props.params.hasOwnProperty('id')) {
+      newId = this.props.params.id;
+    }
+    if (oldId != newId) {
+      this.getProfile();
+    }
+  }
+
+  getProfile = () => {
     if (!AuthService.getProfile().identities) {
       return;
     }
@@ -50,6 +64,11 @@ export default class Profile extends React.Component {
     this.setState({
       profile: profiles[0],
       preview: profiles[0].photo,
+      organization: profiles[0].organization,
+      description: profiles[0].description,
+      facebook: profiles[0].facebook,
+      twitter: profiles[0].twitter,
+      linkedin: profiles[0].linkedin,
     });
 
     $('.editableContainer').each(function () {
@@ -67,11 +86,11 @@ export default class Profile extends React.Component {
     });
   }
 
-  showError() {
+  showError = () => {
     console.log(PeopleStore.error);
   }
 
-  onDrop(files) {
+  onDrop = (files) => {
     this.setState({
       preview: files[0].preview,
       newPhoto: files[0],
@@ -79,7 +98,7 @@ export default class Profile extends React.Component {
     });
   }
 
-  cancelDrop(e) {
+  cancelDrop = (e) => {
     e.stopPropagation();
     this.setState({
       preview: this.state.profile.photo,
@@ -88,12 +107,19 @@ export default class Profile extends React.Component {
     });
   }
 
-  submitChanges() {
+  handleChange = (name, value) => {
+    this.setState({...this.state, [name]: value});
+  };
+
+  submitChanges = () => {
     const form = $('.profile');
     const profile = {
       id: this.state.profile.id,
-      description: form.find('.description').text(),
-      organization: form.find('.organization').text(),
+      description: this.state.description,
+      organization: this.state.organization,
+      facebook: this.state.facebook,
+      twitter: this.state.twitter,
+      linkedin: this.state.linkedin,
     };
 
     if (this.state.newPhoto != null) {
@@ -102,10 +128,14 @@ export default class Profile extends React.Component {
     PeopleStore.updatePerson(profile);
   }
 
-  renderLinkedAccountsList(myProfile) {
-    if (myProfile) {
+  renderSocialMediaList = () => {
+    if (this.state.facebook || this.state.twitter || this.state.linkedin) {
       return (
-        <LinkedAccountsList profile={AuthService.getProfile()} />
+        <SocialMediaList profile={{
+          facebook: this.state.facebook,
+          twitter: this.state.twitter,
+          linkedin: this.state.linkedin,
+        }} />
       );
     }
     return null;
@@ -118,34 +148,43 @@ export default class Profile extends React.Component {
 
     const { id, first_name, last_name, organization, points, description, rank } = this.state.profile;
 
-    // TODO: determine if this is my profile or not
     const myProfile = id === AuthService.getCurrentUserId();
 
     const displayCancel = myProfile && this.state.uploadInProgress ? 'visible' : 'hidden';
     const myProfileClass = myProfile ? 'myProfile' : '';
 
-    const buttonIcon = React.createElement(Clear, null);
-    const editIcon = React.createElement(Edit, null);
-
     return (
       <div className={`profile ${myProfileClass}`}>
         <Dropzone className="dropzone" onDrop={this.onDrop} multiple={false} disableClick={!myProfile}>
           <img src={this.state.preview} />
-          <button className={`secondaryBackground cancel ${displayCancel}`} onClick={this.cancelDrop}>{buttonIcon}</button>
           <p className="label">Upload new photo</p>
         </Dropzone>
         <h2 className="primaryText">{first_name} {last_name}</h2>
         <h4>Points: {points}</h4>
         <h4>Rank: {rank}</h4>
-        {this.renderLinkedAccountsList(myProfile)}
-        <div className="editableContainer profileItem">
-          <h3 contentEditable={myProfile} className="organization editable">{organization}</h3>
-          <div className="editIcon">{editIcon}</div>
-        </div>
-        <div className="editableContainer profileItem">
-          <p contentEditable={myProfile} className="description editable">{description}</p>
-          <div className="editIcon">{editIcon}</div>
-        </div>
+        { this.renderSocialMediaList() }
+        { (myProfile || this.state.organization.length > 0) &&
+          <Input type='text' label='Organization' name='organization' value={this.state.organization} onChange={this.handleChange.bind(this, 'organization')} disabled={!myProfile}/>
+        }
+        { (myProfile || this.state.description.length > 0) &&
+          <Input type='text' label='About you' name='description' value={this.state.description} onChange={this.handleChange.bind(this, 'description')} disabled={!myProfile}/>
+        }
+        { myProfile &&
+          <div>
+            <div className="socialMediaInput">
+              <div className="prefix">facebook.com/</div>
+              <Input type='text' label='Facebook' name='facebook' value={this.state.facebook} onChange={this.handleChange.bind(this, 'facebook')} disabled={!myProfile}/>
+            </div>
+            <div className="socialMediaInput">
+              <div className="prefix">@</div>
+              <Input type='text' label='Twitter' name='twitter' value={this.state.twitter} onChange={this.handleChange.bind(this, 'twitter')} disabled={!myProfile}/>
+            </div>
+            <div className="socialMediaInput">
+              <div className="prefix">linkedin.com/</div>
+              <Input type='text' label='LinkedIn' name='linkedin' value={this.state.linkedin} onChange={this.handleChange.bind(this, 'linkedin')} disabled={!myProfile}/>
+            </div>
+          </div>
+        }
         <button className="secondaryBackground submitChanges" onClick={this.submitChanges}>Save changes</button>
       </div>
     );

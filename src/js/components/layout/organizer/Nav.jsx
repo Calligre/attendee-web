@@ -21,9 +21,9 @@ export default class Nav extends React.Component {
     const { collapsed } = this.state;
     const brandingClass = location.pathname === "/" ? "active" : "";
     const calendarClass = location.pathname.match(/^\/calendar/) ? "active" : "";
-    const cardsClass = location.pathname.match(/^\/cards/) ? "active" : "";
     const preferencesClass = location.pathname.match(/^\/preferences/) ? "active" : "";
     const surveyClass = location.pathname.match(/^\/surveys/) ? "active" : "";
+    const moderationClass = location.pathname.match(/^\/moderation/) ? "active" : "";
     const navClass = collapsed ? "collapse" : "";
 
     return (
@@ -45,14 +45,14 @@ export default class Nav extends React.Component {
               <li class={calendarClass}>
                 <Link to="calendar" onClick={this.toggleCollapse.bind(this)}>Calendar</Link>
               </li>
-              <li class={cardsClass}>
-                <Link to="cards" onClick={this.toggleCollapse.bind(this)}>Cards</Link>
-              </li>
               <li class={preferencesClass}>
                 <Link to="preferences" onClick={this.toggleCollapse.bind(this)}>Preferences</Link>
               </li>
               <li class={surveyClass}>
                 <Link to="surveys" onClick={this.toggleCollapse.bind(this)}>Surveys</Link>
+              </li>
+              <li class={moderationClass}>
+                <Link to="moderation" onClick={this.toggleCollapse.bind(this)}>Moderation</Link>
               </li>
               <li>
                 <Link to="login" onClick={AuthService.logout}>Logout</Link>

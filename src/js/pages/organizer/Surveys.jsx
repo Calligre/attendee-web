@@ -1,5 +1,6 @@
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import Switch from 'react-toolbox/lib/switch';
 
 import SurveyStore from 'stores/SurveyStore';
 import PreferenceStore from 'stores/PreferenceStore';
@@ -9,7 +10,7 @@ export default class Surveys extends React.Component {
     super();
     this.state = {
       surveys: [],
-      disabled: PreferenceStore.getDefaults().survey,
+      enabled: PreferenceStore.getDefaults().survey,
       loaded: false,
     };
 
@@ -43,7 +44,7 @@ export default class Surveys extends React.Component {
 
   loadPreferences = () => {
     this.setState({
-      disabled: !PreferenceStore.preferences.survey,
+      enabled: !PreferenceStore.preferences.survey,
       loaded: true,
     });
   }
@@ -51,6 +52,12 @@ export default class Surveys extends React.Component {
   showPreferenceError = () => {
     console.error(PreferenceStore.error);
   }
+
+  handleChange = (name, value) => {
+    PreferenceStore.update(name, value);
+    this.setState({ enabled : value });
+  }
+    
 
   updateSurvey = (row) => {
     SurveyStore.update(row);
@@ -65,14 +72,10 @@ export default class Surveys extends React.Component {
   }
 
   render() {
-    const { surveys, disabled, loaded } = this.state;
+    const { surveys, enabled, loaded } = this.state;
 
     if (!loaded) {
       return (<div> Loading... </div>);
-    }
-
-    if (disabled) {
-      return (<div> Surveys have been disabled, please check your preferences. </div>);
     }
 
     const cellEditProp = {
@@ -80,7 +83,6 @@ export default class Surveys extends React.Component {
       blueToSave: true,
       afterSaveCell: this.updateSurvey,
     };
-
 
     const tableOptions = {
       afterInsertRow: this.addSurvey,
@@ -93,21 +95,29 @@ export default class Surveys extends React.Component {
     };
 
     return (
-      <BootstrapTable
-        data={surveys}
-        cellEdit={cellEditProp}
-        selectRow={selectRowProp}
-        insertRow
-        deleteRow
-        striped
-        hover
-        options={tableOptions}
-      >
-        <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
-        <TableHeaderColumn dataField="link" editable={{ validator: requireSurveyLink }}>Survey Link</TableHeaderColumn>
-        <TableHeaderColumn dataField="description">Description</TableHeaderColumn>
-        <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField="id">Id</TableHeaderColumn>
-      </BootstrapTable>
+      <div>
+        <h1 className="primaryText">Surveys</h1>
+		<Switch
+          checked={enabled}
+          label="Enable surveys on the home page"
+          onChange={this.handleChange.bind(this, 'survey')}
+        />
+        <BootstrapTable
+          data={surveys}
+          cellEdit={cellEditProp}
+          selectRow={selectRowProp}
+          insertRow
+          deleteRow
+          striped
+          hover
+          options={tableOptions}
+          className={enabled ? "" : "disabled"}>
+          <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
+          <TableHeaderColumn dataField='link' editable={ { validator: requireSurveyLink } }>Survey Link</TableHeaderColumn>
+          <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>
+          <TableHeaderColumn isKey hidden hiddenOnInsert autoValue dataField='id'>Id</TableHeaderColumn>
+        </BootstrapTable>
+      </div>
     );
   }
 }

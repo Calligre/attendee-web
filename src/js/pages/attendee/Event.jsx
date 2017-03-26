@@ -27,6 +27,20 @@ export default class Event extends React.Component {
     EventStore.removeListener('error', this.showError);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    let oldId = -1;
+    let newId = -1;
+    if (prevProps.params.hasOwnProperty('eventId')) {
+      oldId = prevProps.params.eventId;
+    }
+    if (this.props.params.hasOwnProperty('eventId')) {
+      newId = this.props.params.eventId;
+    }
+    if (oldId != newId) {
+      this.getEvent();
+    }
+  }
+
   getEvent = () => {
     const id = parseInt(this.props.params.eventId);
     const event = EventStore.events.filter(e => e.id === id)[0];
@@ -67,11 +81,11 @@ export default class Event extends React.Component {
         <div className="nameContainer" style={streamStyle}>
           <div className="header">
             <div className="dates">
-              <h4 className="date">{moment.unix(starttime).format('MMM Do')}</h4>
-              <h4 className="date">{moment.unix(starttime).format('h:mm a')}</h4>
-              <h4 className="date">{moment.unix(endtime).format('h:mm a')}</h4>
+              <h4 className="date outlined">{moment.unix(starttime).format('MMM Do')}</h4>
+              <h4 className="date outlined">{moment.unix(starttime).format('h:mm a')}</h4>
+              <h4 className="date outlined">{moment.unix(endtime).format('h:mm a')}</h4>
             </div>
-            <h1>{name}</h1>
+            <h1 className="primaryText outlined">{name}</h1>
           </div>
           <SubscribeButton className="isSubscribed" id={this.state.event.id} subscribed={isSubscribed} />
         </div>

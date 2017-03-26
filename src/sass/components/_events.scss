@@ -25,10 +25,14 @@
       background-color: rgba(0,0,0,0.05);
     }
   }
+
+  h4, p {
+    text-align: left;
+  }
   
   .subscribeButton{
     display: table-cell;
-    padding: 10px;
+    padding: 10px 20px 10px 10px;
     font-size: 24px;
     vertical-align: middle;
   }
@@ -47,8 +51,12 @@
     padding: 0px 20px;
     vertical-align: super;
 
-    p {
+    .date {
       font-weight: bold;
+    }
+
+    .end {
+      color: gray;
     }
   }
 
@@ -74,12 +82,13 @@
     position: relative;
     background-image: url("http://kingofwallpapers.com/grey-background/grey-background-005.jpg");
     background-size: cover;
-    height: 200px;
+    background-position: center;
+    height: 300px;
     border-left: 20px solid black;
 
     .header {
       position: absolute;
-      bottom: 30px;
+      bottom: 10px;
       display: flex;
       flex-direction: row;
       align-items: flex-end;
@@ -90,6 +99,7 @@
 
         h4 {
           margin: 0;
+          font-weight: bold;
         }
       }
     }
@@ -109,6 +119,7 @@
 
   .info {
     padding: 0 20px;
+    text-align: left;
 
     h2 {
       font-size: 24px;
@@ -123,5 +134,19 @@
 
   .description {
     font-size: 16px;
+  }
+}
+
+.dateFilter {
+  display: flex;
+
+  label {
+    margin: 30px 20px 0 0;
+    width: 200px;
+    text-align: left;
+  }
+
+  [class^='theme__input'] {
+    flex-grow: 1;
   }
 }

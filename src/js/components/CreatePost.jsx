@@ -1,10 +1,11 @@
 import React from 'react';
-import NewsFeedStore from 'stores/NewsFeedStore';
+import AuthService from 'util/AuthService';
 import Dropzone from 'react-dropzone';
 import MdHighlightRemove from 'react-icons/lib/md/highlight-remove';
 import MdPhotoCamera from 'react-icons/lib/md/photo-camera';
 import TiSocialFacebook from 'react-icons/lib/ti/social-facebook';
 import TiSocialTwitter from 'react-icons/lib/ti/social-twitter';
+import NewsFeedStore from 'stores/NewsFeedStore';
 import PreferenceStore from 'stores/PreferenceStore';
 
 export default class NewsFeed extends React.Component {
@@ -20,16 +21,28 @@ export default class NewsFeed extends React.Component {
     this.deletePhoto = this.deletePhoto.bind(this);
     this.createPost = this.createPost.bind(this);
 
+    const integrations = AuthService.getProfile().identities;
+    let fbIntegration = false;
+    let twIntegration = false;
+
+    for (let integration of integrations) {
+      if (integration.connection === 'facebook') {
+        fbIntegration = true;
+      } else if (integration.connection === 'twitter') {
+        twIntegration = true;
+      }
+    }
+
     this.state = {
       text: '',
       file: null,
       preview: null,
       fbPost: false,
       twPost: false,
-      // TODO: HOW CAN I GET THESE? (If user is integrated into social media channels)
-      twIntegration: true,
-      fbIntegration: true,
+      fbIntegration: fbIntegration,
+      twIntegration: twIntegration,
       preferences: PreferenceStore.getDefaults(),
+
     };
     PreferenceStore.loadAll();
   }
@@ -181,7 +194,7 @@ export default class NewsFeed extends React.Component {
                   value={text}
                 />
                 <div className="soc-submit inline">
-                  { preferences.facebook &&
+                  { preferences.facebook && fbIntegration &&
                     <div className="inline">
                       <button
                         type="button"
@@ -192,7 +205,7 @@ export default class NewsFeed extends React.Component {
                       </button>
                     </div>
                   }
-                  { preferences.twitter &&
+                  { preferences.twitter && twIntegration &&
                     <div className="inline">
                       <button
                         type="button"
