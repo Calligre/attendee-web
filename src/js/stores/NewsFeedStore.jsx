@@ -216,7 +216,6 @@ class NewsFeedStore extends EventEmitter {
       contentType: 'application/json',
       cache: false,
       success(response) {
-        console.log(response);
         dispatcher.dispatch({ type: 'CREATE_POST_SUCCESS', post: response.data });
       },
       error(error) {
@@ -352,7 +351,6 @@ class NewsFeedStore extends EventEmitter {
         const arrayLength = this.contentFeed.items.length;
         for (let i = 0; i < arrayLength; i += 1) {
           if (this.contentFeed.items[i].id === action.postId) {
-            console.log("HERE");
             this.contentFeed.items[i].current_user_flagged = true;
             // Assume that store and UI are in sync if action was correct
             // this.emit('updated');
