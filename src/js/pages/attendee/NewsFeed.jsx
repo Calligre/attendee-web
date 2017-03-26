@@ -38,6 +38,7 @@ export default class NewsFeed extends React.Component {
     // Grab data here. Emitted events aren't picked up until here
     PreferenceStore.on('loaded', this.loadPreferences);
     PreferenceStore.on('error', this.showPreferenceError);
+
     NewsFeedStore.getOnLoad();
   }
 
