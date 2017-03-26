@@ -41,14 +41,10 @@ export default class Calendar extends React.Component {
       location: '',
       stream: '',
       starttime: '',
-      endttime: '',
+      endtime: '',
     };
     for (const prop in row) {
-      if (prop == 'starttime' || prop == 'endtime') {
-        updatedEvent[prop] = moment(row[prop]).valueOf();
-      } else {
-        updatedEvent[prop] = row[prop];
-      }
+      updatedEvent[prop] = row[prop];
     }
     return updatedEvent;
   }
@@ -80,7 +76,7 @@ export default class Calendar extends React.Component {
 
   formatDate = (cell) => {
     const format = 'MMM Do hh:mm a';
-    return moment(cell).format(format);
+    return moment.unix(cell).format(format);
   }
 
   render() {
@@ -137,7 +133,7 @@ function removeAlertOnDelete(next) {
 class TimeEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: moment(props.defaultValue).format('YYYY-MM-DDTHH:mm') };
+    this.state = { value: moment.unix(props.defaultValue).format('YYYY-MM-DDTHH:mm') };
   }
   focus() {
     this.refs.inputRef.focus();

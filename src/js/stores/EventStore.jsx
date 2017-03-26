@@ -89,11 +89,9 @@ class EventStore extends EventEmitter {
   }
 
   updateEvent(data) {
-    const event = formatValues(data);
-
     $.ajax({
-      url: `${url}/event/${event.id}`,
-      data: JSON.stringify(event),
+      url: `${url}/event/${data.id}`,
+      data: JSON.stringify(data),
       type: 'PATCH',
       contentType: 'application/json',
       processData: false,
@@ -102,7 +100,7 @@ class EventStore extends EventEmitter {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
       success() {
-        dispatcher.dispatch({ type: 'EVENT_UPDATE', event });
+        dispatcher.dispatch({ type: 'EVENT_UPDATE', data });
       },
       error(error) {
         dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
@@ -205,7 +203,7 @@ class EventStore extends EventEmitter {
       }
       case 'EVENTS_GET': {
         this.events = action.events.map((event) => {
-          const attributes = formatData(event.attributes);
+          const attributes = event.attributes;
           streamMap[attributes.stream] = streamMap[attributes.stream] || randomColor();
           attributes.streamColor = streamMap[attributes.stream];
           attributes.isSubscribed = action.subscriptions.includes(attributes.id);
