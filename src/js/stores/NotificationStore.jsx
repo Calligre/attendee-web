@@ -53,11 +53,11 @@ class NotificationStore extends EventEmitter {
   }
 
   add(data) {
-    const notification = JSON.stringify(formatValues(data));
+    const notification = formatValues(data);
     const self = this;
     $.ajax({
       url: `${url}/broadcast`,
-      data: notification,
+      data: JSON.stringify(notification),
       type: 'POST',
       contentType: 'application/json',
       processData: false,
@@ -77,11 +77,11 @@ class NotificationStore extends EventEmitter {
 
 
   update(data) {
-    const notification = JSON.stringify(formatValues(data));
+    const notification = formatValues(data);
 
     $.ajax({
       url: `${url}/broadcast/${notification.id}`,
-      data: notification,
+      data: JSON.stringify(notification),
       type: 'PATCH',
       contentType: 'application/json',
       processData: false,

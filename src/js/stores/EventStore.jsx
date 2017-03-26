@@ -88,11 +88,11 @@ class EventStore extends EventEmitter {
   }
 
   updateEvent(data) {
-    const event = JSON.stringify(formatValues(data));
+    const event = formatValues(data);
 
     $.ajax({
       url: `${url}/event/${event.id}`,
-      data: event,
+      data: JSON.stringify(event),
       type: 'PATCH',
       contentType: 'application/json',
       processData: false,
@@ -111,10 +111,10 @@ class EventStore extends EventEmitter {
   }
 
   addEvent(data) {
-    const event = JSON.stringify(formatValues(data));
+    const event = formatValues(data);
     $.ajax({
       url: `${url}/event`,
-      data: event,
+      data: JSON.stringify(event),
       type: 'POST',
       contentType: 'application/json',
       processData: false,
