@@ -27,6 +27,20 @@ export default class Event extends React.Component {
     EventStore.removeListener('error', this.showError);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    let oldId = -1;
+    let newId = -1;
+    if (prevProps.params.hasOwnProperty('eventId')) {
+      oldId = prevProps.params.eventId;
+    }
+    if (this.props.params.hasOwnProperty('eventId')) {
+      newId = this.props.params.eventId;
+    }
+    if (oldId != newId) {
+      this.getEvent();
+    }
+  }
+
   getEvent = () => {
     const id = parseInt(this.props.params.eventId);
     const event = EventStore.events.filter(e => e.id === id)[0];
