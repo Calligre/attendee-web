@@ -181,7 +181,7 @@ var SurveyCard = React.createClass({
           style={this.props.headerStyle}/>
 		<CardText>{this.props.data.description}</CardText>
 		<CardActions>
-		  <Button style={this.props.buttonStyle} label="Take Survey" />
+		  <Button style={this.props.buttonStyle} href={this.props.data.link} label="Take Survey" />
 		</CardActions>
 	  </BetterCard>
     );
