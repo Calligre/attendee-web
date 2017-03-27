@@ -1,4 +1,5 @@
 .newsFeed {
+  margin-top: 30px;
 
   html.noscroll {
     position: fixed;
@@ -94,86 +95,52 @@
   }
 
   .user-post {
+    textarea {
+      width: 100%;
+      border: none;
+    }
 
-    margin-top: 40px;
+    [class^='theme__cardMedia'] > [class^='theme__content']:hover {
+      background-color: rgba(255, 255, 255, 0.5);
 
-    .left-input {
-      float: left;
-      height: inherit;
-      width: 79%;
-      @media screen and (max-width: 540px) {
-        width: 69%;
+      .photo-delete {
+        color: black;
       }
     }
 
-    .right-input {
-      float: left;
-      margin-left: 1%;
-      height: inherit;
-      width: 20%;
-      @media screen and (max-width: 540px) {
-        width: 30%;
+    .photo-delete {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: rgba( 150, 150, 150, 0.8);
+
+      &:hover {
+         opacity: 0.5;
       }
+     }
+
+    [class^='theme__cardTitle'] {
+      padding: 30px 36px;
     }
 
-    .input {
-      height: 125px;
+    [class^='theme__cardText'] {
+      padding: 0px 36px;
+    }
 
-      .text-input {
-        width: 100%;
-        height: 80px;
-        font-size: 16px;
-        outline: none;
-      }
+    [class^='theme__cardActions'] {
+      border-top: 1px solid lightgrey;
+      margin: 20px 20px 0;
+      width: initial;
 
-      .soc-submit {
-        float: right;
+      .postOptions {
+        flex-grow: 1;
+        text-align: right;
 
         .soc {
-          padding: 2px !important;
-          margin: 1px !important;
-          outline: none;
+          width: 50px;
+          height: 40px;
+          padding: 0 !important;
         }
-
-        .submit-form {
-          margin: 2px 0 2px 5px !important;
-          outline: none;
-        }
-      }
-
-      .dropzone {
-
-        width: 100%;
-        height: 100%;
-        max-height: 100%;
-        background-color: $grey;
-        cursor: pointer;
-        cursor: hand;
-
-        .preview-box {
-          height: 100%;
-          width: 100%;
-
-          .photo-delete {
-            right: 18px;
-            position: absolute;
-            background-color: white;
-            -webkit-border-radius: 10px;
-          }
-        }
-
-        .label {
-          color: #2d2d2d;
-          font-weight: normal;
-          font-size: 12px;
-          white-space: pre-wrap;
-
-          .photo-icon {
-            display: block;
-            margin: 7% auto 5% auto;
-          }
-        }
-
       }
     }
   }
@@ -181,102 +148,79 @@
   .newsfeed-posts {
     margin-top: 40px;
 
-    .newsfeed-post {
-      border: 1px solid $grey;
-      border-radius: 5px;
-      padding: 10px;
-      margin: 10px 0;
-      min-height: 102px;
+    .post-action {
+      position: absolute;
+      right: 36px;
+      top: 30px;
+    }
 
+    .post-action, .post-interaction {
+      color: $darkestGrey;
+      overflow: visible;
 
-      .profile-photo {
-        position: absolute;
-        display: inline-block;
+      &:hover {
+        opacity: 0.7;
       }
+    }
 
-      .user-photo {
-        height: 80px;
-        width: 80px;
-      }
 
-      .post-text {
-        width: 100%;
-        vertical-align: top;
-        word-wrap: break-word;
-        padding-left: 110px;
+    [class^='theme__card_'] {
+      margin: 30px 0;
+      position: relative;
+
+      h5, p {
         text-align: left;
-        @media screen and (max-width: 359px){
-          padding-left: 90px;
+      }
+
+      [class^='theme__cardTitle'] {
+        padding: 30px 36px;
+      }
+
+      [class^='theme__cardText'] {
+        padding: 0px 36px;
+      }
+
+      [class^='theme__cardActions'] {
+        border-top: 1px solid lightgrey;
+        font-size: 20px;
+        color: $darkestGrey;
+        margin: 20px 20px 0;
+        padding: 15px 16px !important;
+        width: initial;
+
+        .heart-icon {
+          vertical-align: text-bottom;
         }
 
-        img {
-          margin-bottom: 15px;
-          width: 100%;
+        .repost-icon {
+          margin-left: 30px;
         }
 
-        .username {
-          font-size: 20px;
-          font-weight: bold;
+        .like-count {
+          margin-left: 10px;
         }
 
-        .text {
+        .date-newsfeed {
           font-size: 16px;
+          padding-top:0.5em;
         }
 
-        .right-options {
-          color: #949494;
-          margin: 0.1em 0.1em 0 0;
-
-          .right-icons {
-            float: right;
-            margin-right: 0px !important;
-          }
+        .date {
+          float: right;
         }
 
-        .soc-bar {
-          vertical-align: bottom;
-          font-size: 20px;
-          font-weight: bold;
-          color: #949494;
-          margin-top: 20px;
-          width: 100%;
-          min-width: 185px;
-
-          .heart-icon {
-            vertical-align: text-bottom;
-            margin-right: 5px;
-          }
-
-          .social-spacing {
-            margin-left: 10%;
-          }
-
-          .date-newsfeed {
-            font-size: 16px;
-            padding-top:0.5em;
-          }
-
-          .date {
-            float: right;
-          }
-
-          .show-image {
-            margin-left: 8%;
-            font-size: 16px;
-            font-weight: normal;
-          }
+        .show-image {
+          margin-left: 8%;
+          font-size: 16px;
+          font-weight: normal;
         }
       }
     }
   }
 
-
-
-
   .paginate {
     text-align: center;
     font-size: 16px;
   }
-
 }
 

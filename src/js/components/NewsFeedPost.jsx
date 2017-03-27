@@ -5,6 +5,7 @@ import FaFlag from 'react-icons/lib/fa/flag';
 import FaHeart from 'react-icons/lib/fa/heart';
 import FaRetweet from 'react-icons/lib/fa/retweet';
 import FaTrashO from 'react-icons/lib/fa/trash-o';
+import { Card as BetterCard, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card';
 let moment = require('moment')
 
 
@@ -96,72 +97,51 @@ export default class NewsFeedPost extends React.Component {
     const owner = poster_id === userId;
 
     const heartColor = {
-      color: current_user_likes ? 'red' : 'inherit',
+      color: current_user_likes ? 'red' : '',
     };
 
     const flagColor = {
-      color: current_user_flagged ? 'darkred' : 'inherit',
+      color: current_user_flagged ? 'darkorange' : '',
     };
 
-    let actions = null;
-    if (owner) {
-      actions = (
-        <FaTrashO
-          className="clickable right-icons no-selection"
-          onClick={this.deletePost}
-          size={20}
-        />
-      );
-    } else {
-      actions = (
-        <FaFlag
-          className="clickable right-icons no-selection"
-          onClick={this.changeFlag}
-          style={flagColor}
-          size={20}
-        />
-      );
-    }
-
-
-    let image = null;
-    if (media_link && media_link !== '') {
-      image = (
-        <span className="show-image link clickable no-selection" onClick={this.showImage}>
-          <img src={media_link}/>
-        </span>
-      );
-    }
-
     return (
-      <div className="newsfeed-post">
-        <div className="profile-photo inline">
-          <img alt="poster" src={poster_icon} className="user-photo no-selection" />
-        </div>
-        <div className="post-text inline">
-          <div className="right-options">
-            {actions}
-          </div>
-          <p className="username">{poster_name}</p>
-          <p className="text">{text}</p>
-          {image}
-          <div className="soc-bar">
-            <FaHeart
-              className="heart-icon clickable no-selection"
-              onClick={this.changeLike}
-              style={heartColor}
-              size={20}
-            />
-            <span className="like-count no-selection">{like_count}</span>
-            { repost &&
-              <FaRetweet className="social-spacing clickable" onClick={this.retweet} size={28} />
-            }
-            <span className="social-spacing no-selection date date-newsfeed">
-              {moment(timestamp * 1000).format('MMMM Do, h:mm a')}
-            </span>
-          </div>
-        </div>
-      </div>
+	  <BetterCard>
+		<CardTitle
+		  avatar={poster_icon}
+		  title={poster_name}
+		  subtitle={moment(timestamp * 1000).format('MMMM Do, h:mm a')}/>
+		{ owner &&
+		  <FaTrashO
+			className="post-action"
+			onClick={this.deletePost}
+			size={20}/>
+		}
+		{ !owner &&
+		  <FaFlag
+			className="post-action"
+			onClick={this.changeFlag}
+			style={flagColor}
+			size={20}/>
+		}
+		<CardText>{text}</CardText>
+		{ media_link && media_link !== '' &&
+		  <CardMedia
+			aspectRatio="wide"
+			image={media_link}
+            onClick={this.showImage}/> }
+		<CardActions>
+		  <FaHeart
+			className="heart-icon post-interaction"
+			onClick={this.changeLike}
+			style={heartColor}
+			size={20}
+		  />
+		  <span className="like-count no-selection">{like_count}</span>
+		  { repost &&
+			<FaRetweet className="repost-icon post-interaction" onClick={this.retweet} size={28} />
+		  }
+		</CardActions>
+	  </BetterCard>
     );
   }
 }
