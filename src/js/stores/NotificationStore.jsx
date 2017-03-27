@@ -127,15 +127,15 @@ class NotificationStore extends EventEmitter {
     const currTime = moment();
 
     // Check Expiry time
-    self.notifications = self.notifications.filter(notification => moment(notification.expirytime).isAfter(currTime));
+    let validNotifications = self.notifications.filter(notification => moment(notification.expirytime).isAfter(currTime));
 
     // Check if Notifications have already been seen
     const viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications'));
     if (viewedNotifications) {
-      self.notifications = self.notifications.filter(notification => !(viewedNotifications.includes(notification.id)));
+      validNotifications = validNotifications.filter(notification => !(viewedNotifications.includes(notification.id)));
     }
 
-    self.notifications = self.notifications.map((notification) => {
+    validNotifications = validNotifications.map((notification) => {
       return {
         message: notification.message,
         id: notification.id,
@@ -146,13 +146,12 @@ class NotificationStore extends EventEmitter {
         onClick: () => this.handleDismiss(notification),
       };
     });
-    self.notifications = self.notifications.sort((a, b) => a.expirytime > b.expirytime);
-    return self.notifications;
+    validNotifications = validNotifications.sort((a, b) => a.expirytime > b.expirytime);
+    return validNotifications;
   }
 
   handleDismiss(notificationParam) {
     const self = this;
-    self.notifications = self.notifications.filter(notification => notification.id !== notificationParam.id);
 
     // Set this notification as viewed so it doesn't appear again
     let viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications'));
