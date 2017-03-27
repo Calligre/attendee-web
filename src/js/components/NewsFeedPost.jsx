@@ -97,32 +97,12 @@ export default class NewsFeedPost extends React.Component {
     const owner = poster_id === userId;
 
     const heartColor = {
-      color: current_user_likes ? 'red' : 'inherit',
+      color: current_user_likes ? 'red' : '',
     };
 
     const flagColor = {
-      color: current_user_flagged ? 'darkred' : 'inherit',
+      color: current_user_flagged ? 'darkorange' : '',
     };
-
-    let actions = null;
-    if (owner) {
-      actions = (
-        <FaTrashO
-          className="clickable right-icons no-selection"
-          onClick={this.deletePost}
-          size={20}
-        />
-      );
-    } else {
-      actions = (
-        <FaFlag
-          className="clickable right-icons no-selection"
-          onClick={this.changeFlag}
-          style={flagColor}
-          size={20}
-        />
-      );
-    }
 
     return (
 	  <BetterCard>
@@ -130,6 +110,19 @@ export default class NewsFeedPost extends React.Component {
 		  avatar={poster_icon}
 		  title={poster_name}
 		  subtitle={moment(timestamp * 1000).format('MMMM Do, h:mm a')}/>
+		{ owner &&
+		  <FaTrashO
+			className="post-action"
+			onClick={this.deletePost}
+			size={20}/>
+		}
+		{ !owner &&
+		  <FaFlag
+			className="post-action"
+			onClick={this.changeFlag}
+			style={flagColor}
+			size={20}/>
+		}
 		<CardText>{text}</CardText>
 		{ media_link && media_link !== '' &&
 		  <CardMedia
@@ -138,14 +131,14 @@ export default class NewsFeedPost extends React.Component {
             onClick={this.showImage}/> }
 		<CardActions>
 		  <FaHeart
-			className="heart-icon clickable no-selection"
+			className="heart-icon post-interaction"
 			onClick={this.changeLike}
 			style={heartColor}
 			size={20}
 		  />
 		  <span className="like-count no-selection">{like_count}</span>
 		  { repost &&
-			<FaRetweet className="repost-icon clickable" onClick={this.retweet} size={28} />
+			<FaRetweet className="repost-icon post-interaction" onClick={this.retweet} size={28} />
 		  }
 		</CardActions>
 	  </BetterCard>

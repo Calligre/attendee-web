@@ -1,4 +1,5 @@
 .newsFeed {
+  margin-top: 30px;
 
   html.noscroll {
     position: fixed;
@@ -96,7 +97,6 @@
   .user-post {
     textarea {
       width: 100%;
-      padding: 10px;
       border: none;
     }
 
@@ -119,6 +119,14 @@
       }
      }
 
+    [class^='theme__cardTitle'] {
+      padding: 30px 36px;
+    }
+
+    [class^='theme__cardText'] {
+      padding: 0px 36px;
+    }
+
     [class^='theme__cardActions'] {
       border-top: 1px solid lightgrey;
       margin: 20px 20px 0;
@@ -140,19 +148,44 @@
   .newsfeed-posts {
     margin-top: 40px;
 
+    .post-action {
+      position: absolute;
+      right: 36px;
+      top: 30px;
+    }
+
+    .post-action, .post-interaction {
+      color: $darkestGrey;
+      overflow: visible;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+
     [class^='theme__card_'] {
       margin: 30px 0;
+      position: relative;
 
       h5, p {
         text-align: left;
       }
 
+      [class^='theme__cardTitle'] {
+        padding: 30px 36px;
+      }
+
+      [class^='theme__cardText'] {
+        padding: 0px 36px;
+      }
+
       [class^='theme__cardActions'] {
         border-top: 1px solid lightgrey;
         font-size: 20px;
-        font-weight: bold;
-        color: #949494;
+        color: $darkestGrey;
         margin: 20px 20px 0;
+        padding: 15px 16px !important;
         width: initial;
 
         .heart-icon {

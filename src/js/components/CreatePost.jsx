@@ -160,10 +160,10 @@ export default class NewsFeed extends React.Component {
     const textPostLength = twPost ? '140' : '1000';
 
     return (
-	  <BetterCard className="user-post">
-		<CardTitle
-		  title="Post to News Feed" />
-		<CardText>
+      <BetterCard className="user-post">
+        <CardTitle
+          title="Post to News Feed" />
+        <CardText>
           <textarea
             ref={(input) => { this.textInput = input; }}
             className="text-input"
@@ -174,16 +174,16 @@ export default class NewsFeed extends React.Component {
             onChange={this.changeText}
             value={text}/>
         </CardText>
-		{ preview &&
-		  <CardMedia
-			aspectRatio="wide"
-			image={preview}>
+        { preview &&
+          <CardMedia
+            aspectRatio="wide"
+            image={preview}>
             <MdHighlightRemove className="photo-delete" onClick={this.deletePhoto} size={24} />
           </CardMedia>
         }
-		<CardActions>
-		  <Dropzone className="dropzone border" onDrop={this.onPhotoDrop} multiple={false}>
-		    <Button style={this.props.buttonStyle} label="Upload Photo"/>
+        <CardActions>
+          <Dropzone className="dropzone border" onDrop={this.onPhotoDrop} multiple={false}>
+            <Button style={this.props.buttonStyle} label="Upload Photo"/>
           </Dropzone>
           <div className="postOptions">
             { preferences.facebook && fbIntegration &&
@@ -204,8 +204,8 @@ export default class NewsFeed extends React.Component {
             }
             <Button style={this.props.buttonStyle} label="Post" onClick={this.createPost} id="post"/>
           </div>
-		</CardActions>
-	  </BetterCard>
+        </CardActions>
+      </BetterCard>
     );
   }
 }
