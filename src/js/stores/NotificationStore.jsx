@@ -124,10 +124,10 @@ class NotificationStore extends EventEmitter {
 
   getValid() {
     const self = this;
-    const currTime = moment().unix();
+    const currTime = moment();
 
     // Check Expiry time
-    self.notifications = self.notifications.filter(notification => notification.expirytime > currTime);
+    self.notifications = self.notifications.filter(notification => moment(notification.expirytime).isAfter(currTime));
 
     // Check if Notifications have already been seen
     const viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications'));
@@ -142,7 +142,7 @@ class NotificationStore extends EventEmitter {
         key: `notification-${notification.id}`,
         expirytime: notification.expirytime,
         action: 'Dismiss',
-        dismissAfter: (notification.expirytime - currTime) * 1000,
+        dismissAfter: moment(notification.expirytime).diff(currTime),
         onClick: () => this.handleDismiss(notification),
       };
     });
