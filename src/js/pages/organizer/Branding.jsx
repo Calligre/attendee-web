@@ -29,23 +29,23 @@ export default class Branding extends React.Component {
       facebook: '',
       twitter: '',
     };
+    BrandStore.getBranding();
   }
- 
+
   componentWillMount() {
     BrandStore.on("receivedBranding", this.setBranding);
-    BrandStore.on("savedBranding", this.brandingSaved)
-    BrandStore.getBranding();
+    BrandStore.on("savedBranding", this.setBranding)
   };
 
   componentWillUnmount() {
     BrandStore.removeListener("receivedBranding", this.setBranding);
-    BrandStore.removeListener("savedBranding", this.brandingSaved);
+    BrandStore.removeListener("savedBranding", this.setBranding);
   };
 
   setBranding = () => {
     let branding = BrandStore.branding;
-    branding['starttime'] = moment.unix(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
-    branding['endtime'] = moment.unix(branding['endtime']).format('YYYY-MM-DD[T]HH:mm');
+    branding['starttime'] = moment(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
+    branding['endtime'] = moment(branding['endtime']).format('YYYY-MM-DD[T]HH:mm');
     this.setState(branding);
   }
 
@@ -57,8 +57,8 @@ export default class Branding extends React.Component {
     const data = {
       name: this.state.name,
       organization: this.state.organization,
-      starttime: moment(this.state.starttime).unix(),
-      endtime: moment(this.state.endtime).unix(),
+      starttime: moment(this.state.starttime,'YYYY-MM-DD[T]HH:mm').valueOf(),
+      endtime: moment(this.state.endtime, 'YYYY-MM-DD[T]HH:mm').valueOf(),
       color_primary: this.state.color_primary,
       color_secondary: this.state.color_secondary,
       logo: this.state.logo,
@@ -71,11 +71,6 @@ export default class Branding extends React.Component {
     };
 
     BrandStore.saveBranding(data);
-  }
-
-  brandingSaved = (event) => {
-    //TODO: Figure out a better way of alerting the user that saving succeeded
-    console.log("Branding saved successfully.");
   }
 
   render() {
@@ -95,7 +90,7 @@ export default class Branding extends React.Component {
       color: this.state.color_primary,
       WebkitTextFillColor: this.state.color_primary,
     }
- 
+
     let socialCard = null;
     if (this.state.facebook || this.state.twitter) {
       socialCard = <Card type="social" headerStyle={primaryText} facebook={this.state.facebook} twitter={this.state.twitter}/>;
