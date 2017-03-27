@@ -76,6 +76,8 @@ export default class Event extends React.Component {
       borderColor: streamColor,
     };
 
+    let descriptionHTML = {__html: description};
+
     return (
       <div id={`event-${id}`} className="event-item">
         <div className="nameContainer" style={streamStyle}>
@@ -92,7 +94,7 @@ export default class Event extends React.Component {
         <div className="info">
           <div id="avoidSubscribeButton" />
           <h2 className="secondaryText location">{location}</h2>
-          <div className="description">{description}</div>
+          <div className="description" dangerouslySetInnerHTML={descriptionHTML}/>
         </div>
       </div>
     );

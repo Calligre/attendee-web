@@ -97,10 +97,10 @@ export default class Events extends React.Component {
       if (filterTerms.stream.length > 0 && !filterTerms.stream.includes(event.stream)) {
         return false;
       }
-      if (startDateEnabled && moment.unix(event.starttime).isBefore(moment(filterTerms.startDate))) {
+      if (startDateEnabled && moment(event.starttime).isBefore(moment(filterTerms.startDate))) {
         return false;
       }
-      if (endDateEnabled && moment.unix(event.endtime).isAfter(moment(filterTerms.endDate))) {
+      if (endDateEnabled && moment(event.endtime).isAfter(moment(filterTerms.endDate))) {
         return false;
       }
 

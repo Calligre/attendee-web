@@ -45,7 +45,7 @@ export default class Calendar extends React.Component {
     };
     for (const prop in row) {
       if (prop == 'starttime' || prop == 'endtime') {
-        updatedEvent[prop] = moment(row[prop]).unix();
+        updatedEvent[prop] = moment(row[prop]).valueOf();
       } else {
         updatedEvent[prop] = row[prop];
       }
