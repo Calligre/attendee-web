@@ -43,7 +43,7 @@ export default class Notifications extends React.Component {
   }
 
   updateNotification = (row) => {
-    NotificationStore.update(data);
+    NotificationStore.update(row);
   }
 
   addNotification = (row) => {
