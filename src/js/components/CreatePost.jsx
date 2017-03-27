@@ -12,14 +12,6 @@ export default class NewsFeed extends React.Component {
 
   constructor(props) {
     super(props);
-    this.onPhotoDrop = this.onPhotoDrop.bind(this);
-    this.getRetweetText = this.getRetweetText.bind(this);
-    this.setPostText = this.setPostText.bind(this);
-    this.changeText = this.changeText.bind(this);
-    this.twToggle = this.twToggle.bind(this);
-    this.fbToggle = this.fbToggle.bind(this);
-    this.deletePhoto = this.deletePhoto.bind(this);
-    this.createPost = this.createPost.bind(this);
 
     const integrations = AuthService.getProfile().identities;
     let fbIntegration = false;
@@ -63,14 +55,14 @@ export default class NewsFeed extends React.Component {
     PreferenceStore.removeListener('error', this.showPreferenceError);
   }
 
-  onPhotoDrop(files) {
+  onPhotoDrop = (files) => {
     this.setState({
       file: files[0],
       preview: files[0].preview,
     });
   }
 
-  getRetweetText() {
+  getRetweetText = () => {
     this.setState({
       text: NewsFeedStore.retweetText,
     });
@@ -78,7 +70,7 @@ export default class NewsFeed extends React.Component {
     window.scrollTo(0, 0);
   }
 
-  setPostText() {
+  setPostText = () => {
     this.setState({
       text: '',
       file: null,
@@ -96,13 +88,13 @@ export default class NewsFeed extends React.Component {
     console.error(PreferenceStore.error);
   }
 
-  changeText(event) {
+  changeText = (event) => {
     this.setState({
       text: event.target.value,
     });
   }
 
-  fbToggle() {
+  fbToggle = () => {
     if (this.state.fbIntegration) {
       this.setState({
         fbPost: !this.state.fbPost,
@@ -113,7 +105,7 @@ export default class NewsFeed extends React.Component {
     }
   }
 
-  twToggle() {
+  twToggle = () => {
     if (this.state.twIntegration) {
       this.setState({
         twPost: !this.state.twPost,
@@ -124,7 +116,7 @@ export default class NewsFeed extends React.Component {
     }
   }
 
-  deletePhoto(e) {
+  deletePhoto = (e) => {
     e.stopPropagation();
     this.setState({
       file: null,
@@ -132,7 +124,7 @@ export default class NewsFeed extends React.Component {
     });
   }
 
-  createPost() {
+  createPost = () => {
     NewsFeedStore.createPost(
       this.state.text,
       this.state.file,

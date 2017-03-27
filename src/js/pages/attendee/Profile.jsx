@@ -107,8 +107,8 @@ export default class Profile extends React.Component {
     });
   }
 
-  handleChange = (name, value) => {
-    this.setState({...this.state, [name]: value});
+  handleChange = (key, value) => {
+    this.setState({ [key]: value });
   };
 
   submitChanges = () => {
@@ -164,24 +164,24 @@ export default class Profile extends React.Component {
         <h4>Rank: {rank}</h4>
         { this.renderSocialMediaList() }
         { (myProfile || this.state.organization.length > 0) &&
-          <Input type='text' label='Organization' name='organization' value={this.state.organization} onChange={this.handleChange.bind(this, 'organization')} disabled={!myProfile}/>
+          <Input type='text' label='Organization' name='organization' value={this.state.organization} onChange={this.handleChange} disabled={!myProfile}/>
         }
         { (myProfile || this.state.description.length > 0) &&
-          <Input type='text' label='About you' name='description' value={this.state.description} onChange={this.handleChange.bind(this, 'description')} disabled={!myProfile}/>
+          <Input type='text' label='About you' name='description' value={this.state.description} onChange={this.handleChange} disabled={!myProfile}/>
         }
         { myProfile &&
           <div>
             <div className="socialMediaInput">
               <div className="prefix">facebook.com/</div>
-              <Input type='text' label='Facebook' name='facebook' value={this.state.facebook} onChange={this.handleChange.bind(this, 'facebook')} disabled={!myProfile}/>
+              <Input type='text' label='Facebook' name='facebook' value={this.state.facebook} onChange={this.handleChange} disabled={!myProfile}/>
             </div>
             <div className="socialMediaInput">
               <div className="prefix">@</div>
-              <Input type='text' label='Twitter' name='twitter' value={this.state.twitter} onChange={this.handleChange.bind(this, 'twitter')} disabled={!myProfile}/>
+              <Input type='text' label='Twitter' name='twitter' value={this.state.twitter} onChange={this.handleChange} disabled={!myProfile}/>
             </div>
             <div className="socialMediaInput">
               <div className="prefix">linkedin.com/</div>
-              <Input type='text' label='LinkedIn' name='linkedin' value={this.state.linkedin} onChange={this.handleChange.bind(this, 'linkedin')} disabled={!myProfile}/>
+              <Input type='text' label='LinkedIn' name='linkedin' value={this.state.linkedin} onChange={this.handleChange} disabled={!myProfile}/>
             </div>
           </div>
         }

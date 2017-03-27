@@ -10,12 +10,6 @@ export default class NewsFeed extends React.Component {
 
   constructor() {
     super();
-    this.getNewsFeedPosts = this.getNewsFeedPosts.bind(this);
-    this.revertNewsFeedPosts = this.revertNewsFeedPosts.bind(this);
-    this.setImageOverlay = this.setImageOverlay.bind(this);
-    this.paginatePosts = this.paginatePosts.bind(this);
-    this.closeImageOverlay = this.closeImageOverlay.bind(this);
-    this.showError = this.showError.bind(this);
 
     this.state = {
       contentFeed: {
@@ -52,19 +46,19 @@ export default class NewsFeed extends React.Component {
   }
 
   // Grab the News Feed Posts that the user has retrieved from the store
-  getNewsFeedPosts() {
+  getNewsFeedPosts = () => {
     this.setState({
       contentFeed: NewsFeedStore.contentFeed,
     });
   }
 
-  setImageOverlay(value) {
+  setImageOverlay = (value) => {
     this.setState({
       imageOverlay: value,
     });
   }
 
-  revertNewsFeedPosts() {
+  revertNewsFeedPosts = () => {
     this.setState({
       contentFeed: NewsFeedStore.contentFeed,
     });
@@ -73,15 +67,15 @@ export default class NewsFeed extends React.Component {
     }
   }
 
-  paginatePosts() {
+  paginatePosts = () => {
     NewsFeedStore.get();
   }
 
-  closeImageOverlay() {
+  closeImageOverlay = () => {
     this.setImageOverlay(null);
   }
 
-  showError() {
+  showError = () => {
     alert(NewsFeedStore.error);
   }
 

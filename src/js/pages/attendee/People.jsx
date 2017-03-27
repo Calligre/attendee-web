@@ -8,11 +8,6 @@ import SwapVert from 'react-icons/lib/md/swap-vert';
 export default class People extends React.Component {
   constructor(props) {
     super(props);
-    this.getPeople = this.getPeople.bind(this);
-    this.searchUpdated = this.searchUpdated.bind(this);
-    this.filterUpdated = this.filterUpdated.bind(this);
-    this.sortKeyUpdated = this.sortKeyUpdated.bind(this);
-    this.sortDirectionUpdated = this.sortDirectionUpdated.bind(this);
     this.state = {
       people: [],
       searchTerm: '',
@@ -47,35 +42,35 @@ export default class People extends React.Component {
     PeopleStore.removeListener('error', this.showError);
   }
 
-  getPeople() {
+  getPeople = () => {
     this.setState({
       people: PeopleStore.people,
     });
   }
 
-  showError() {
+  showError = () => {
     console.log(PeopleStore.error);
   }
 
-  searchUpdated(term) {
+  searchUpdated = (term) => {
     this.setState({
       searchTerm: term,
     });
   }
 
-  filterUpdated(terms) {
+  filterUpdated = (terms) => {
     this.setState({
       filterTerms: terms,
     });
   }
 
-  sortKeyUpdated(key) {
+  sortKeyUpdated = (key) => {
     this.setState({
       sortKey: key,
     });
   }
 
-  sortDirectionUpdated() {
+  sortDirectionUpdated = () => {
     this.setState({
       sortDirection: -this.state.sortDirection,
     });
