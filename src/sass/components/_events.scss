@@ -16,6 +16,14 @@
   max-width: 450px;
 }
 
+.Select-control {
+  text-align: left;
+
+  .Select-placeholder {
+    font-size: 12px;
+  }
+}
+
 .eventPageEvent{
   a {
     display: table-cell;
@@ -132,21 +140,36 @@
     }
   }
 
+  .location {
+    padding: 0 10px;
+  }
+
   .description {
-    font-size: 16px;
+    padding: 20px 10px;
+
+    .group {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 16px;
+    }
   }
 }
 
 .dateFilter {
   display: flex;
+  padding: 0 10px;
+  overflow: hidden;
 
   label {
-    margin: 30px 20px 0 0;
+    margin: 21px 20px 0 0;
     width: 200px;
     text-align: left;
   }
 
   [class^='theme__input'] {
     flex-grow: 1;
+    padding: 10px 0 !important;
   }
 }
