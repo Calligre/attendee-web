@@ -49,7 +49,10 @@ export default class Login extends React.Component {
 
     return (
       <div id="loginContainer">
-        <div> Welcome to: {branding.name} </div>
+        <div>
+          <h3>Welcome to</h3>
+          <h1 className="secondaryText">{branding.name}</h1>
+        </div>
         <div className="logo">
           <div className="logoC primaryBackground" />
           <div className="rest">alligre</div>

@@ -200,7 +200,7 @@ button:not([class^='theme__button']) {
   .logo {
     position: relative;
     margin-bottom: 30px;
-    margin-top: 100px;
+    margin-top: 50px;
     width: 100%;
     height: 100%;
 
@@ -239,6 +239,8 @@ button:not([class^='theme__button']) {
 }
 
 [class^="theme__dialog"] {
+  overflow: scroll;
+
   h6 {
     font-size: 40px;
     margin-bottom: 30px;
@@ -261,6 +263,20 @@ button:not([class^='theme__button']) {
     &:hover {
       background: rgba(33,33,33,.2) !important;
     }
+  }
+
+  @media screen and (max-width: 1000px) {
+	h3 {
+	  font-size: 18px;
+	}
+	.conferenceElement {
+	  margin: 20px 10px;
+	  width: 100px;
+
+	  img {
+		height: 60px;
+	  }
+	}
   }
 }
 
