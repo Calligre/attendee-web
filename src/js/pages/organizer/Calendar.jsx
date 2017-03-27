@@ -131,7 +131,7 @@ function removeAlertOnDelete(next) {
 class TimeEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: moment.unix(props.defaultValue).format('YYYY-MM-DDTHH:mm') };
+    this.state = { value: moment(props.defaultValue).format('YYYY-MM-DDTHH:mm') };
   }
   focus() {
     this.refs.inputRef.focus();
