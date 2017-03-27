@@ -10,14 +10,14 @@ const moment = require('moment');
 
 // for the UI
 function formatData(notification) {
-  const value = notification;
+  const value = Object.assign({}, notification);
   value.expirytime = moment.unix(value.expirytime).valueOf();
   return value;
 }
 
 // for the DB
 function formatValues(notification) {
-  const value = notification;
+  const value = Object.assign({}, notification);
   value.expirytime = moment(value.expirytime).unix();
   return value;
 }
@@ -52,12 +52,12 @@ class NotificationStore extends EventEmitter {
     return self.notifications;
   }
 
-  add(data) {
-    const notification = formatValues(data);
+  add(notification) {
+    const data = formatValues(notification);
     const self = this;
     $.ajax({
       url: `${url}/broadcast`,
-      data: JSON.stringify(notification),
+      data: JSON.stringify(data),
       type: 'POST',
       contentType: 'application/json',
       processData: false,
@@ -76,12 +76,12 @@ class NotificationStore extends EventEmitter {
   }
 
 
-  update(data) {
-    const notification = formatValues(data);
+  update(notification) {
+    const data = formatValues(notification);
 
     $.ajax({
       url: `${url}/broadcast/${notification.id}`,
-      data: JSON.stringify(notification),
+      data: JSON.stringify(data),
       type: 'PATCH',
       contentType: 'application/json',
       processData: false,
