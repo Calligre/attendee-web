@@ -21,26 +21,17 @@ require('!style!css!sass!../sass/main.scss');
 const apiBaseURL = UrlService.getUrl();
 
 const app = document.getElementById('app');
-const redirectCallback = () => {
-  redirectAfterLogin();
-};
+const afterLogin = () => {
+  AppHistory.push('/')
+}
 
 // onEnter callback to validate authentication in private routes
-const requireAuth = (nextState) => {
+const requireAuth = (nextState, replace) => {
   if (!AuthService.loggedIn()) {
-    localStorage.setItem('redirect_after_login', nextState.location.pathname);
     AppHistory.push('login');
+    AuthService.on('after_login', afterLogin);
   } else {
-    AuthService.on('profile_updated', redirectCallback);
-  }
-};
-
-const redirectAfterLogin = () => {
-  const url = localStorage.getItem('redirect_after_login');
-  if (url) {
-    localStorage.removeItem('redirect_after_login');
-    AppHistory.push(url);
-    AuthService.removeListener('profile_updated', redirectCallback);
+    AuthService.removeListener('after_login', afterLogin);
   }
 };
 

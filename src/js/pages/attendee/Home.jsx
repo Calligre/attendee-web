@@ -153,9 +153,6 @@ export default class Featured extends React.Component {
   }
 
   render() {
-    if (localStorage.getItem('redirect_after_login')) {
-      return (<div></div>)
-    }
     const { messages, events, notifications, logo, branding, locations, cards, contacts, surveys, sponsors, preferences} = this.state;
 
     var eventCount = 0;

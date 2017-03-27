@@ -49,6 +49,7 @@ class AuthService extends EventEmitter {
         } else {
           this.setProfile(profile);
           this._createUser();
+          this.emit('after_login');
         }
         localStorage.removeItem('logging_in');
       });
@@ -100,7 +101,7 @@ class AuthService extends EventEmitter {
     // Saves profile data to localStorage
     localStorage.setItem('profile', JSON.stringify(profile));
     // Triggers profile_updated event to update the UI
-    this.emit('profile_updated', profile);
+    this.emit('profile_updated');
   }
 
   getProfile() {
