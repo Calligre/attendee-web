@@ -120,7 +120,7 @@ class PeopleStore extends EventEmitter {
       }
       case "PEOPLE_ERROR": {
         this.error = action.error;
-        this.emit("error");
+        this.emit('error');
         break;
       }
     }

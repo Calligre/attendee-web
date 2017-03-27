@@ -15,11 +15,6 @@ export default class NewsFeedPost extends React.Component {
     super(props);
     this.state = Object.assign({}, props);
     this.state.userId = AuthService.getProfile().user_id;
-    this.changeFlag = this.changeFlag.bind(this);
-    this.changeLike = this.changeLike.bind(this);
-    this.deletePost = this.deletePost.bind(this);
-    this.retweet = this.retweet.bind(this);
-    this.showImage = this.showImage.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,7 +31,7 @@ export default class NewsFeedPost extends React.Component {
     }
   }
 
-  changeFlag() {
+  changeFlag = () => {
     if (this.state.current_user_flagged) {
       NewsFeedStore.unflagPost(this.state.id);
       this.setState({
@@ -50,7 +45,7 @@ export default class NewsFeedPost extends React.Component {
     }
   }
 
-  changeLike() {
+  changeLike = () => {
     if (this.state.current_user_likes) {
       NewsFeedStore.unlikePost(this.state.id);
       this.setState({
@@ -66,16 +61,16 @@ export default class NewsFeedPost extends React.Component {
     }
   }
 
-  deletePost() {
+  deletePost = () => {
     NewsFeedStore.deletePost(this.state.id);
   }
 
-  retweet() {
+  retweet = () => {
     const retweetText = `"${this.state.text}" (${this.state.poster_name})`;
     NewsFeedStore.setRetweet(retweetText);
   }
 
-  showImage() {
+  showImage = () => {
     this.state.imgOverlay(this.state.media_link);
   }
 
