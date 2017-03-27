@@ -13,7 +13,7 @@ const moment = require('moment');
 
 // for the UI
 function formatData(event) {
-  const value = event;
+  const value = Object.assign({}, event);
   value.starttime = moment.unix(value.starttime).valueOf();
   value.endtime = moment.unix(value.endtime).valueOf();
   return value;
@@ -21,7 +21,7 @@ function formatData(event) {
 
 // for the DB
 function formatValues(event) {
-  const value = event;
+  const value = Object.assign({}, event);
   value.starttime = moment(value.starttime).unix();
   value.endtime = moment(value.endtime).unix();
   return value;
@@ -88,7 +88,8 @@ class EventStore extends EventEmitter {
     return this.events;
   }
 
-  updateEvent(data) {
+  updateEvent(event) {
+    const data = formatValues(event);
     $.ajax({
       url: `${url}/event/${data.id}`,
       data: JSON.stringify(data),
@@ -100,7 +101,7 @@ class EventStore extends EventEmitter {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
       success() {
-        dispatcher.dispatch({ type: 'EVENT_UPDATE', data });
+        dispatcher.dispatch({ type: 'EVENT_UPDATE', event });
       },
       error(error) {
         dispatcher.dispatch({ type: 'EVENTS_ERROR', error: error.error });
@@ -109,11 +110,11 @@ class EventStore extends EventEmitter {
     return this.events;
   }
 
-  addEvent(data) {
-    const event = formatValues(data);
+  addEvent(event) {
+    const data = formatValues(event);
     $.ajax({
       url: `${url}/event`,
-      data: JSON.stringify(event),
+      data: JSON.stringify(data),
       type: 'POST',
       contentType: 'application/json',
       processData: false,
@@ -203,7 +204,7 @@ class EventStore extends EventEmitter {
       }
       case 'EVENTS_GET': {
         this.events = action.events.map((event) => {
-          const attributes = event.attributes;
+          const attributes = Object.assign({}, formatData(event.attributes));
           streamMap[attributes.stream] = streamMap[attributes.stream] || randomColor();
           attributes.streamColor = streamMap[attributes.stream];
           attributes.isSubscribed = action.subscriptions.includes(attributes.id);
@@ -220,7 +221,7 @@ class EventStore extends EventEmitter {
         break;
       }
       case 'EVENT_ADD': {
-        const event = action.event;
+        const event = Object.assign({}, action.event);
         event.id = action.id;
         streamMap[event.stream] = streamMap[event.stream] || randomColor();
         event.streamColor = streamMap[event.stream];

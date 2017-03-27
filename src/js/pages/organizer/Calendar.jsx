@@ -73,8 +73,8 @@ export default class Calendar extends React.Component {
   insertModal = (columns, validateState, ignoreEditable) => (<InsertModalBody columns={columns} validateState={validateState} ignoreEditable={ignoreEditable} />)
 
   formatDate = (cell) => {
-    const format = 'MMM Do hh:mm a';
-    return moment.unix(cell).format(format);
+    const format = 'MMM DD, YYYY hh:mm a';
+    return moment(cell).format(format);
   }
 
   render() {
