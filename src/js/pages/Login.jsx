@@ -42,20 +42,20 @@ export default class Login extends React.Component {
 
   render() {
     const { branding } = this.state;
-    
+
     if (localStorage.getItem('logging_in') || !branding) {
-      return (<div></div>)
+      return (<div />);
     }
 
     return (
       <div id="loginContainer">
         <div> Welcome to: {branding.name} </div>
         <div className="logo">
-          <div className="logoC primaryBackground"></div>
+          <div className="logoC primaryBackground" />
           <div className="rest">alligre</div>
         </div>
         <button className="secondaryBackground" onClick={AuthService.login}>Login or Sign Up</button>
       </div>
-    )
+    );
   }
 }
