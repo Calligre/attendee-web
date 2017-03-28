@@ -12,7 +12,6 @@ import People from "pages/attendee/People";
 import Events from "pages/attendee/Events";
 import Event from "pages/attendee/Event";
 import Profile from "pages/attendee/Profile";
-import Info from "pages/attendee/Info";
 import Login from "pages/Login";
 
 import AppHistory from 'util/AppHistory';
@@ -45,7 +44,6 @@ ReactDOM.render(
       <Route path="events" component={Events} onEnter={requireAuth}></Route>
       <Route path="events/:eventId" component={Event} onEnter={requireAuth}></Route>
       <Route path="profile" component={Profile} onEnter={requireAuth}></Route>
-      <Route path="info" apiBaseURL={UrlService.getUrl()} component={Info} onEnter={requireAuth}></Route>
       <Route path="login" component={Login}></Route>
       <Route path="access_token=:token" component={Login} />
     </Route>

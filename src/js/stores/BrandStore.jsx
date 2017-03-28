@@ -5,8 +5,24 @@ import UrlService from 'util/UrlService';
 import dispatcher from 'dispatcher';
 
 const $ = require('jquery');
-
+const moment = require('moment');
 const url = UrlService.getUrl();
+
+// for the UI
+function formatData(data) {
+  const value = Object.assign({}, data);
+  value.starttime = moment.unix(value.starttime).valueOf();
+  value.endtime = moment.unix(value.endtime).valueOf();
+  return value;
+}
+
+// for the DB
+function formatValues(data) {
+  const value = Object.assign({}, data);
+  value.starttime = moment(value.starttime).unix();
+  value.endtime = moment(value.endtime).unix();
+  return value;
+}
 
 class BrandStore extends EventEmitter {
   constructor() {
@@ -375,18 +391,20 @@ class BrandStore extends EventEmitter {
   };
 
   saveBranding(data) {
+    const brand = formatValues(data);
+
     $.ajax({
       url: `${url}/info`,
       dataType: 'json',
       contentType: 'application/json',
-      data: JSON.stringify(data),
+      data: JSON.stringify(brand),
       type: 'PATCH',
       headers: {
         Authorization: `Bearer ${AuthService.getToken()}`,
       },
       cache: false,
       success() {
-        dispatcher.dispatch({ type: 'BRANDING_SAVED' });
+        dispatcher.dispatch({ type: 'BRANDING_SAVED', brand: data });
       },
       error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -418,7 +436,7 @@ class BrandStore extends EventEmitter {
   handleActions(action) {
     switch (action.type) {
       case 'BRANDING_GET': {
-        this.branding = action.branding;
+        this.branding = formatData(action.branding);
         this.emit('receivedBranding');
         break;
       }
@@ -531,12 +549,12 @@ class BrandStore extends EventEmitter {
         break;
       }
       case 'BRANDING_SAVED': {
+        this.branding = Object.assign(this.branding, action.brand);
         this.emit('savedBranding');
         break;
       }
       case 'BRAND_ERROR': {
         this.error = action.error;
-        console.log(`${action.error.status}: ${action.error.statusText}`);
         this.emit('error');
         break;
       }
