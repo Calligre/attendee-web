@@ -45,7 +45,7 @@ class BrandStore extends EventEmitter {
       },
     });
   }
- 
+
   getCards = () => {
     $.ajax({
       url: `${url}/info/card`,
@@ -78,7 +78,6 @@ class BrandStore extends EventEmitter {
       },
       success: function(response){
         dispatcher.dispatch({ type: 'CARD_UPDATE', card });
-        console.log(response);
       },
       error: function(error){
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
@@ -479,7 +478,7 @@ class BrandStore extends EventEmitter {
       }
       case 'CARD_GET': {
         this.cards = action.cards.map((card) => {
-          return card.attributes.data;
+          return card.attributes;
         });
         this.emit('receivedCards');
         break;
