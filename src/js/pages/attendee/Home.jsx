@@ -162,6 +162,7 @@ export default class Featured extends React.Component {
         return <Card type="event" key={"event-" + event.id} item={event}/>;
       }
     });
+    EventComponents.sort((a, b) => a.props.item.starttime - b.props.item.starttime);
 
     let mapCard = null;
     let confPackageCard = null;
