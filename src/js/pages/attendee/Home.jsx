@@ -185,11 +185,11 @@ export default class Featured extends React.Component {
         link: branding.package,
       };
 
-      if (preferences.map) {
-        mapCard = <Card type="download" item={map} buttonStyle={secondaryText} />;
+      if (preferences.map && branding.map) {
+        mapCard = <Card type="download" item={map} buttonStyle={secondaryText}/>;
       }
-      if (preferences.package) {
-        confPackageCard = <Card type="download" item={confPackage} buttonStyle={secondaryText} />;
+      if (preferences.package && branding.package) {
+        confPackageCard = <Card type="download" item={confPackage} buttonStyle={secondaryText}/>;
       }
       if (branding.facebook || branding.twitter) {
         socialCard = <Card type="social" headerStyle={primaryText} facebook={branding.facebook} twitter={branding.twitter} />;
