@@ -33,6 +33,10 @@
 
 .card {
   margin: 40px;
+
+  @media screen and (max-width: 550px) {
+    margin: 20px 10px;
+  }
 }
 
 [class^='theme__card'] {
