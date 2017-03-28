@@ -83,7 +83,7 @@ class BrandStore extends EventEmitter {
 
   updateCard(card){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/card/" + card.id,
+      url: url + "/info/card/" + card.id,
       data : JSON.stringify(card),
       type : 'PATCH',
       contentType : 'application/json',
@@ -105,7 +105,7 @@ class BrandStore extends EventEmitter {
 
   addCard(card){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/card",
+      url: url + "/info/card",
       data : JSON.stringify(card),
       type : 'POST',
       contentType : 'application/json',
@@ -127,7 +127,7 @@ class BrandStore extends EventEmitter {
 
   deleteCard(id){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/card/" + id,
+      url: url + "/info/card/" + id,
       type : 'DELETE',
       contentType : 'application/json',
       processData: false,
@@ -168,7 +168,7 @@ class BrandStore extends EventEmitter {
 
   updateContact(contact){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/contact/" + contact.id,
+      url: url + "/info/contact/" + contact.id,
       data : JSON.stringify(contact),
       type : 'PATCH',
       contentType : 'application/json',
@@ -189,7 +189,7 @@ class BrandStore extends EventEmitter {
 
   addContact(contact){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/contact",
+      url: url + "/info/contact",
       data : JSON.stringify(contact),
       type : 'POST',
       contentType : 'application/json',
@@ -210,7 +210,7 @@ class BrandStore extends EventEmitter {
 
   deleteContact(id){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/contact/" + id,
+      url: url + "/info/contact/" + id,
       type : 'DELETE',
       contentType : 'application/json',
       processData: false,
@@ -249,7 +249,7 @@ class BrandStore extends EventEmitter {
 
   updateLocation(location){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/location/" + location.id,
+      url: url + "/info/location/" + location.id,
       data : JSON.stringify(location),
       type : 'PATCH',
       contentType : 'application/json',
@@ -270,7 +270,7 @@ class BrandStore extends EventEmitter {
 
   addLocation(location){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/location",
+      url: url + "/info/location",
       data : JSON.stringify(location),
       type : 'POST',
       contentType : 'application/json',
@@ -291,7 +291,7 @@ class BrandStore extends EventEmitter {
 
   deleteLocation(id){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/location/" + id,
+      url: url + "/info/location/" + id,
       type : 'DELETE',
       contentType : 'application/json',
       processData: false,
@@ -330,7 +330,7 @@ class BrandStore extends EventEmitter {
 
   updateSponsor(sponsor){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/sponsor/" + sponsor.id,
+      url: url + "/info/sponsor/" + sponsor.id,
       data : JSON.stringify(sponsor),
       type : 'PATCH',
       contentType : 'application/json',
@@ -351,7 +351,7 @@ class BrandStore extends EventEmitter {
 
   addSponsor(sponsor){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/sponsor",
+      url: url + "/info/sponsor",
       data : JSON.stringify(sponsor),
       type : 'POST',
       contentType : 'application/json',
@@ -372,7 +372,7 @@ class BrandStore extends EventEmitter {
 
   deleteSponsor(id){
     $.ajax({
-      url: "https://dev.calligre.com/api/info/sponsor/" + id,
+      url: url + "/info/sponsor/" + id,
       type : 'DELETE',
       contentType : 'application/json',
       processData: false,
