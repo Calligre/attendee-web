@@ -100,43 +100,42 @@ export default class NewsFeedPost extends React.Component {
     };
 
     return (
-	  <BetterCard>
-		<CardTitle
-		  avatar={poster_icon}
-		  title={poster_name}
-		  subtitle={moment(timestamp * 1000).format('MMMM Do, h:mm a')}/>
-		{ owner &&
-		  <FaTrashO
-			className="post-action"
-			onClick={this.deletePost}
-			size={20}/>
-		}
-		{ !owner &&
-		  <FaFlag
-			className="post-action"
-			onClick={this.changeFlag}
-			style={flagColor}
-			size={20}/>
-		}
-		<CardText>{text}</CardText>
-		{ media_link && media_link !== '' &&
-		  <CardMedia
-			aspectRatio="wide"
-			image={media_link}
+      <BetterCard>
+        <CardTitle
+          avatar={poster_icon}
+          title={poster_name}
+          subtitle={moment(timestamp * 1000).format('MMMM Do, h:mm a')} />
+        { owner &&
+          <FaTrashO
+            className="post-action"
+            onClick={this.deletePost}
+            size={20}/>
+        }
+        { !owner &&
+          <FaFlag
+            className="post-action"
+            onClick={this.changeFlag}
+            style={flagColor}
+            size={20}/>
+        }
+        <CardText>{text}</CardText>
+        { media_link && media_link !== '' &&
+          <CardMedia
+            aspectRatio="wide"
+            image={media_link}
             onClick={this.showImage}/> }
-		<CardActions>
-		  <FaHeart
-			className="heart-icon post-interaction"
-			onClick={this.changeLike}
-			style={heartColor}
-			size={20}
-		  />
-		  <span className="like-count no-selection">{like_count}</span>
-		  { repost &&
-			<FaRetweet className="repost-icon post-interaction" onClick={this.retweet} size={28} />
-		  }
-		</CardActions>
-	  </BetterCard>
+        <CardActions>
+          <FaHeart
+            className="heart-icon post-interaction"
+            onClick={this.changeLike}
+            style={heartColor}
+            size={20} />
+          <span className="like-count no-selection">{like_count}</span>
+          { repost &&
+            <FaRetweet className="repost-icon post-interaction" onClick={this.retweet} size={28} />
+          }
+        </CardActions>
+      </BetterCard>
     );
   }
 }

@@ -5,6 +5,7 @@ import FaFlag from 'react-icons/lib/fa/flag';
 import FaHeart from 'react-icons/lib/fa/heart';
 import FaTrashO from 'react-icons/lib/fa/trash-o';
 import NewsFeedStore from 'stores/NewsFeedStore';
+import { Card as BetterCard, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card';
 let moment = require('moment')
 
 
@@ -37,45 +38,31 @@ export default class ModeratePost extends React.Component {
       timestamp,
     } = this.state;
 
-    let image = null;
-    if (media_link && media_link !== '') {
-      image = (
-        <span className="link no-selection">
-          <img src={media_link}/>
-        </span>
-      );
-    }
-
     return (
-      <div className="newsfeed-post">
-        <div className="profile-photo inline">
-          <img alt="poster" src={poster_icon} className="user-photo no-selection" />
-        </div>
-        <div className="post-text inline">
-          <div className="right-options">
-            <Button className="right-icons btn-danger" onClick={this.deletePost}>
+      <BetterCard>
+        <CardTitle
+          avatar={poster_icon}
+          title={poster_name}
+          subtitle={moment(timestamp * 1000).format('MMMM Do, h:mm:ss a')} />
+            <Button className="admin-delete btn-danger" onClick={this.deletePost}>
               Delete
             </Button>
-            <Button className="right-icons btn-danger" onClick={this.unflagPost}>
+            <Button className="admin-unflag btn-danger" onClick={this.unflagPost}>
               Unflag
             </Button>
-          </div>
-          <p className="username">{poster_name}</p>
-          <p className="text">{text}</p>
-          {image}
-          <div className="soc-bar">
-            <FaHeart
-              className="heart-icon"
-              size={20}
-            />
-            <span className="like-count no-selection">{like_count}</span>
-            <span className="social-spacing no-selection">Flagged {flag_count} time(s)</span>
-            <span className="social-spacing no-selection date">
-              {moment(timestamp * 1000).format('MMMM Do, h:mm:ss a')}
-            </span>
-          </div>
-        </div>
-      </div>
+        <CardText>{text}</CardText>
+        { media_link && media_link !== '' &&
+          <CardMedia
+          aspectRatio="wide"
+          image={media_link} /> }
+        <CardActions>
+          <FaHeart
+            className="heart-icon post-interaction"
+            size={20} />
+          <span className="like-count no-selection">{like_count}</span>
+          <span className="no-selection repost-icon">Flagged {flag_count} time(s)</span>
+        </CardActions>
+      </BetterCard>
     );
   }
 }

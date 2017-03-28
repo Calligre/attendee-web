@@ -109,11 +109,10 @@ export default class NewsFeed extends React.Component {
     function imageOverlayDisplay(closeImageOverlay) {
       if (imageOverlay) {
         return (
-          <div className="fullscreen-frame">
+          <div className="fullscreen-frame" onClick={closeImageOverlay}>
             <MdClose
               className="img-overlay-close clickable"
               size={40}
-              onClick={closeImageOverlay}
             />
             <div className="img-container">
               <span className="helper inline" /><img alt="full" className="inline" src={imageOverlay} />
