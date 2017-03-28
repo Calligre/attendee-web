@@ -305,7 +305,7 @@ export default class Cards extends React.Component {
 		  </TableHeaderColumn>
 		  <TableHeaderColumn dataField='address'>Address</TableHeaderColumn>
 		</BootstrapTable>
- 
+
         <h2 className="secondaryText largeTopMargin">Important Contacts</h2>
 		<Switch
           checked={this.state.preferences.contact}

@@ -198,7 +198,7 @@ export default class Featured extends React.Component {
     let contentCards = null;
     if (cards !== undefined && cards.length > 0 && preferences.content) {
       contentCards = cards.map((content) =>
-        <Card type="content" item={content} buttonStyle={secondaryText}/>
+        <Card type="content" item={content.data} buttonStyle={secondaryText}/>
       );
     }
 
@@ -218,7 +218,7 @@ export default class Featured extends React.Component {
           <Card type="survey" item={survey} buttonStyle={secondaryText}/>
       );
     }
-    
+
     let sponsorCards = null;
     if (sponsors !== undefined && sponsors.length > 0) {
       sponsorCards = sponsors.map((sublist) =>
