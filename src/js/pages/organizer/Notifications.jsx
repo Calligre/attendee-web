@@ -55,7 +55,7 @@ export default class Notifications extends React.Component {
   }
 
   formatExpiry = (cell) => {
-    const format = 'MMM DD, YYYY hh:mm a';
+    const format = 'MMM DD, YYYY h:mm a';
     return moment(cell).format(format);
   }
 
