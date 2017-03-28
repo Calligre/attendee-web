@@ -154,6 +154,18 @@
       top: 30px;
     }
 
+    .admin-delete {
+      position: absolute;
+      right: 5px;
+      top: 20px;
+    }
+
+    .admin-unflag {
+      position: absolute;
+      right: 100px;
+      top: 20px;
+    }
+
     .post-action, .post-interaction {
       color: $darkestGrey;
       overflow: visible;
