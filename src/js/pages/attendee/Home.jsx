@@ -84,7 +84,7 @@ export default class Featured extends React.Component {
 
   getEvents = () => {
     this.setState({
-      events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment(event.starttime)))
+      events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment(event.starttime))),
     });
   };
 
@@ -102,8 +102,8 @@ export default class Featured extends React.Component {
 
   setBranding = () => {
     const branding = BrandStore.branding;
-    branding['starttime'] = moment(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
-    branding['endtime'] = moment(branding['endtime']).format('YYYY-MM-DD[T]HH:mm');
+    branding.starttime = moment(branding.starttime).format('YYYY-MM-DD[T]HH:mm');
+    branding.endtime = moment(branding.endtime).format('YYYY-MM-DD[T]HH:mm');
     this.setState({
       branding,
       logo: branding.logo,
