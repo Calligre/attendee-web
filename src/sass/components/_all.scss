@@ -117,6 +117,10 @@ a {
   }
 }
 
+.contentContainer {
+  margin: 60px 20px;
+}
+
 .Select-control {
   font-size: 12px;
 
@@ -233,10 +237,6 @@ button:not([class^='theme__button']) {
       font-size: 23px;
     }
   }
-}
-
-.navHeader {
-  margin-top: 60px;
 }
 
 .sidebarLink {

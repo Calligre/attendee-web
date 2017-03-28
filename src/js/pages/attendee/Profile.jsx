@@ -156,7 +156,7 @@ export default class Profile extends React.Component {
     return (
       <div className={`profile ${myProfileClass}`}>
         <Dropzone className="dropzone" onDrop={this.onDrop} multiple={false} disableClick={!myProfile}>
-          <img src={this.state.preview} />
+          <div className="profilePic" style={{backgroundImage: "url(" + this.state.preview + ")"}} />
           <p className="label">Upload new photo</p>
         </Dropzone>
         <h2 className="primaryText">{first_name} {last_name}</h2>

@@ -18,12 +18,13 @@ export default class NewsFeed extends React.Component {
     const integrations = AuthService.getProfile().identities;
     let fbIntegration = false;
     let twIntegration = false;
-
-    for (let integration of integrations) {
-      if (integration.connection === 'facebook') {
-        fbIntegration = true;
-      } else if (integration.connection === 'twitter') {
-        twIntegration = true;
+    if (integrations) {
+      for (let integration of integrations) {
+        if (integration.connection === 'facebook') {
+          fbIntegration = true;
+        } else if (integration.connection === 'twitter') {
+          twIntegration = true;
+        }
       }
     }
 
