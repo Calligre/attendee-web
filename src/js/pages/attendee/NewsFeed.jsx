@@ -17,9 +17,6 @@ export default class NewsFeed extends React.Component {
         // nextOffset is stored in the NewsFeedStore
       },
       imageOverlay: null,
-      // TODO: HOW CAN I GET THESE? (If user is integrated into social media channels)
-      twIntegration: true,
-      fbIntegration: true,
       preferences: PreferenceStore.getDefaults(),
     };
     PreferenceStore.loadAll();
@@ -90,9 +87,7 @@ export default class NewsFeed extends React.Component {
   render() {
     const {
       contentFeed,
-      fbIntegration,
       imageOverlay,
-      twIntegration,
       preferences,
     } = this.state;
 
