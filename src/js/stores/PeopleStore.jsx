@@ -71,11 +71,9 @@ class PeopleStore extends EventEmitter {
         cache: false,
         success: function(response){
           self.updatePerson({id: id, photo: response.data.url});
-          //dispatcher.dispatch({type: "PEOPLE_GET", people: response});
         },
         error: function(error){
-          console.log(error);
-          //dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
+          dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
         }
       });
       return this.people;
@@ -94,12 +92,10 @@ class PeopleStore extends EventEmitter {
         "Authorization": "Bearer " + AuthService.getToken()
       },
       success: function(response){
-        console.log(response);
-        //dispatcher.dispatch({type: "PEOPLE_GET", people: response});
+        dispatcher.dispatch({type: "PEOPLE_UPDATE", person});
       },
       error: function(error){
-        console.log(error);
-        //dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
+        dispatcher.dispatch({type: "PEOPLE_ERROR", error: error});
       }
     });
     return this.people;
@@ -109,7 +105,12 @@ class PeopleStore extends EventEmitter {
     switch(action.type) {
       case "PEOPLE_CREATE":
         this.people.push(action.person);
-        this.emit("received");
+        this.emit("added");
+        break;
+      case "PEOPLE_UPDATE":
+        const entry = this.people.find(c => c.id === action.person.id);
+        Object.assign(entry, action.person);
+        this.emit("updated");
         break;
       case "PEOPLE_GET": {
         this.people = action.people.data.map(function(person) {
