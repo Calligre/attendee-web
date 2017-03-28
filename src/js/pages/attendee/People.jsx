@@ -34,11 +34,13 @@ export default class People extends React.Component {
 
   componentWillMount() {
     PeopleStore.on('received', this.getPeople);
+    PeopleStore.on('updated', this.getPeople);
     PeopleStore.on('error', this.showError);
   }
 
   componentWillUnmount() {
     PeopleStore.removeListener('received', this.getPeople);
+    PeopleStore.removeListener('updated', this.getPeople);
     PeopleStore.removeListener('error', this.showError);
   }
 
@@ -153,7 +155,7 @@ const Person = React.createClass({
               <p className="personRank"> Rank: {this.props.rank} </p>
             </div>
           </div>
-          <img src={this.props.photo} />
+          <div className="profilePic" style={{ backgroundImage: "url(" + this.props.photo + ")"}} />
           <div className="info-container">
             <div className="top-half">
               <p className="personName"> {this.props.name} </p>

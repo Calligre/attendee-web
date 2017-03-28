@@ -73,7 +73,7 @@ export default class Calendar extends React.Component {
   insertModal = (columns, validateState, ignoreEditable) => (<InsertModalBody columns={columns} validateState={validateState} ignoreEditable={ignoreEditable} />)
 
   formatDate = (cell) => {
-    const format = 'MMM DD, YYYY hh:mm a';
+    const format = 'MMM D h:mm a';
     return moment(cell).format(format);
   }
 
@@ -116,7 +116,7 @@ export default class Calendar extends React.Component {
           <TableHeaderColumn dataField="endtime" dataSort dataFormat={this.formatDate} customEditor={{ getElement: timeEditor }}>
             End time
           </TableHeaderColumn>
-          <TableHeaderColumn dataField="description">Description</TableHeaderColumn>
+          <TableHeaderColumn dataField="description" editable={ { type: 'textarea' } }>Description</TableHeaderColumn>
         </BootstrapTable>
       </div>
     );
@@ -211,9 +211,8 @@ class InsertModalBody extends React.Component {
           </div>
           <div className="form-group" key="description">
             <label>Description</label>
-            <input
+            <textarea
               ref="description"
-              type="text"
               className="form-control editor edit-text"
             />
           </div>
