@@ -243,6 +243,12 @@ button:not([class^='theme__button']) {
   color: white !important;
 }
 
+[class^="theme__avatar"] > img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
 [class^="theme__dialog"] {
   overflow: scroll;
 
