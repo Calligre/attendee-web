@@ -15,19 +15,19 @@ export default class Calendar extends React.Component {
   }
 
   componentWillMount() {
-    EventStore.on("received", this.getEvents);
-    EventStore.on("addEvents", this.getEvents);
-    EventStore.on("updateEvents", this.getEvents);
-    EventStore.on("deleteEvents", this.getEvents);
-    EventStore.on("error", this.showError);
+    EventStore.on('received', this.getEvents);
+    EventStore.on('addEvents', this.getEvents);
+    EventStore.on('updateEvents', this.getEvents);
+    EventStore.on('deleteEvents', this.getEvents);
+    EventStore.on('error', this.showError);
   }
 
   componentWillUnmount() {
-    EventStore.removeListener("received", this.getEvents);
-    EventStore.removeListener("addEvents", this.getEvents);
-    EventStore.removeListener("updateEvents", this.getEvents);
-    EventStore.removeListener("deleteEvents", this.getEvents);
-    EventStore.removeListener("error", this.showError);
+    EventStore.removeListener('received', this.getEvents);
+    EventStore.removeListener('addEvents', this.getEvents);
+    EventStore.removeListener('updateEvents', this.getEvents);
+    EventStore.removeListener('deleteEvents', this.getEvents);
+    EventStore.removeListener('error', this.showError);
   }
 
   showError = () => {
@@ -41,14 +41,10 @@ export default class Calendar extends React.Component {
       location: '',
       stream: '',
       starttime: '',
-      endttime: '',
+      endtime: '',
     };
     for (const prop in row) {
-      if (prop == 'starttime' || prop == 'endtime') {
-        updatedEvent[prop] = moment(row[prop]).valueOf();
-      } else {
-        updatedEvent[prop] = row[prop];
-      }
+      updatedEvent[prop] = row[prop];
     }
     return updatedEvent;
   }
@@ -74,12 +70,10 @@ export default class Calendar extends React.Component {
     });
   }
 
-  insertModal = (columns, validateState, ignoreEditable) => {
-    return (<InsertModalBody columns={columns} validateState={validateState} ignoreEditable={ignoreEditable} />);
-  }
+  insertModal = (columns, validateState, ignoreEditable) => (<InsertModalBody columns={columns} validateState={validateState} ignoreEditable={ignoreEditable} />)
 
   formatDate = (cell) => {
-    const format = 'MMM Do hh:mm a';
+    const format = 'MMM DD, YYYY hh:mm a';
     return moment(cell).format(format);
   }
 

@@ -84,7 +84,7 @@ export default class Featured extends React.Component {
 
   getEvents = () => {
     this.setState({
-      events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment.unix(event.starttime)))
+      events: EventStore.events.filter(event => event.isSubscribed && moment().isBefore(moment(event.starttime)))
     });
   };
 
@@ -102,8 +102,8 @@ export default class Featured extends React.Component {
 
   setBranding = () => {
     let branding = BrandStore.branding;
-    branding['starttime'] = moment.unix(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
-    branding['endtime'] = moment.unix(branding['endtime']).format('YYYY-MM-DD[T]HH:mm');
+    branding['starttime'] = moment(branding['starttime']).format('YYYY-MM-DD[T]HH:mm');
+    branding['endtime'] = moment(branding['endtime']).format('YYYY-MM-DD[T]HH:mm');
     this.setState({
       branding: branding,
       logo: branding.logo,
@@ -157,7 +157,7 @@ export default class Featured extends React.Component {
 
     var eventCount = 0;
     const EventComponents = events.map((event) => {
-      if (moment().diff(moment.unix(event.starttime), "hours") < 2 || eventCount < 3) {
+      if (moment().diff(moment(event.starttime), "hours") < 2 || eventCount < 3) {
         eventCount++;
         return <Card type="event" key={"event-" + event.id} item={event}/>;
       }

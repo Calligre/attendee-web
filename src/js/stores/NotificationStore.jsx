@@ -10,14 +10,14 @@ const moment = require('moment');
 
 // for the UI
 function formatData(notification) {
-  const value = notification;
+  const value = Object.assign({}, notification);
   value.expirytime = moment.unix(value.expirytime).valueOf();
   return value;
 }
 
 // for the DB
 function formatValues(notification) {
-  const value = notification;
+  const value = Object.assign({}, notification);
   value.expirytime = moment(value.expirytime).unix();
   return value;
 }
@@ -52,12 +52,12 @@ class NotificationStore extends EventEmitter {
     return self.notifications;
   }
 
-  add(data) {
-    const notification = formatValues(data);
+  add(notification) {
+    const data = formatValues(notification);
     const self = this;
     $.ajax({
       url: `${url}/broadcast`,
-      data: JSON.stringify(notification),
+      data: JSON.stringify(data),
       type: 'POST',
       contentType: 'application/json',
       processData: false,
@@ -76,12 +76,12 @@ class NotificationStore extends EventEmitter {
   }
 
 
-  update(data) {
-    const notification = formatValues(data);
+  update(notification) {
+    const data = formatValues(notification);
 
     $.ajax({
       url: `${url}/broadcast/${notification.id}`,
-      data: JSON.stringify(notification),
+      data: JSON.stringify(data),
       type: 'PATCH',
       contentType: 'application/json',
       processData: false,
@@ -127,15 +127,15 @@ class NotificationStore extends EventEmitter {
     const currTime = moment();
 
     // Check Expiry time
-    self.notifications = self.notifications.filter(notification => moment(notification.expirytime).isAfter(currTime));
+    let validNotifications = self.notifications.filter(notification => moment(notification.expirytime).isAfter(currTime));
 
     // Check if Notifications have already been seen
     const viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications'));
     if (viewedNotifications) {
-      self.notifications = self.notifications.filter(notification => !(viewedNotifications.includes(notification.id)));
+      validNotifications = validNotifications.filter(notification => !(viewedNotifications.includes(notification.id)));
     }
 
-    self.notifications = self.notifications.map((notification) => {
+    validNotifications = validNotifications.map((notification) => {
       return {
         message: notification.message,
         id: notification.id,
@@ -146,13 +146,12 @@ class NotificationStore extends EventEmitter {
         onClick: () => this.handleDismiss(notification),
       };
     });
-    self.notifications = self.notifications.sort((a, b) => a.expirytime > b.expirytime);
-    return self.notifications;
+    validNotifications = validNotifications.sort((a, b) => a.expirytime > b.expirytime);
+    return validNotifications;
   }
 
   handleDismiss(notificationParam) {
     const self = this;
-    self.notifications = self.notifications.filter(notification => notification.id !== notificationParam.id);
 
     // Set this notification as viewed so it doesn't appear again
     let viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications'));
