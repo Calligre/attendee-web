@@ -34,11 +34,13 @@ export default class People extends React.Component {
 
   componentWillMount() {
     PeopleStore.on('received', this.getPeople);
+    PeopleStore.on('updated', this.getPeople);
     PeopleStore.on('error', this.showError);
   }
 
   componentWillUnmount() {
     PeopleStore.removeListener('received', this.getPeople);
+    PeopleStore.removeListener('updated', this.getPeople);
     PeopleStore.removeListener('error', this.showError);
   }
 
