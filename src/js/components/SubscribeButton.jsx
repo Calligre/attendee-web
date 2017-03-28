@@ -6,17 +6,9 @@ import StarFilled from 'react-icons/lib/md/star';
 export default class SubscribeButton extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { id: props.id, hover: false, subscribed: props.subscribed};
+    this.state = { id: props.id, subscribed: props.subscribed};
     this.starFilled = React.createElement(StarFilled, null);
     this.starEmpty = React.createElement(StarEmpty, null);
-  }
-
-  mouseOver = () => {
-    this.setState({hover: true});
-  }
-
-  mouseOut = () => {
-    this.setState({hover: false});
   }
 
   toggleSubscribed = () => {
@@ -30,14 +22,9 @@ export default class SubscribeButton extends React.Component {
   }
 
   render() {
-    var icon = this.starEmpty;
-    if (this.state.hover || this.state.subscribed) {
-      icon = this.starFilled;
-    }
-
     return (
-      <div className="subscribeButton" onMouseOver={this.mouseOver} onMouseOut={this.mouseOut} onClick={this.toggleSubscribed}>
-        {icon}
+      <div className="subscribeButton" onClick={this.toggleSubscribed}>
+        { this.state.subscribed ? this.starFilled : this.starEmpty }
       </div>
     );
   }
