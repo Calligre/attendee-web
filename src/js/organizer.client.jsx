@@ -26,7 +26,7 @@ const afterLogin = () => {
 }
 
 // onEnter callback to validate authentication in private routes
-const requireAuth = (nextState, replace) => {
+const requireAuth = (nextState) => {
   if (!AuthService.loggedIn()) {
     AppHistory.push('login');
     AuthService.on('after_login', afterLogin);
