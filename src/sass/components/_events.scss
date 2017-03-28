@@ -25,6 +25,8 @@
 }
 
 .eventPageEvent{
+  padding: 10px 0;
+
   a {
     display: table-cell;
     width: 100%;
@@ -43,13 +45,18 @@
     padding: 10px 20px 10px 10px;
     font-size: 24px;
     vertical-align: middle;
+    border-radius: 0 10px 10px 0;
+
+    &:hover {
+      background-color: rgba(0,0,0,0.05);
+    }
   }
 }
 
 .event {
-  margin: 10px 0px;
   display: flex;
   align-items: center;
+  border-radius: 10px 0 0 10px;
 
   .time, .details {
     display: inline-block;
