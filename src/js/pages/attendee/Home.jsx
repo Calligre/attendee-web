@@ -154,8 +154,10 @@ export default class Featured extends React.Component {
     const { messages, events, notifications, logo, branding, locations, cards, contacts, surveys, sponsors, preferences } = this.state;
 
     let eventCount = 0;
+    const now = moment();
     const EventComponents = events.map((event) => {
-      if (moment().diff(moment.unix(event.starttime), 'hours') < 2 || eventCount < 3) {
+      const hourDiff = moment(event.starttime).diff(now, 'hours');
+      if ((hourDiff >= -1 && hourDiff <= 2) || eventCount < 3) {
         eventCount++;
         return <Card type="event" key={`event-${event.id}`} item={event} />;
       }
