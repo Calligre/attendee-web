@@ -154,7 +154,7 @@ export default class Featured extends React.Component {
     const { messages, events, notifications, logo, branding, locations, cards, contacts, surveys, sponsors, preferences } = this.state;
 
     let eventCount = 0;
-    events.sort((a, b) => a.starttime - b.starttime);
+    events.sort((a, b) => moment(a.starttime).isBefore(moment(b.starttime)) ? -1 : 1);
     const now = moment();
     const EventComponents = events.map((event) => {
       const hourDiff = moment(event.starttime).diff(now, 'hours');
