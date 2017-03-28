@@ -59,12 +59,12 @@ class PeopleStore extends EventEmitter {
     const self = this;
     const fileReader = new FileReader();
     fileReader.readAsDataURL(photo);
-    fileReader.onloadend = () => {
+    fileReader.onloadend = (result) => {
       $.ajax({
         url: `${url}/user/${id}/photo`,
         contentType: 'application/json',
         type: 'put',
-        data: JSON.stringify({ data: this.result }),
+        data: JSON.stringify({ data: result.currentTarget.result }),
         headers: {
           Authorization: `Bearer ${AuthService.getToken()}`,
         },

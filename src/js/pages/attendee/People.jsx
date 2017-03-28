@@ -155,7 +155,7 @@ const Person = React.createClass({
               <p className="personRank"> Rank: {this.props.rank} </p>
             </div>
           </div>
-          <img src={this.props.photo} />
+          <div className="profilePic" style={{ backgroundImage: "url(" + this.props.photo + ")"}} />
           <div className="info-container">
             <div className="top-half">
               <p className="personName"> {this.props.name} </p>
