@@ -13,10 +13,16 @@
     .notification-bar-wrapper {
       display: flex;
       align-items: center;
-      justify-content: center;
+
+      .notification-bar-message {
+        margin-right: 50px;
+        text-align: left;
+        flex-grow: 1;
+        border-right: 1px solid white;
+      }
 
       .notification-bar-action {
-        color: black !important;
+        color: white !important;
         font-size: 1rem !important;
         position: absolute;
         right: 5px;
