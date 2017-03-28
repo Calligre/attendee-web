@@ -216,7 +216,7 @@ class EventStore extends EventEmitter {
       }
       case 'EVENT_UPDATE': {
         const entry = this.events.find(c => c.id === action.event.id);
-        Object.assign(entry, formatData(action.event));
+        Object.assign(entry, action.event);
         this.emit('updateEvents');
         break;
       }
@@ -225,7 +225,7 @@ class EventStore extends EventEmitter {
         event.id = action.id;
         streamMap[event.stream] = streamMap[event.stream] || randomColor();
         event.streamColor = streamMap[event.stream];
-        this.events.push(formatData(event));
+        this.events.push(event);
         this.emit('addEvents');
         break;
       }
