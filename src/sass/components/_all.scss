@@ -41,6 +41,11 @@ body {
   text-align: center;
 }
 
+* {
+  // Necessary to register onClick for iOS... ya.
+  cursor: pointer;
+}
+
 $h1-font-sizes: (
   null  : 8vw,
   460px : 40px,

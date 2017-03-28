@@ -119,24 +119,27 @@ export default class Layout extends React.Component {
       width: '200',
     }
 
-    const items = [
-      <SidebarItem href='/' background={background} hoverHighlight={highlight}>Home</SidebarItem>,
-    ];
-    if (newsfeed) {
-      items.push(<SidebarItem href='/newsfeed'>News Feed</SidebarItem>);
-    }
-    items.push(
-      <SidebarItem href='/events'>Events</SidebarItem>,
-      <SidebarItem href='/people'>People</SidebarItem>,
-      <SidebarItem href='/profile'>My Profile</SidebarItem>,
-      <SidebarItem>
-        <a className="sidebarLink" onClick={this.showConferenceSwitcher}>Switch Conferences</a>
-      </SidebarItem>
-    );
+    const items = [];
     if (AuthService.loggedIn()) {
+      items.push(<SidebarItem href='/' background={background} hoverHighlight={highlight}>Home</SidebarItem>);
+      if (newsfeed) {
+        items.push(<SidebarItem href='/newsfeed'>News Feed</SidebarItem>);
+      }
       items.push(
+        <SidebarItem href='/events'>Events</SidebarItem>,
+        <SidebarItem href='/people'>People</SidebarItem>,
+        <SidebarItem href='/profile'>My Profile</SidebarItem>,
+        <SidebarItem>
+          <a className="sidebarLink" onClick={this.showConferenceSwitcher}>Switch Conferences</a>
+        </SidebarItem>,
         <SidebarItem href='/login'>
           <a className="sidebarLink" onClick={AuthService.logout}>Logout</a>
+        </SidebarItem>
+      );
+    } else {
+      items.push(
+        <SidebarItem>
+          <a className="sidebarLink" onClick={this.showConferenceSwitcher}>Switch Conferences</a>
         </SidebarItem>
       );
     }
