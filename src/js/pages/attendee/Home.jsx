@@ -154,15 +154,18 @@ export default class Featured extends React.Component {
     const { messages, events, notifications, logo, branding, locations, cards, contacts, surveys, sponsors, preferences } = this.state;
 
     let eventCount = 0;
-    events.sort((a, b) => moment(a.starttime).isBefore(moment(b.starttime)) ? -1 : 1);
-    const now = moment();
-    const EventComponents = events.map((event) => {
-      const hourDiff = moment(event.starttime).diff(now, 'hours');
-      if ((hourDiff >= -1 && hourDiff <= 2) || eventCount < 3) {
-        eventCount++;
-        return <Card type="event" key={`event-${event.id}`} item={event} />;
-      }
-    });
+    let EventComponents = [];
+    if (preferences.events) {
+      events.sort((a, b) => moment(a.starttime).isBefore(moment(b.starttime)) ? -1 : 1);
+      const now = moment();
+      EventComponents = events.map((event) => {
+        const hourDiff = moment(event.starttime).diff(now, 'hours');
+        if ((hourDiff >= -1 && hourDiff <= 2) || eventCount < 3) {
+          eventCount++;
+          return <Card type="event" key={`event-${event.id}`} item={event} />;
+        }
+      });
+    }
 
     let mapCard = null;
     let confPackageCard = null;
@@ -198,6 +201,7 @@ export default class Featured extends React.Component {
 
     let contentCards = null;
     if (cards !== undefined && cards.length > 0 && preferences.content) {
+        
       contentCards = cards.map(content =>
         <Card type="content" item={content.data} buttonStyle={secondaryText} />,
       );
