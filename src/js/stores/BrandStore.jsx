@@ -6,6 +6,7 @@ import dispatcher from 'dispatcher';
 
 const $ = require('jquery');
 const moment = require('moment');
+
 const url = UrlService.getUrl();
 
 // for the UI
@@ -81,70 +82,70 @@ class BrandStore extends EventEmitter {
     });
   }
 
-  updateCard(card){
+  updateCard(card) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/card/" + card.id,
-      data : JSON.stringify(card),
-      type : 'PATCH',
-      contentType : 'application/json',
+      url: `${url}/info/card/${card.id}`,
+      data: JSON.stringify(card),
+      type: 'PATCH',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success() {
         dispatcher.dispatch({ type: 'CARD_UPDATE', card });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
 
     return this.cards;
-  };
+  }
 
-  addCard(card){
+  addCard(card) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/card",
-      data : JSON.stringify(card),
-      type : 'POST',
-      contentType : 'application/json',
+      url: `${url}/info/card`,
+      data: JSON.stringify(card),
+      type: 'POST',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success(response) {
         dispatcher.dispatch({ type: 'CARD_ADD', card, id: response.data.id });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
 
     return this.cards;
-  };
+  }
 
-  deleteCard(id){
+  deleteCard(id) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/card/" + id,
-      type : 'DELETE',
-      contentType : 'application/json',
+      url: `${url}/info/card/${id}`,
+      type: 'DELETE',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success() {
         dispatcher.dispatch({ type: 'CARD_DELETE', id });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
 
     return this.cards;
-  };
+  }
 
 
   getContacts = () => {
@@ -166,67 +167,67 @@ class BrandStore extends EventEmitter {
     });
   }
 
-  updateContact(contact){
+  updateContact(contact) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/contact/" + contact.id,
-      data : JSON.stringify(contact),
-      type : 'PATCH',
-      contentType : 'application/json',
+      url: `${url}/info/contact/${contact.id}`,
+      data: JSON.stringify(contact),
+      type: 'PATCH',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
-        dispatcher.dispatch({ type: 'CONTACT_UPDATE', contacts });
+      success() {
+        dispatcher.dispatch({ type: 'CONTACT_UPDATE', contact });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
     return this.events;
-  };
+  }
 
-  addContact(contact){
+  addContact(contact) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/contact",
-      data : JSON.stringify(contact),
-      type : 'POST',
-      contentType : 'application/json',
+      url: `${url}/info/contact`,
+      data: JSON.stringify(contact),
+      type: 'POST',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success(response) {
         dispatcher.dispatch({ type: 'CONTACT_ADD', contact, id: response.data.id });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
     return this.contacts;
-  };
+  }
 
-  deleteContact(id){
+  deleteContact(id) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/contact/" + id,
-      type : 'DELETE',
-      contentType : 'application/json',
+      url: `${url}/info/contact/${id}`,
+      type: 'DELETE',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success() {
         dispatcher.dispatch({ type: 'CONTACT_DELETE', id });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
     return this.contacts;
-  };
+  }
 
   getLocations = () => {
     $.ajax({
@@ -247,67 +248,67 @@ class BrandStore extends EventEmitter {
     });
   }
 
-  updateLocation(location){
+  updateLocation(location) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/location/" + location.id,
-      data : JSON.stringify(location),
-      type : 'PATCH',
-      contentType : 'application/json',
+      url: `${url}/info/location/${location.id}`,
+      data: JSON.stringify(location),
+      type: 'PATCH',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success() {
         dispatcher.dispatch({ type: 'LOCATION_UPDATE', location });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
     return this.events;
-  };
+  }
 
-  addLocation(location){
+  addLocation(location) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/location",
-      data : JSON.stringify(location),
-      type : 'POST',
-      contentType : 'application/json',
+      url: `${url}/info/location`,
+      data: JSON.stringify(location),
+      type: 'POST',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success(response) {
         dispatcher.dispatch({ type: 'LOCATION_ADD', location, id: response.data.id });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
     return this.locations;
-  };
+  }
 
-  deleteLocation(id){
+  deleteLocation(id) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/location/" + id,
-      type : 'DELETE',
-      contentType : 'application/json',
+      url: `${url}/info/location/${id}`,
+      type: 'DELETE',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success() {
         dispatcher.dispatch({ type: 'LOCATION_DELETE', id });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
     return this.locations;
-  };
+  }
 
   getSponsors = () => {
     $.ajax({
@@ -328,67 +329,67 @@ class BrandStore extends EventEmitter {
     });
   }
 
-  updateSponsor(sponsor){
+  updateSponsor(sponsor) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/sponsor/" + sponsor.id,
-      data : JSON.stringify(sponsor),
-      type : 'PATCH',
-      contentType : 'application/json',
+      url: `${url}/info/sponsor/${sponsor.id}`,
+      data: JSON.stringify(sponsor),
+      type: 'PATCH',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success() {
         dispatcher.dispatch({ type: 'SPONSOR_UPDATE', sponsor });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
     return this.events;
-  };
+  }
 
-  addSponsor(sponsor){
+  addSponsor(sponsor) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/sponsor",
-      data : JSON.stringify(sponsor),
-      type : 'POST',
-      contentType : 'application/json',
+      url: `${url}/info/sponsor`,
+      data: JSON.stringify(sponsor),
+      type: 'POST',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success(response) {
         dispatcher.dispatch({ type: 'SPONSOR_ADD', sponsor, id: response.data.id });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
     return this.sponsors;
-  };
+  }
 
-  deleteSponsor(id){
+  deleteSponsor(id) {
     $.ajax({
-      url: "https://dev.calligre.com/api/info/sponsor/" + id,
-      type : 'DELETE',
-      contentType : 'application/json',
+      url: `${url}/info/sponsor/${id}`,
+      type: 'DELETE',
+      contentType: 'application/json',
       processData: false,
       dataType: 'json',
       headers: {
-        "Authorization": "Bearer " + AuthService.getToken()
+        Authorization: `Bearer ${AuthService.getToken()}`,
       },
-      success: function(response){
+      success() {
         dispatcher.dispatch({ type: 'SPONSOR_DELETE', id });
       },
-      error: function(error){
+      error(error) {
         dispatcher.dispatch({ type: 'BRAND_ERROR', error });
-      }
+      },
     });
     return this.sponsors;
-  };
+  }
 
   saveBranding(data) {
     const brand = formatValues(data);
@@ -441,26 +442,25 @@ class BrandStore extends EventEmitter {
         break;
       }
       case 'LOCATION_GET': {
-        this.locations = action.locations.map((location) => {
-          return location.attributes;
-        });
+        this.locations = action.locations.map(location => location.attributes);
         this.emit('receivedLocations');
         break;
       }
       case 'LOCATION_UPDATE': {
-        var entry = this.locations.find(c => c.id === action.location.id);
+        const entry = this.locations.find(c => c.id === action.location.id);
         Object.assign(entry, action.location);
         this.emit('updateLocations');
         break;
       }
       case 'LOCATION_ADD': {
-        action.location.id = action.id;
-        this.locations.push(action.location)
+        const location = Object.assign({}, action.location);
+        location.id = action.id;
+        this.locations.push(location);
         this.emit('addLocations');
         break;
       }
       case 'LOCATION_DELETE': {
-        let index = this.locations.findIndex(c => c.id === action.id);
+        const index = this.locations.findIndex(c => c.id === action.id);
         if (index > -1) {
           this.locations.splice(index, 1);
         }
@@ -468,26 +468,25 @@ class BrandStore extends EventEmitter {
         break;
       }
       case 'CONTACT_GET': {
-        this.contacts = action.contacts.map((contact) => {
-          return contact.attributes;
-        });
+        this.contacts = action.contacts.map(contact => contact.attributes);
         this.emit('receivedContacts');
         break;
       }
       case 'CONTACT_UPDATE': {
-        var entry = this.contacts.find(c => c.id === action.contact.id);
+        const entry = this.contacts.find(c => c.id === action.contact.id);
         Object.assign(entry, action.contact);
         this.emit('updateContacts');
         break;
       }
       case 'CONTACT_ADD': {
-        action.contact.id = action.id;
-        this.contacts.push(action.contact)
+        const contact = Object.assign({}, action.contact);
+        contact.id = action.id;
+        this.contacts.push(contact);
         this.emit('addContacts');
         break;
       }
       case 'CONTACT_DELETE': {
-        let index = this.contacts.findIndex(c => c.id === action.id);
+        const index = this.contacts.findIndex(c => c.id === action.id);
         if (index > -1) {
           this.contacts.splice(index, 1);
         }
@@ -495,26 +494,25 @@ class BrandStore extends EventEmitter {
         break;
       }
       case 'CARD_GET': {
-        this.cards = action.cards.map((card) => {
-          return card.attributes;
-        });
+        this.cards = action.cards.map(card => card.attributes);
         this.emit('receivedCards');
         break;
       }
       case 'CARD_UPDATE': {
-        var entry = this.cards.find(c => c.id === action.card.id);
+        const entry = this.cards.find(c => c.id === action.card.id);
         Object.assign(entry, action.card);
         this.emit('updateCards');
         break;
       }
       case 'CARD_ADD': {
-        action.card.id = action.id;
-        this.cards.push(action.card)
+        const card = Object.assign({}, action.card);
+        card.id = action.id;
+        this.cards.push(card);
         this.emit('addCards');
         break;
       }
       case 'CARD_DELETE': {
-        let index = this.cards.findIndex(c => c.id === action.id);
+        const index = this.cards.findIndex(c => c.id === action.id);
         if (index > -1) {
           this.cards.splice(index, 1);
         }
@@ -522,26 +520,25 @@ class BrandStore extends EventEmitter {
         break;
       }
       case 'SPONSOR_GET': {
-        this.sponsors = action.sponsors.map((sponsor) => {
-          return sponsor.attributes;
-        });
+        this.sponsors = action.sponsors.map(sponsor => sponsor.attributes);
         this.emit('receivedSponsors');
         break;
       }
       case 'SPONSOR_UPDATE': {
-        var entry = this.sponsors.find(c => c.id === action.sponsor.id);
+        const entry = this.sponsors.find(c => c.id === action.sponsor.id);
         Object.assign(entry, action.sponsor);
         this.emit('updateSponsors');
         break;
       }
       case 'SPONSOR_ADD': {
-        action.sponsor.id = action.id;
-        this.sponsors.push(action.sponsor)
+        const sponsor = Object.assign({}, action.sponsor);
+        sponsor.id = action.id;
+        this.sponsors.push(sponsor);
         this.emit('addSponsors');
         break;
       }
       case 'SPONSOR_DELETE': {
-        let index = this.sponsors.findIndex(c => c.id === action.id);
+        const index = this.sponsors.findIndex(c => c.id === action.id);
         if (index > -1) {
           this.sponsors.splice(index, 1);
         }
@@ -556,6 +553,9 @@ class BrandStore extends EventEmitter {
       case 'BRAND_ERROR': {
         this.error = action.error;
         this.emit('error');
+        break;
+      }
+      default: {
         break;
       }
     }
