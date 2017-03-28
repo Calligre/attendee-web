@@ -62,40 +62,51 @@ export default class Layout extends React.Component {
       return null;
     }
 
-    const sidebarConfig = {
-      background: branding.color_secondary,
-      width: '200',
-    }
-
-    const items = [
-      <SidebarItem href='/' background={background} hoverHighlight={highlight}>Branding</SidebarItem>,
-      <SidebarItem href='/cards'>Cards</SidebarItem>,
-      <SidebarItem href='/calendar'>Calendar</SidebarItem>,
-      <SidebarItem href='/preferences'>Preferences</SidebarItem>,
-      <SidebarItem href='/surveys'>Surveys</SidebarItem>,
-      <SidebarItem href='/notifications'>Notifications</SidebarItem>,
-      <SidebarItem href='/moderation'>Moderation</SidebarItem>,
-    ];
     if (AuthService.loggedIn()) {
-      items.push(
+      const sidebarConfig = {
+        background: branding.color_secondary,
+        width: '200',
+      }
+
+      const items = [
+        <SidebarItem href='/' background={background} hoverHighlight={highlight}>Branding</SidebarItem>,
+        <SidebarItem href='/cards'>Cards</SidebarItem>,
+        <SidebarItem href='/calendar'>Calendar</SidebarItem>,
+        <SidebarItem href='/preferences'>Preferences</SidebarItem>,
+        <SidebarItem href='/surveys'>Surveys</SidebarItem>,
+        <SidebarItem href='/notifications'>Notifications</SidebarItem>,
+        <SidebarItem href='/moderation'>Moderation</SidebarItem>,
         <SidebarItem href='/login'>
           <a className="sidebarLink" onClick={AuthService.logout}>Logout</a>
         </SidebarItem>
+      ];
+
+      return (
+        <div>
+          <Sidebar content={items} {...sidebarConfig}>
+            <div class="container navHeader">
+              <div class="row">
+                <div class="col-lg-12">
+                  {this.props.children}
+                </div>
+              </div>
+              <Footer/>
+            </div>
+          </Sidebar>
+        </div>
       );
     }
 
     return (
       <div>
-        <Sidebar content={items} {...sidebarConfig}>
-          <div class="container navHeader">
-            <div class="row">
-              <div class="col-lg-12">
-                {this.props.children}
-              </div>
+        <div class="container navHeader">
+          <div class="row">
+            <div class="col-lg-12">
+              {this.props.children}
             </div>
-            <Footer/>
           </div>
-        </Sidebar>
+          <Footer/>
+        </div>
       </div>
     );
   }
