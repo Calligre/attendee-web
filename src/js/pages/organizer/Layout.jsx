@@ -82,31 +82,19 @@ export default class Layout extends React.Component {
       ];
 
       return (
-        <div>
-          <Sidebar content={items} {...sidebarConfig}>
-            <div class="container navHeader">
-              <div class="row">
-                <div class="col-lg-12">
-                  {this.props.children}
-                </div>
-              </div>
-              <Footer/>
-            </div>
-          </Sidebar>
-        </div>
+        <Sidebar content={items} {...sidebarConfig}>
+          <div class="contentContainer">
+            {this.props.children}
+            <Footer/>
+          </div>
+        </Sidebar>
       );
     }
 
     return (
-      <div>
-        <div class="container navHeader">
-          <div class="row">
-            <div class="col-lg-12">
-              {this.props.children}
-            </div>
-          </div>
-          <Footer/>
-        </div>
+      <div class="contentContainer">
+        {this.props.children}
+        <Footer/>
       </div>
     );
   }
