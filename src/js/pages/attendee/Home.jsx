@@ -132,7 +132,7 @@ export default class Featured extends React.Component {
 
   setSponsors = () => {
     const sponsors = Array.from(BrandStore.sponsors);
-    sponsors.sort((a, b) => a.rank > b.rank);
+    sponsors.sort((a, b) => a.rank - b.rank);
 
     let right = 0;
     const sponsorsSplit = [];
@@ -248,14 +248,14 @@ export default class Featured extends React.Component {
           <h2 className="secondaryText">Conference Information</h2>
         }
         <div>
+          {contentCards}
           {locationsCard}
           {contactsCard}
           {mapCard}
           {confPackageCard}
-          {socialCard}
-          {contentCards}
           {surveyCards}
           {sponsorCards}
+          {socialCard}
         </div>
       </div>
     );
