@@ -73,7 +73,7 @@ class AuthService extends EventEmitter {
           first_name: profile.given_name || profile.name.split(' ')[0],
           last_name: profile.family_name || profile.name.split(' ')[profile.name.split(' ').length - 1],
           email: profile.email || 'test@example.com',
-          photo: profile.picture,
+          photo: profile.picture_large !== null && profile.picture_large != "" ? profile.picture_large : profile.picture,
         };
         PeopleStore.create(userData);
       },
