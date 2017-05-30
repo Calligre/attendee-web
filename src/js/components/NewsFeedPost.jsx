@@ -121,9 +121,10 @@ export default class NewsFeedPost extends React.Component {
         <CardText>{text}</CardText>
         { media_link && media_link !== '' &&
           <CardMedia
-            aspectRatio="wide"
-            image={media_link}
-            onClick={this.showImage}/> }
+            onClick={this.showImage}>
+            <img src={media_link} className="newsfeedMedia"/>
+          </CardMedia>
+        }
         <CardActions>
           <FaHeart
             className="heart-icon post-interaction"
