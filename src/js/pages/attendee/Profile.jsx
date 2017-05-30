@@ -4,6 +4,7 @@ import Dropzone from 'react-dropzone';
 import Input from 'react-toolbox/lib/input';
 
 import SocialMediaList from 'components/SocialMediaList';
+import LinkedAccountsList from 'components/LinkedAccountsList';
 import PeopleStore from 'stores/PeopleStore';
 import AuthService from 'util/AuthService';
 
@@ -186,6 +187,12 @@ export default class Profile extends React.Component {
           </div>
         }
         <button className="secondaryBackground submitChanges" onClick={this.submitChanges}>Save changes</button>
+		{ myProfile &&
+          <div id="linkAccountContainer">
+            <h5 className="primaryText"> You can post to these accounts linked to your profile: </h5>
+            <LinkedAccountsList profile={AuthService.getProfile()}></LinkedAccountsList>
+          </div>
+        }
       </div>
     );
   }
