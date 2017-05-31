@@ -168,9 +168,8 @@ export default class NewsFeed extends React.Component {
             value={text}/>
         </CardText>
         { preview &&
-          <CardMedia
-            aspectRatio="wide"
-            image={preview}>
+          <CardMedia>
+            <img src={preview} className="newsfeedMedia" />
             <MdHighlightRemove className="photo-delete" onClick={this.deletePhoto} size={24} />
           </CardMedia>
         }

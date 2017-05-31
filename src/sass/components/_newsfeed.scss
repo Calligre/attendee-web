@@ -1,5 +1,6 @@
 .newsFeed {
-  margin-top: 30px;
+  margin: 30px auto;
+  max-width: 510px;
 
   html.noscroll {
     position: fixed;
@@ -92,6 +93,10 @@
     -moz-user-select: none; /* mozilla browsers */
     -khtml-user-select: none; /* webkit (konqueror) browsers */
     -ms-user-select: none; /* IE10+ */
+  }
+
+  .newsfeedMedia {
+    width: 100%;
   }
 
   .user-post {
