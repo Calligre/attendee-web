@@ -194,12 +194,12 @@ export default class NewsFeed extends React.Component {
             <img src={preview} className="newsfeedMedia" />
           </CardMedia>
         }
-		{ preview &&
-		  <div id="photoEditContainer">
+        { preview &&
+          <div id="photoEditContainer">
             <Button style={this.props.buttonStyle} label="Delete" onClick={this.deletePhoto}/>
-			<Button style={this.props.buttonStyle} label="Rotate" onClick={this.rotatePhoto}/>
-		  </div>
-		}
+            <Button style={this.props.buttonStyle} label="Rotate" onClick={this.rotatePhoto}/>
+          </div>
+        }
         <CardActions>
           <Dropzone className="dropzone border" onDrop={this.onPhotoDrop} multiple={false}>
             <Button style={this.props.buttonStyle} label="Upload Photo"/>
