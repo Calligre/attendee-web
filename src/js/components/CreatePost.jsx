@@ -7,6 +7,7 @@ import TiSocialTwitter from 'react-icons/lib/ti/social-twitter';
 import NewsFeedStore from 'stores/NewsFeedStore';
 import PreferenceStore from 'stores/PreferenceStore';
 import Dropzone from 'react-dropzone';
+import EXIF from 'exif-js';
 import { Card as BetterCard, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card';
 import { Button } from 'react-toolbox/lib/button';
 
@@ -58,11 +59,32 @@ export default class NewsFeed extends React.Component {
     PreferenceStore.removeListener('error', this.showPreferenceError);
   }
 
+  rotatePhoto = () => {
+    const img = new Image();
+    img.onload = () => {
+	  const width = img.width;
+	  const height = img.height;
+	  const canvas = document.createElement('canvas');
+	  const ctx = canvas.getContext('2d');
+	  canvas.width = height;
+      canvas.height = width;
+	  ctx.transform(0, 1, -1, 0, height, 0);
+	  ctx.drawImage(img, 0, 0);
+	  canvas.toBlob(blob => {
+		this.setState({
+		  file: blob,
+		  preview: window.URL.createObjectURL(blob)
+		});
+	  })
+    };
+    img.src = window.URL.createObjectURL(this.state.file);
+  }
+
   onPhotoDrop = (files) => {
-    this.setState({
-      file: files[0],
-      preview: files[0].preview,
-    });
+	this.setState({
+	  file: files[0],
+	  preview: files[0].preview,
+	});
   }
 
   getRetweetText = () => {
@@ -170,8 +192,13 @@ export default class NewsFeed extends React.Component {
         { preview &&
           <CardMedia>
             <img src={preview} className="newsfeedMedia" />
-            <MdHighlightRemove className="photo-delete" onClick={this.deletePhoto} size={24} />
           </CardMedia>
+        }
+        { preview &&
+          <div id="photoEditContainer">
+            <Button style={this.props.buttonStyle} label="Delete" onClick={this.deletePhoto}/>
+            <Button style={this.props.buttonStyle} label="Rotate" onClick={this.rotatePhoto}/>
+          </div>
         }
         <CardActions>
           <Dropzone className="dropzone border" onDrop={this.onPhotoDrop} multiple={false}>

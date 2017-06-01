@@ -15,6 +15,7 @@
     "babel-preset-stage-0": "6.22.0",
     "components": "0.1.0",
     "css-loader": "0.23.1",
+    "exif-js": "2.2.1",
     "extract-text-webpack-plugin": "1.0.1",
     "flux": "2.1.1",
     "jwt-decode": "2.1.0",
